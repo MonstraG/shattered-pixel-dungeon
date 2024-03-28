@@ -173,7 +173,7 @@ public class PixelScene extends Scene {
 	public void update() {
 		//we create this here so that it is last in the scene
 		if (DeviceCompat.isDesktop() && fullscreenListener == null) {
-			KeyEvent.addKeyListener(fullscreenListener = new Signal.Listener<KeyEvent>() {
+			KeyEvent.addKeyListener(fullscreenListener = new Signal.Listener<>() {
 
 				private boolean alt;
 				private boolean enter;

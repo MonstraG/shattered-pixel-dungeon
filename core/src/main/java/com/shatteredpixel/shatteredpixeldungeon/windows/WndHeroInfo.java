@@ -55,35 +55,24 @@ public class WndHeroInfo extends WndTabbed {
 	private static int MIN_HEIGHT = 125;
 	private static int MARGIN = 2;
 
-	public WndHeroInfo( HeroClass cl ){
+	public WndHeroInfo(HeroClass cl) {
 
-		Image tabIcon;
-		switch (cl){
-			case WARRIOR: default:
-				tabIcon = new ItemSprite(ItemSpriteSheet.SEAL, null);
-				break;
-			case MAGE:
-				tabIcon = new ItemSprite(ItemSpriteSheet.MAGES_STAFF, null);
-				break;
-			case ROGUE:
-				tabIcon = new ItemSprite(ItemSpriteSheet.ARTIFACT_CLOAK, null);
-				break;
-			case HUNTRESS:
-				tabIcon = new ItemSprite(ItemSpriteSheet.SPIRIT_BOW, null);
-				break;
-			case DUELIST:
-				tabIcon = new ItemSprite(ItemSpriteSheet.RAPIER, null);
-				break;
-		}
+		Image tabIcon = switch (cl) {
+			default -> new ItemSprite(ItemSpriteSheet.SEAL, null);
+			case MAGE -> new ItemSprite(ItemSpriteSheet.MAGES_STAFF, null);
+			case ROGUE -> new ItemSprite(ItemSpriteSheet.ARTIFACT_CLOAK, null);
+			case HUNTRESS -> new ItemSprite(ItemSpriteSheet.SPIRIT_BOW, null);
+			case DUELIST -> new ItemSprite(ItemSpriteSheet.RAPIER, null);
+		};
 
 		int finalHeight = MIN_HEIGHT;
 
 		heroInfo = new HeroInfoTab(cl);
 		add(heroInfo);
 		heroInfo.setSize(WIDTH, MIN_HEIGHT);
-		finalHeight = (int)Math.max(finalHeight, heroInfo.height());
+		finalHeight = (int) Math.max(finalHeight, heroInfo.height());
 
-		add( new IconTab( tabIcon ){
+		add(new IconTab(tabIcon) {
 			@Override
 			protected void select(boolean value) {
 				super.select(value);
@@ -94,9 +83,9 @@ public class WndHeroInfo extends WndTabbed {
 		talentInfo = new TalentInfoTab(cl);
 		add(talentInfo);
 		talentInfo.setSize(WIDTH, MIN_HEIGHT);
-		finalHeight = (int)Math.max(finalHeight, talentInfo.height());
+		finalHeight = (int) Math.max(finalHeight, talentInfo.height());
 
-		add( new IconTab( Icons.get(Icons.TALENT) ){
+		add(new IconTab(Icons.get(Icons.TALENT)) {
 			@Override
 			protected void select(boolean value) {
 				super.select(value);
@@ -108,7 +97,7 @@ public class WndHeroInfo extends WndTabbed {
 			subclassInfo = new SubclassInfoTab(cl);
 			add(subclassInfo);
 			subclassInfo.setSize(WIDTH, MIN_HEIGHT);
-			finalHeight = (int)Math.max(finalHeight, subclassInfo.height());
+			finalHeight = (int) Math.max(finalHeight, subclassInfo.height());
 
 			add(new IconTab(new ItemSprite(ItemSpriteSheet.MASK, null)) {
 				@Override
@@ -123,7 +112,7 @@ public class WndHeroInfo extends WndTabbed {
 			abilityInfo = new ArmorAbilityInfoTab(cl);
 			add(abilityInfo);
 			abilityInfo.setSize(WIDTH, MIN_HEIGHT);
-			finalHeight = (int)Math.max(finalHeight, abilityInfo.height());
+			finalHeight = (int) Math.max(finalHeight, abilityInfo.height());
 
 			add(new IconTab(new ItemSprite(ItemSpriteSheet.CROWN, null)) {
 				@Override
@@ -155,7 +144,7 @@ public class WndHeroInfo extends WndTabbed {
 		private RenderedTextBlock[] info;
 		private Image[] icons;
 
-		public HeroInfoTab(HeroClass cls){
+		public HeroInfoTab(HeroClass cls) {
 			super();
 			title = PixelScene.renderTextBlock(Messages.titleCase(cls.title()), 9);
 			title.hardlight(TITLE_COLOR);
@@ -165,36 +154,37 @@ public class WndHeroInfo extends WndTabbed {
 
 			info = new RenderedTextBlock[desc_entries.length];
 
-			for (int i = 0; i < desc_entries.length; i++){
+			for (int i = 0; i < desc_entries.length; i++) {
 				info[i] = PixelScene.renderTextBlock(desc_entries[i], 6);
 				add(info[i]);
 			}
 
-			switch (cls){
-				case WARRIOR: default:
-					icons = new Image[]{ new ItemSprite(ItemSpriteSheet.SEAL),
+			switch (cls) {
+				case WARRIOR:
+				default:
+					icons = new Image[]{new ItemSprite(ItemSpriteSheet.SEAL),
 							new ItemSprite(ItemSpriteSheet.WORN_SHORTSWORD),
 							new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
 					break;
 				case MAGE:
-					icons = new Image[]{ new ItemSprite(ItemSpriteSheet.MAGES_STAFF),
+					icons = new Image[]{new ItemSprite(ItemSpriteSheet.MAGES_STAFF),
 							new ItemSprite(ItemSpriteSheet.WAND_MAGIC_MISSILE),
 							new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
 					break;
 				case ROGUE:
-					icons = new Image[]{ new ItemSprite(ItemSpriteSheet.ARTIFACT_CLOAK),
+					icons = new Image[]{new ItemSprite(ItemSpriteSheet.ARTIFACT_CLOAK),
 							Icons.get(Icons.STAIRS),
 							new ItemSprite(ItemSpriteSheet.DAGGER),
 							new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
 					break;
 				case HUNTRESS:
-					icons = new Image[]{ new ItemSprite(ItemSpriteSheet.SPIRIT_BOW),
+					icons = new Image[]{new ItemSprite(ItemSpriteSheet.SPIRIT_BOW),
 							new Image(Assets.Environment.TILES_SEWERS, 32, 64, 16, 16),
 							new ItemSprite(ItemSpriteSheet.GLOVES),
 							new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
 					break;
 				case DUELIST:
-					icons = new Image[]{ new ItemSprite(ItemSpriteSheet.RAPIER),
+					icons = new Image[]{new ItemSprite(ItemSpriteSheet.RAPIER),
 							new ItemSprite(ItemSpriteSheet.WAR_HAMMER),
 							new ItemSprite(ItemSpriteSheet.THROWING_SPIKE),
 							new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
@@ -210,21 +200,21 @@ public class WndHeroInfo extends WndTabbed {
 		protected void layout() {
 			super.layout();
 
-			title.setPos((width-title.width())/2, MARGIN);
+			title.setPos((width - title.width()) / 2, MARGIN);
 
-			float pos = title.bottom()+4*MARGIN;
+			float pos = title.bottom() + 4 * MARGIN;
 
-			for (int i = 0; i < info.length; i++){
-				info[i].maxWidth((int)width - 20);
+			for (int i = 0; i < info.length; i++) {
+				info[i].maxWidth((int) width - 20);
 				info[i].setPos(20, pos);
 
-				icons[i].x = (20-icons[i].width())/2;
-				icons[i].y = info[i].top() + (info[i].height() - icons[i].height())/2;
+				icons[i].x = (20 - icons[i].width()) / 2;
+				icons[i].y = info[i].top() + (info[i].height() - icons[i].height()) / 2;
 
-				pos = info[i].bottom() + 4*MARGIN;
+				pos = info[i].bottom() + 4 * MARGIN;
 			}
 
-			height = Math.max(height, pos - 4*MARGIN);
+			height = Math.max(height, pos - 4 * MARGIN);
 
 		}
 	}
@@ -235,7 +225,7 @@ public class WndHeroInfo extends WndTabbed {
 		private RenderedTextBlock message;
 		private TalentsPane talentPane;
 
-		public TalentInfoTab( HeroClass cls ){
+		public TalentInfoTab(HeroClass cls) {
 			super();
 			title = PixelScene.renderTextBlock(Messages.titleCase(Messages.get(WndHeroInfo.class, "talents")), 9);
 			title.hardlight(TITLE_COLOR);
@@ -256,11 +246,11 @@ public class WndHeroInfo extends WndTabbed {
 		protected void layout() {
 			super.layout();
 
-			title.setPos((width-title.width())/2, MARGIN);
-			message.maxWidth((int)width);
-			message.setPos(0, title.bottom()+4*MARGIN);
+			title.setPos((width - title.width()) / 2, MARGIN);
+			message.maxWidth((int) width);
+			message.setPos(0, title.bottom() + 4 * MARGIN);
 
-			talentPane.setRect(0, message.bottom() + 3*MARGIN, width, 85);
+			talentPane.setRect(0, message.bottom() + 3 * MARGIN, width, 85);
 
 			height = Math.max(height, talentPane.bottom());
 		}
@@ -273,7 +263,7 @@ public class WndHeroInfo extends WndTabbed {
 		private RenderedTextBlock[] subClsDescs;
 		private IconButton[] subClsInfos;
 
-		public SubclassInfoTab( HeroClass cls ){
+		public SubclassInfoTab(HeroClass cls) {
 			super();
 			title = PixelScene.renderTextBlock(Messages.titleCase(Messages.get(WndHeroInfo.class, "subclasses")), 9);
 			title.hardlight(TITLE_COLOR);
@@ -287,10 +277,10 @@ public class WndHeroInfo extends WndTabbed {
 			subClsDescs = new RenderedTextBlock[subClasses.length];
 			subClsInfos = new IconButton[subClasses.length];
 
-			for (int i = 0; i < subClasses.length; i++){
+			for (int i = 0; i < subClasses.length; i++) {
 				subClsDescs[i] = PixelScene.renderTextBlock(subClasses[i].shortDesc(), 6);
 				int finalI = i;
-				subClsInfos[i] = new IconButton( Icons.get(Icons.INFO) ){
+				subClsInfos[i] = new IconButton(Icons.get(Icons.INFO)) {
 					@Override
 					protected void onClick() {
 						Game.scene().addToFront(new WndInfoSubclass(cls, subClasses[finalI]));
@@ -306,22 +296,22 @@ public class WndHeroInfo extends WndTabbed {
 		protected void layout() {
 			super.layout();
 
-			title.setPos((width-title.width())/2, MARGIN);
-			message.maxWidth((int)width);
-			message.setPos(0, title.bottom()+4*MARGIN);
+			title.setPos((width - title.width()) / 2, MARGIN);
+			message.maxWidth((int) width);
+			message.setPos(0, title.bottom() + 4 * MARGIN);
 
-			float pos = message.bottom()+4*MARGIN;
+			float pos = message.bottom() + 4 * MARGIN;
 
-			for (int i = 0; i < subClsDescs.length; i++){
-				subClsDescs[i].maxWidth((int)width - 20);
+			for (int i = 0; i < subClsDescs.length; i++) {
+				subClsDescs[i].maxWidth((int) width - 20);
 				subClsDescs[i].setPos(0, pos);
 
-				subClsInfos[i].setRect(width-20, subClsDescs[i].top() + (subClsDescs[i].height()-20)/2, 20, 20);
+				subClsInfos[i].setRect(width - 20, subClsDescs[i].top() + (subClsDescs[i].height() - 20) / 2, 20, 20);
 
-				pos = subClsDescs[i].bottom() + 4*MARGIN;
+				pos = subClsDescs[i].bottom() + 4 * MARGIN;
 			}
 
-			height = Math.max(height, pos - 4*MARGIN);
+			height = Math.max(height, pos - 4 * MARGIN);
 
 		}
 	}
@@ -333,7 +323,7 @@ public class WndHeroInfo extends WndTabbed {
 		private RenderedTextBlock[] abilityDescs;
 		private IconButton[] abilityInfos;
 
-		public ArmorAbilityInfoTab(HeroClass cls){
+		public ArmorAbilityInfoTab(HeroClass cls) {
 			super();
 			title = PixelScene.renderTextBlock(Messages.titleCase(Messages.get(WndHeroInfo.class, "abilities")), 9);
 			title.hardlight(TITLE_COLOR);
@@ -347,10 +337,10 @@ public class WndHeroInfo extends WndTabbed {
 			abilityDescs = new RenderedTextBlock[abilities.length];
 			abilityInfos = new IconButton[abilities.length];
 
-			for (int i = 0; i < abilities.length; i++){
+			for (int i = 0; i < abilities.length; i++) {
 				abilityDescs[i] = PixelScene.renderTextBlock(abilities[i].shortDesc(), 6);
 				int finalI = i;
-				abilityInfos[i] = new IconButton( Icons.get(Icons.INFO) ){
+				abilityInfos[i] = new IconButton(Icons.get(Icons.INFO)) {
 					@Override
 					protected void onClick() {
 						Game.scene().addToFront(new WndInfoArmorAbility(cls, abilities[finalI]));
@@ -366,22 +356,22 @@ public class WndHeroInfo extends WndTabbed {
 		protected void layout() {
 			super.layout();
 
-			title.setPos((width-title.width())/2, MARGIN);
-			message.maxWidth((int)width);
-			message.setPos(0, title.bottom()+4*MARGIN);
+			title.setPos((width - title.width()) / 2, MARGIN);
+			message.maxWidth((int) width);
+			message.setPos(0, title.bottom() + 4 * MARGIN);
 
-			float pos = message.bottom()+4*MARGIN;
+			float pos = message.bottom() + 4 * MARGIN;
 
-			for (int i = 0; i < abilityDescs.length; i++){
-				abilityDescs[i].maxWidth((int)width - 20);
+			for (int i = 0; i < abilityDescs.length; i++) {
+				abilityDescs[i].maxWidth((int) width - 20);
 				abilityDescs[i].setPos(0, pos);
 
-				abilityInfos[i].setRect(width-20, abilityDescs[i].top() + (abilityDescs[i].height()-20)/2, 20, 20);
+				abilityInfos[i].setRect(width - 20, abilityDescs[i].top() + (abilityDescs[i].height() - 20) / 2, 20, 20);
 
-				pos = abilityDescs[i].bottom() + 4*MARGIN;
+				pos = abilityDescs[i].bottom() + 4 * MARGIN;
 			}
 
-			height = Math.max(height, pos - 4*MARGIN);
+			height = Math.max(height, pos - 4 * MARGIN);
 
 		}
 	}

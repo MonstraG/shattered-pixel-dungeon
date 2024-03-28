@@ -671,7 +671,7 @@ public abstract class Wand extends Item {
 						CursedWand.cursedZap(curWand,
 								curUser,
 								new Ballistica(curUser.pos, target, Ballistica.MAGIC_BOLT),
-								() -> curWand.wandUsed());
+								curWand::wandUsed);
 					} else {
 						curWand.fx(shot, () -> {
 							curWand.onZap(shot);

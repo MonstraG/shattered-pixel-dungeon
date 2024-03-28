@@ -539,7 +539,7 @@ public class WndJournal extends WndTabbed {
 				itemClasses = new ArrayList<>();
 			}
 
-			Collections.sort(itemClasses, (a, b) -> {
+			itemClasses.sort((a, b) -> {
 				int result = 0;
 
 				//specifically known items appear first, then seen items, then unknown items.

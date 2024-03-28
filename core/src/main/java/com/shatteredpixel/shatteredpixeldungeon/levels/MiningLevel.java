@@ -71,14 +71,11 @@ public class MiningLevel extends CavesLevel {
 
 	@Override
 	public String tilesTex() {
-		switch (Blacksmith.Quest.Type()) {
-			default:
-				return Assets.Environment.TILES_CAVES;
-			case Blacksmith.Quest.CRYSTAL:
-				return Assets.Environment.TILES_CAVES_CRYSTAL;
-			case Blacksmith.Quest.GNOLL:
-				return Assets.Environment.TILES_CAVES_GNOLL;
-		}
+		return switch (Blacksmith.Quest.Type()) {
+			default -> Assets.Environment.TILES_CAVES;
+			case Blacksmith.Quest.CRYSTAL -> Assets.Environment.TILES_CAVES_CRYSTAL;
+			case Blacksmith.Quest.GNOLL -> Assets.Environment.TILES_CAVES_GNOLL;
+		};
 
 	}
 
@@ -157,16 +154,12 @@ public class MiningLevel extends CavesLevel {
 
 	@Override
 	public Mob createMob() {
-		switch (Blacksmith.Quest.Type()) {
-			default:
-				return new Bat();
-			case Blacksmith.Quest.CRYSTAL:
-				return new CrystalWisp();
-			case Blacksmith.Quest.GNOLL:
-				return new GnollGuard();
-			case Blacksmith.Quest.FUNGI:
-				return new FungalSpinner();
-		}
+		return switch (Blacksmith.Quest.Type()) {
+			default -> new Bat();
+			case Blacksmith.Quest.CRYSTAL -> new CrystalWisp();
+			case Blacksmith.Quest.GNOLL -> new GnollGuard();
+			case Blacksmith.Quest.FUNGI -> new FungalSpinner();
+		};
 	}
 
 	@Override
@@ -225,14 +218,11 @@ public class MiningLevel extends CavesLevel {
 
 	@Override
 	public String tileName(int tile) {
-		switch (tile) {
-			case Terrain.MINE_CRYSTAL:
-				return Messages.get(MiningLevel.class, "crystal_name");
-			case Terrain.MINE_BOULDER:
-				return Messages.get(MiningLevel.class, "boulder_name");
-			default:
-				return super.tileName(tile);
-		}
+		return switch (tile) {
+			case Terrain.MINE_CRYSTAL -> Messages.get(MiningLevel.class, "crystal_name");
+			case Terrain.MINE_BOULDER -> Messages.get(MiningLevel.class, "boulder_name");
+			default -> super.tileName(tile);
+		};
 	}
 
 	@Override
@@ -299,20 +289,15 @@ public class MiningLevel extends CavesLevel {
 
 	@Override
 	public String tileDesc(int tile) {
-		switch (tile) {
-			case Terrain.WALL:
-				return Messages.get(MiningLevel.class, "wall_desc");
-			case Terrain.WALL_DECO:
-				return super.tileDesc(tile) + "\n\n" + Messages.get(MiningLevel.class, "gold_extra_desc");
-			case Terrain.MINE_CRYSTAL:
-				return Messages.get(MiningLevel.class, "crystal_desc");
-			case Terrain.MINE_BOULDER:
-				return Messages.get(MiningLevel.class, "boulder_desc");
-			case Terrain.BARRICADE:
-				return Messages.get(MiningLevel.class, "barricade_desc");
-			default:
-				return super.tileDesc(tile);
-		}
+		return switch (tile) {
+			case Terrain.WALL -> Messages.get(MiningLevel.class, "wall_desc");
+			case Terrain.WALL_DECO ->
+					super.tileDesc(tile) + "\n\n" + Messages.get(MiningLevel.class, "gold_extra_desc");
+			case Terrain.MINE_CRYSTAL -> Messages.get(MiningLevel.class, "crystal_desc");
+			case Terrain.MINE_BOULDER -> Messages.get(MiningLevel.class, "boulder_desc");
+			case Terrain.BARRICADE -> Messages.get(MiningLevel.class, "barricade_desc");
+			default -> super.tileDesc(tile);
+		};
 	}
 
 	@Override

@@ -107,17 +107,12 @@ public class CursedWand {
 	}
 
 	public static boolean cursedEffect(final Item origin, final Char user, final int targetPos) {
-		switch (Random.chances(new float[]{COMMON_CHANCE, UNCOMMON_CHANCE, RARE_CHANCE, VERY_RARE_CHANCE})) {
-			case 0:
-			default:
-				return commonEffect(origin, user, targetPos);
-			case 1:
-				return uncommonEffect(origin, user, targetPos);
-			case 2:
-				return rareEffect(origin, user, targetPos);
-			case 3:
-				return veryRareEffect(origin, user, targetPos);
-		}
+		return switch (Random.chances(new float[]{COMMON_CHANCE, UNCOMMON_CHANCE, RARE_CHANCE, VERY_RARE_CHANCE})) {
+			default -> commonEffect(origin, user, targetPos);
+			case 1 -> uncommonEffect(origin, user, targetPos);
+			case 2 -> rareEffect(origin, user, targetPos);
+			case 3 -> veryRareEffect(origin, user, targetPos);
+		};
 	}
 
 	private static boolean commonEffect(final Item origin, final Char user, final int targetPos) {
@@ -166,18 +161,20 @@ public class CursedWand {
 			case 3:
 				Sample.INSTANCE.play(Assets.Sounds.GAS);
 				tryForWandProc(Actor.findChar(targetPos), origin);
-				switch (Random.Int(3)) {
-					case 0:
-					default:
+				return switch (Random.Int(3)) {
+					default -> {
 						GameScene.add(Blob.seed(targetPos, 800, ConfusionGas.class));
-						return true;
-					case 1:
+						yield true;
+					}
+					case 1 -> {
 						GameScene.add(Blob.seed(targetPos, 500, ToxicGas.class));
-						return true;
-					case 2:
+						yield true;
+					}
+					case 2 -> {
 						GameScene.add(Blob.seed(targetPos, 200, ParalyticGas.class));
-						return true;
-				}
+						yield true;
+					}
+				};
 		}
 
 	}
@@ -350,7 +347,7 @@ public class CursedWand {
 				Char ch = Actor.findChar(targetPos);
 				int spawnCell = targetPos;
 				if (ch != null) {
-					ArrayList<Integer> candidates = new ArrayList<Integer>();
+					ArrayList<Integer> candidates = new ArrayList<>();
 					for (int n : PathFinder.NEIGHBOURS8) {
 						int cell = targetPos + n;
 						if (Dungeon.level.passable[cell] && Actor.findChar(cell) == null) {

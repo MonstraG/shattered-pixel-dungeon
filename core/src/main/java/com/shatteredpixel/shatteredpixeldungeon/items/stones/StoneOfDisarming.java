@@ -77,7 +77,7 @@ public class StoneOfDisarming extends Runestone {
 		}
 
 		Collections.shuffle(disarmCandidates);
-		Collections.sort(disarmCandidates, (o1, o2) -> {
+		disarmCandidates.sort((o1, o2) -> {
 			float diff = Dungeon.level.trueDistance(cell, o1.pos) - Dungeon.level.trueDistance(cell, o2.pos);
 			if (diff < 0) {
 				return -1;

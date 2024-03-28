@@ -43,30 +43,30 @@ import com.watabou.noosa.Image;
 import com.watabou.utils.PathFinder;
 
 public class QuickSlotButton extends Button {
-	
+
 	private static QuickSlotButton[] instance = new QuickSlotButton[QuickSlot.SIZE];
 	private int slotNum;
 
 	private ItemSlot slot;
-	
+
 	private Image crossB;
 	private Image crossM;
-	
+
 	public static int targetingSlot = -1;
 	public static Char lastTarget = null;
-	
-	public QuickSlotButton( int slotNum ) {
+
+	public QuickSlotButton(int slotNum) {
 		super();
 		this.slotNum = slotNum;
-		item( select( slotNum ) );
-		
+		item(select(slotNum));
+
 		instance[slotNum] = this;
 	}
-	
+
 	@Override
 	public void destroy() {
 		super.destroy();
-		
+
 		reset();
 	}
 
@@ -75,25 +75,25 @@ public class QuickSlotButton extends Button {
 
 		lastTarget = null;
 	}
-	
+
 	@Override
 	protected void createChildren() {
 		super.createChildren();
-		
+
 		slot = new ItemSlot() {
 			@Override
 			protected void onClick() {
-				if (!Dungeon.hero.isAlive() || !Dungeon.hero.ready){
+				if (!Dungeon.hero.isAlive() || !Dungeon.hero.ready) {
 					return;
 				}
 				if (targetingSlot == slotNum) {
 					int cell = autoAim(lastTarget, select(slotNum));
 
-					if (cell != -1){
+					if (cell != -1) {
 						GameScene.handleCell(cell);
 					} else {
 						//couldn't auto-aim, just target the position and hope for the best.
-						GameScene.handleCell( lastTarget.pos );
+						GameScene.handleCell(lastTarget.pos);
 					}
 				} else {
 					Item item = select(slotNum);
@@ -121,18 +121,22 @@ public class QuickSlotButton extends Button {
 			public GameAction keyAction() {
 				return QuickSlotButton.this.keyAction();
 			}
+
 			@Override
-			public GameAction secondaryTooltipAction(){
+			public GameAction secondaryTooltipAction() {
 				return QuickSlotButton.this.secondaryTooltipAction();
 			}
+
 			@Override
 			protected boolean onLongClick() {
 				return QuickSlotButton.this.onLongClick();
 			}
+
 			@Override
 			protected void onPointerDown() {
-				sprite.lightness( 0.7f );
+				sprite.lightness(0.7f);
 			}
+
 			@Override
 			protected void onPointerUp() {
 				sprite.resetColor();
@@ -140,65 +144,58 @@ public class QuickSlotButton extends Button {
 
 			@Override
 			protected String hoverText() {
-				if (item == null){
-					return Messages.titleCase(Messages.get(WndKeyBindings.class, "quickslot_" + (slotNum+1)));
+				if (item == null) {
+					return Messages.titleCase(Messages.get(WndKeyBindings.class, "quickslot_" + (slotNum + 1)));
 				} else {
 					return super.hoverText();
 				}
 			}
 		};
-		slot.showExtraInfo( false );
-		add( slot );
-		
+		slot.showExtraInfo(false);
+		add(slot);
+
 		crossB = Icons.TARGET.get();
 		crossB.visible = false;
-		add( crossB );
-		
+		add(crossB);
+
 		crossM = new Image();
-		crossM.copy( crossB );
+		crossM.copy(crossB);
 	}
-	
+
 	@Override
 	protected void layout() {
 		super.layout();
-		
-		slot.fill( this );
-		
+
+		slot.fill(this);
+
 		crossB.x = x + (width - crossB.width) / 2;
 		crossB.y = y + (height - crossB.height) / 2;
 		PixelScene.align(crossB);
 	}
 
-	public void alpha( float value ){
+	public void alpha(float value) {
 		slot.alpha(value);
 	}
 
 	@Override
 	public void update() {
 		super.update();
-		if (targetingSlot != -1 && lastTarget != null && lastTarget.sprite != null){
+		if (targetingSlot != -1 && lastTarget != null && lastTarget.sprite != null) {
 			crossM.point(lastTarget.sprite.center(crossM));
 		}
 	}
 
 	@Override
 	public GameAction keyAction() {
-		switch (slotNum){
-			case 0:
-				return SPDAction.QUICKSLOT_1;
-			case 1:
-				return SPDAction.QUICKSLOT_2;
-			case 2:
-				return SPDAction.QUICKSLOT_3;
-			case 3:
-				return SPDAction.QUICKSLOT_4;
-			case 4:
-				return SPDAction.QUICKSLOT_5;
-			case 5:
-				return SPDAction.QUICKSLOT_6;
-			default:
-				return super.keyAction();
-		}
+		return switch (slotNum) {
+			case 0 -> SPDAction.QUICKSLOT_1;
+			case 1 -> SPDAction.QUICKSLOT_2;
+			case 2 -> SPDAction.QUICKSLOT_3;
+			case 3 -> SPDAction.QUICKSLOT_4;
+			case 4 -> SPDAction.QUICKSLOT_5;
+			case 5 -> SPDAction.QUICKSLOT_6;
+			default -> super.keyAction();
+		};
 	}
 
 	@Override
@@ -208,13 +205,13 @@ public class QuickSlotButton extends Button {
 
 	@Override
 	protected String hoverText() {
-		if (slot.item == null){
-			return Messages.titleCase(Messages.get(WndKeyBindings.class, "quickslot_" + (slotNum+1)));
+		if (slot.item == null) {
+			return Messages.titleCase(Messages.get(WndKeyBindings.class, "quickslot_" + (slotNum + 1)));
 		} else {
 			return super.hoverText();
 		}
 	}
-	
+
 	@Override
 	protected void onClick() {
 		if (Dungeon.hero.ready && !GameScene.cancel()) {
@@ -253,14 +250,14 @@ public class QuickSlotButton extends Button {
 		@Override
 		public void onSelect(Item item) {
 			if (item != null) {
-				set( slotNum , item );
+				set(slotNum, item);
 			}
 		}
 	};
 
 	public static int lastVisible = instance.length;
 
-	public static void set(Item item){
+	public static void set(Item item) {
 		for (int i = 0; i < lastVisible; i++) {
 			if (select(i) == null || select(i) == item) {
 				set(i, item);
@@ -270,12 +267,12 @@ public class QuickSlotButton extends Button {
 		set(0, item);
 	}
 
-	public static void set(int slotNum, Item item){
-		Dungeon.quickslot.setSlot( slotNum , item );
+	public static void set(int slotNum, Item item) {
+		Dungeon.quickslot.setSlot(slotNum, item);
 		refresh();
 
 		//Remember if the player adds the waterskin as one of their first actions.
-		if (Statistics.duration + Actor.now() <= 10){
+		if (Statistics.duration + Actor.now() <= 10) {
 			boolean containsWaterskin = false;
 			for (int i = 0; i < instance.length; i++) {
 				if (select(i) instanceof Waterskin) containsWaterskin = true;
@@ -284,41 +281,41 @@ public class QuickSlotButton extends Button {
 		}
 	}
 
-	private static Item select(int slotNum){
-		return Dungeon.quickslot.getItem( slotNum );
+	private static Item select(int slotNum) {
+		return Dungeon.quickslot.getItem(slotNum);
 	}
-	
-	public void item( Item item ) {
-		slot.item( item );
+
+	public void item(Item item) {
+		slot.item(item);
 		enableSlot();
 	}
 
-	public void enable( boolean value ) {
+	public void enable(boolean value) {
 		active = value;
 		if (value) {
 			enableSlot();
 		} else {
-			slot.enable( false );
+			slot.enable(false);
 		}
 	}
-	
+
 	private void enableSlot() {
-		slot.enable(Dungeon.quickslot.isNonePlaceholder( slotNum )
+		slot.enable(Dungeon.quickslot.isNonePlaceholder(slotNum)
 				&& (Dungeon.hero.buff(LostInventory.class) == null || Dungeon.quickslot.getItem(slotNum).keptThroughLostInventory()));
 	}
 
-	public void slotMargins( int left, int top, int right, int bottom){
+	public void slotMargins(int left, int top, int right, int bottom) {
 		slot.setMargins(left, top, right, bottom);
 	}
 
-	public static void useTargeting(int idx){
+	public static void useTargeting(int idx) {
 		instance[idx].useTargeting();
 	}
 
 	private void useTargeting() {
 
 		if (lastTarget != null &&
-				Actor.chars().contains( lastTarget ) &&
+				Actor.chars().contains(lastTarget) &&
 				lastTarget.isAlive() &&
 				lastTarget.alignment != Char.Alignment.ALLY &&
 				Dungeon.level.heroFOV[lastTarget.pos]) {
@@ -343,13 +340,13 @@ public class QuickSlotButton extends Button {
 
 	}
 
-	public static int autoAim(Char target){
+	public static int autoAim(Char target) {
 		//will use generic projectile logic if no item is specified
 		return autoAim(target, new Item());
 	}
 
 	//FIXME: this is currently very expensive, should either optimize ballistica or this, or both
-	public static int autoAim(Char target, Item item){
+	public static int autoAim(Char target, Item item) {
 
 		//first try to directly target
 		if (item.targetingPos(Dungeon.hero, target.pos) == target.pos) {
@@ -357,7 +354,7 @@ public class QuickSlotButton extends Button {
 		}
 
 		//Otherwise pick nearby tiles to try and 'angle' the shot, auto-aim basically.
-		PathFinder.buildDistanceMap( target.pos, BArray.not( new boolean[Dungeon.level.length()], null ), 2 );
+		PathFinder.buildDistanceMap(target.pos, BArray.not(new boolean[Dungeon.level.length()], null), 2);
 		for (int i = 0; i < PathFinder.distance.length; i++) {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE
 					&& item.targetingPos(Dungeon.hero, i) == target.pos)
@@ -375,11 +372,11 @@ public class QuickSlotButton extends Button {
 				instance[i].enable(instance[i].active);
 			}
 		}
-		if (Toolbar.SWAP_INSTANCE != null){
+		if (Toolbar.SWAP_INSTANCE != null) {
 			Toolbar.SWAP_INSTANCE.updateVisuals();
 		}
 		//Remember if the player removes the waterskin as one of their first actions.
-		if (Statistics.duration + Actor.now() <= 10){
+		if (Statistics.duration + Actor.now() <= 10) {
 			boolean containsWaterskin = false;
 			for (int i = 0; i < instance.length; i++) {
 				if (select(i) instanceof Waterskin) containsWaterskin = true;
@@ -387,16 +384,16 @@ public class QuickSlotButton extends Button {
 			if (!containsWaterskin) SPDSettings.quickslotWaterskin(false);
 		}
 	}
-	
-	public static void target( Char target ) {
+
+	public static void target(Char target) {
 		if (target != null && target.alignment != Char.Alignment.ALLY) {
 			lastTarget = target;
-			
-			TargetHealthIndicator.instance.target( target );
+
+			TargetHealthIndicator.instance.target(target);
 			InventoryPane.lastTarget = target;
 		}
 	}
-	
+
 	public static void cancel() {
 		if (targetingSlot != -1) {
 			for (QuickSlotButton btn : instance) {

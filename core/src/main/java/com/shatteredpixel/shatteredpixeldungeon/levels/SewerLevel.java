@@ -177,24 +177,19 @@ public class SewerLevel extends RegularLevel {
 
 	@Override
 	public String tileName(int tile) {
-		switch (tile) {
-			case Terrain.WATER:
-				return Messages.get(SewerLevel.class, "water_name");
-			default:
-				return super.tileName(tile);
-		}
+		return switch (tile) {
+			case Terrain.WATER -> Messages.get(SewerLevel.class, "water_name");
+			default -> super.tileName(tile);
+		};
 	}
 
 	@Override
 	public String tileDesc(int tile) {
-		switch (tile) {
-			case Terrain.EMPTY_DECO:
-				return Messages.get(SewerLevel.class, "empty_deco_desc");
-			case Terrain.BOOKSHELF:
-				return Messages.get(SewerLevel.class, "bookshelf_desc");
-			default:
-				return super.tileDesc(tile);
-		}
+		return switch (tile) {
+			case Terrain.EMPTY_DECO -> Messages.get(SewerLevel.class, "empty_deco_desc");
+			case Terrain.BOOKSHELF -> Messages.get(SewerLevel.class, "bookshelf_desc");
+			default -> super.tileDesc(tile);
+		};
 	}
 
 	private static class Sink extends Emitter {

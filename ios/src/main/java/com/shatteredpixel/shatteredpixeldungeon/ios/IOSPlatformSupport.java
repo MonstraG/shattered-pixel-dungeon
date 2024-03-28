@@ -49,7 +49,7 @@ public class IOSPlatformSupport extends PlatformSupport {
 		//non-zero safe insets on left/top/right means device has a notch, show status bar
 		if (Gdx.graphics.getSafeInsetTop() != 0
 				|| Gdx.graphics.getSafeInsetLeft() != 0
-				|| Gdx.graphics.getSafeInsetRight() != 0){
+				|| Gdx.graphics.getSafeInsetRight() != 0) {
 			UIApplication.getSharedApplication().setStatusBarHidden(false);
 		} else {
 			UIApplication.getSharedApplication().setStatusBarHidden(true);
@@ -86,18 +86,19 @@ public class IOSPlatformSupport extends PlatformSupport {
 	@Override
 	public boolean supportsVibration() {
 		//Devices with haptics...
-		if (Gdx.input.isPeripheralAvailable(Input.Peripheral.HapticFeedback)){
+		if (Gdx.input.isPeripheralAvailable(Input.Peripheral.HapticFeedback)) {
 			return true;
-		};
+		}
+		;
 
 		//...or with a supported controller connected
-		if (ControllerHandler.vibrationSupported()){
+		if (ControllerHandler.vibrationSupported()) {
 			return true;
 		}
 
 		//...or with 3d touch
 		String machineString = HWMachine.getMachineString();
-		if (machineString.equals("iPhone8,4")){ //1st gen SE has no 3D touch specifically
+		if (machineString.equals("iPhone8,4")) { //1st gen SE has no 3D touch specifically
 			return false;
 		} else { // 6s/7/8/X/XR have 3D touch
 			return machineString.contains("iphone8")        //6s
@@ -107,11 +108,11 @@ public class IOSPlatformSupport extends PlatformSupport {
 		}
 	}
 
-	public void vibrate(int millis ){
-		if (ControllerHandler.isControllerConnected()){
+	public void vibrate(int millis) {
+		if (ControllerHandler.isControllerConnected()) {
 			ControllerHandler.vibrate(millis);
-		} else if (Gdx.input.isPeripheralAvailable(Input.Peripheral.HapticFeedback)){
-			Gdx.input.vibrate( millis );
+		} else if (Gdx.input.isPeripheralAvailable(Input.Peripheral.HapticFeedback)) {
+			Gdx.input.vibrate(millis);
 		} else {
 			//devices without haptics but with 3d touch use a short vibrate
 			AudioServices.playSystemSound(1520);
@@ -120,7 +121,7 @@ public class IOSPlatformSupport extends PlatformSupport {
 	}
 
 	@Override
-	public void setHonorSilentSwitch( boolean value ) {
+	public void setHonorSilentSwitch(boolean value) {
 		OALSimpleAudio.sharedInstance().setHonorSilentSwitch(value);
 	}
 
@@ -134,7 +135,7 @@ public class IOSPlatformSupport extends PlatformSupport {
 	@Override
 	public void setupFontGenerators(int pageSize, boolean systemfont) {
 		//don't bother doing anything if nothing has changed
-		if (fonts != null && this.pageSize == pageSize && this.systemfont == systemfont){
+		if (fonts != null && this.pageSize == pageSize && this.systemfont == systemfont) {
 			return;
 		}
 		this.pageSize = pageSize;
@@ -161,8 +162,8 @@ public class IOSPlatformSupport extends PlatformSupport {
 			"\\p{InHiragana}|\\p{InKatakana}").matcher("");
 
 	@Override
-	protected FreeTypeFontGenerator getGeneratorForString( String input ){
-		if (asianMatcher.reset(input).find()){
+	protected FreeTypeFontGenerator getGeneratorForString(String input) {
+		if (asianMatcher.reset(input).find()) {
 			return asianFontGenerator;
 		} else {
 			return basicFontGenerator;
@@ -171,19 +172,17 @@ public class IOSPlatformSupport extends PlatformSupport {
 
 	//splits on newlines, underscores, and chinese/japaneses characters
 	private Pattern regularsplitter = Pattern.compile(
-			"(?<=\n)|(?=\n)|(?<=_)|(?=_)|" +
-					"(?<=\\p{InHiragana})|(?=\\p{InHiragana})|" +
-					"(?<=\\p{InKatakana})|(?=\\p{InKatakana})|" +
-					"(?<=\\p{InCJK_Unified_Ideographs})|(?=\\p{InCJK_Unified_Ideographs})|" +
-					"(?<=\\p{InCJK_Symbols_and_Punctuation})|(?=\\p{InCJK_Symbols_and_Punctuation})");
+			"""
+					(?<=
+					)|(?=
+					)|(?<=_)|(?=_)|(?<=\\p{InHiragana})|(?=\\p{InHiragana})|(?<=\\p{InKatakana})|(?=\\p{InKatakana})|(?<=\\p{InCJK_Unified_Ideographs})|(?=\\p{InCJK_Unified_Ideographs})|(?<=\\p{InCJK_Symbols_and_Punctuation})|(?=\\p{InCJK_Symbols_and_Punctuation})""");
 
 	//additionally splits on words, so that each word can be arranged individually
 	private Pattern regularsplitterMultiline = Pattern.compile(
-			"(?<= )|(?= )|(?<=\n)|(?=\n)|(?<=_)|(?=_)|" +
-					"(?<=\\p{InHiragana})|(?=\\p{InHiragana})|" +
-					"(?<=\\p{InKatakana})|(?=\\p{InKatakana})|" +
-					"(?<=\\p{InCJK_Unified_Ideographs})|(?=\\p{InCJK_Unified_Ideographs})|" +
-					"(?<=\\p{InCJK_Symbols_and_Punctuation})|(?=\\p{InCJK_Symbols_and_Punctuation})");
+			"""
+					(?<= )|(?= )|(?<=
+					)|(?=
+					)|(?<=_)|(?=_)|(?<=\\p{InHiragana})|(?=\\p{InHiragana})|(?<=\\p{InKatakana})|(?=\\p{InKatakana})|(?<=\\p{InCJK_Unified_Ideographs})|(?=\\p{InCJK_Unified_Ideographs})|(?<=\\p{InCJK_Symbols_and_Punctuation})|(?=\\p{InCJK_Symbols_and_Punctuation})""");
 
 	@Override
 	public String[] splitforTextBlock(String text, boolean multiline) {

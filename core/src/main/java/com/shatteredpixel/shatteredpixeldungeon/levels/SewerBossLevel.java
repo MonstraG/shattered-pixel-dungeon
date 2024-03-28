@@ -197,7 +197,7 @@ public class SewerBossLevel extends SewerLevel {
 			set(entrance(), Terrain.ENTRANCE);
 			GameScene.updateMap(entrance());
 
-			Game.runOnRenderThread(() -> Music.INSTANCE.fadeOut(5f, () -> Music.INSTANCE.end()));
+			Game.runOnRenderThread(() -> Music.INSTANCE.fadeOut(5f, Music.INSTANCE::end));
 		}
 	}
 

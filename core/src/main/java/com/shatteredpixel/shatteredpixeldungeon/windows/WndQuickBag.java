@@ -78,7 +78,7 @@ public class WndQuickBag extends Window {
 			items.add(i);
 		}
 
-		Collections.sort(items, quickBagComparator);
+		items.sort(quickBagComparator);
 
 		int btnWidth = 16;
 		int btnHeight = 20;

@@ -95,7 +95,7 @@ public class Item implements Bundlable {
 	// whether an item can be included in heroes remains
 	public boolean bones = false;
 
-	public static final Comparator<Item> itemComparator = (lhs, rhs) -> Generator.Category.order(lhs) - Generator.Category.order(rhs);
+	public static final Comparator<Item> itemComparator = Comparator.comparingInt(Generator.Category::order);
 
 	public ArrayList<String> actions(Hero hero) {
 		ArrayList<String> actions = new ArrayList<>();
@@ -260,7 +260,7 @@ public class Item implements Bundlable {
 
 		items.add(this);
 		Dungeon.quickslot.replacePlaceholder(this);
-		Collections.sort(items, itemComparator);
+		items.sort(itemComparator);
 		updateQuickslot();
 		return true;
 
@@ -327,8 +327,7 @@ public class Item implements Bundlable {
 				container.grabItems(); //try to put more items into the bag as it now has free space
 				updateQuickslot();
 				return this;
-			} else if (item instanceof Bag) {
-				Bag bag = (Bag) item;
+			} else if (item instanceof Bag bag) {
 				if (bag.contains(this)) {
 					return detachAll(bag);
 				}

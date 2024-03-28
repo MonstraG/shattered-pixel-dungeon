@@ -107,36 +107,23 @@ public class Wandmaker extends NPC {
 
 		if (Quest.given) {
 
-			Item item;
-			switch (Quest.type) {
-				case 1:
-				default:
-					item = Dungeon.hero.belongings.getItem(CorpseDust.class);
-					break;
-				case 2:
-					item = Dungeon.hero.belongings.getItem(Embers.class);
-					break;
-				case 3:
-					item = Dungeon.hero.belongings.getItem(Rotberry.Seed.class);
-					break;
-			}
+			Item item = switch (Quest.type) {
+				default -> Dungeon.hero.belongings.getItem(CorpseDust.class);
+				case 2 -> Dungeon.hero.belongings.getItem(Embers.class);
+				case 3 -> Dungeon.hero.belongings.getItem(Rotberry.Seed.class);
+			};
 
 			if (item != null) {
 				Game.runOnRenderThread(() -> GameScene.show(new WndWandmaker(Wandmaker.this, item)));
 			} else {
-				String msg;
-				switch (Quest.type) {
-					case 1:
-					default:
-						msg = Messages.get(this, "reminder_dust", Messages.titleCase(Dungeon.hero.name()));
-						break;
-					case 2:
-						msg = Messages.get(this, "reminder_ember", Messages.titleCase(Dungeon.hero.name()));
-						break;
-					case 3:
-						msg = Messages.get(this, "reminder_berry", Messages.titleCase(Dungeon.hero.name()));
-						break;
-				}
+				String msg = switch (Quest.type) {
+					default ->
+							Messages.get(this, "reminder_dust", Messages.titleCase(Dungeon.hero.name()));
+					case 2 ->
+							Messages.get(this, "reminder_ember", Messages.titleCase(Dungeon.hero.name()));
+					case 3 ->
+							Messages.get(this, "reminder_berry", Messages.titleCase(Dungeon.hero.name()));
+				};
 				Game.runOnRenderThread(() -> GameScene.show(new WndQuest(Wandmaker.this, msg)));
 			}
 

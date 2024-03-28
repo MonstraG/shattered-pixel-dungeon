@@ -315,13 +315,13 @@ public class GnollGeomancer extends Mob {
 		//aim for closest sapper, preferring living ones within 16 tiles
 		int closestSapperPos = -1;
 		boolean closestisAlive = false;
-		for (int i = 0; i < sapperSpawns.length; i++) {
-			if (sapperSpawns[i] == -1) {
+		for (int sapperSpawn : sapperSpawns) {
+			if (sapperSpawn == -1) {
 				continue;
 			}
 
 			if (closestSapperPos == -1) {
-				closestSapperPos = sapperSpawns[i];
+				closestSapperPos = sapperSpawn;
 				for (Mob m : Dungeon.level.mobs) {
 					if (m instanceof GnollSapper && ((GnollSapper) m).spawnPos == closestSapperPos) {
 						closestisAlive = true;
@@ -333,15 +333,15 @@ public class GnollGeomancer extends Mob {
 
 			boolean sapperAlive = false;
 			for (Mob m : Dungeon.level.mobs) {
-				if (m instanceof GnollSapper && ((GnollSapper) m).spawnPos == sapperSpawns[i]) {
+				if (m instanceof GnollSapper && ((GnollSapper) m).spawnPos == sapperSpawn) {
 					sapperAlive = true;
 					break;
 				}
 			}
 
-			if ((sapperAlive && !closestisAlive && Dungeon.level.distance(pos, sapperSpawns[i]) <= 16)
-					|| Dungeon.level.trueDistance(pos, sapperSpawns[i]) < Dungeon.level.trueDistance(pos, closestSapperPos)) {
-				closestSapperPos = sapperSpawns[i];
+			if ((sapperAlive && !closestisAlive && Dungeon.level.distance(pos, sapperSpawn) <= 16)
+					|| Dungeon.level.trueDistance(pos, sapperSpawn) < Dungeon.level.trueDistance(pos, closestSapperPos)) {
+				closestSapperPos = sapperSpawn;
 				closestisAlive = sapperAlive;
 			}
 		}

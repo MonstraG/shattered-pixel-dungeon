@@ -43,12 +43,13 @@ public class Pasty extends Food {
 
 		bones = true;
 	}
-	
+
 	@Override
 	public void reset() {
 		super.reset();
-		switch(Holiday.getCurrentHoliday()){
-			case NONE: default:
+		switch (Holiday.getCurrentHoliday()) {
+			case NONE:
+			default:
 				image = ItemSpriteSheet.PASTY;
 				break;
 			case LUNAR_NEW_YEAR:
@@ -68,23 +69,23 @@ public class Pasty extends Food {
 				break;
 		}
 	}
-	
+
 	@Override
 	protected void satisfy(Hero hero) {
-		if (Holiday.getCurrentHoliday() == Holiday.LUNAR_NEW_YEAR){
+		if (Holiday.getCurrentHoliday() == Holiday.LUNAR_NEW_YEAR) {
 			//main item only clears 300 hunger on lunar new year...
 			energy = Hunger.HUNGRY;
 		}
 
 		super.satisfy(hero);
-		
-		switch(Holiday.getCurrentHoliday()){
+
+		switch (Holiday.getCurrentHoliday()) {
 			default:
 				break; //do nothing extra
 			case LUNAR_NEW_YEAR:
 				//...but it also awards an extra item that restores 150 hunger
 				FishLeftover left = new FishLeftover();
-				if (!left.collect()){
+				if (!left.collect()) {
 					Dungeon.level.drop(left, hero.pos).sprite.drop();
 				}
 				break;
@@ -92,57 +93,45 @@ public class Pasty extends Food {
 				Sample.INSTANCE.play(Assets.Sounds.MIMIC);
 			case EASTER:
 				ArtifactRecharge.chargeArtifacts(hero, 2f);
-				ScrollOfRecharging.charge( hero );
+				ScrollOfRecharging.charge(hero);
 				break;
 			case HALLOWEEN:
 				//heals for 5% max hp, min of 3
-				int toHeal = Math.max(3, hero.HT/20);
+				int toHeal = Math.max(3, hero.HT / 20);
 				hero.HP = Math.min(hero.HP + toHeal, hero.HT);
-				hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(toHeal), FloatingText.HEALING );
+				hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(toHeal), FloatingText.HEALING);
 				break;
 			case WINTER_HOLIDAYS:
 				hero.belongings.charge(0.5f); //2 turns worth
-				ScrollOfRecharging.charge( hero );
+				ScrollOfRecharging.charge(hero);
 				break;
 		}
 	}
 
 	@Override
 	public String name() {
-		switch(Holiday.getCurrentHoliday()){
-			case NONE: default:
-				return super.name();
-			case LUNAR_NEW_YEAR:
-				return Messages.get(this, "fish_name");
-			case APRIL_FOOLS:
-				return Messages.get(this, "amulet_name");
-			case EASTER:
-				return Messages.get(this, "egg_name");
-			case HALLOWEEN:
-				return Messages.get(this, "pie_name");
-			case WINTER_HOLIDAYS:
-				return Messages.get(this, "cane_name");
-		}
+		return switch (Holiday.getCurrentHoliday()) {
+			default -> super.name();
+			case LUNAR_NEW_YEAR -> Messages.get(this, "fish_name");
+			case APRIL_FOOLS -> Messages.get(this, "amulet_name");
+			case EASTER -> Messages.get(this, "egg_name");
+			case HALLOWEEN -> Messages.get(this, "pie_name");
+			case WINTER_HOLIDAYS -> Messages.get(this, "cane_name");
+		};
 	}
 
 	@Override
 	public String info() {
-		switch(Holiday.getCurrentHoliday()){
-			case NONE: default:
-				return super.info();
-			case LUNAR_NEW_YEAR:
-				return Messages.get(this, "fish_desc");
-			case APRIL_FOOLS:
-				return Messages.get(this, "amulet_desc");
-			case EASTER:
-				return Messages.get(this, "egg_desc");
-			case HALLOWEEN:
-				return Messages.get(this, "pie_desc");
-			case WINTER_HOLIDAYS:
-				return Messages.get(this, "cane_desc");
-		}
+		return switch (Holiday.getCurrentHoliday()) {
+			default -> super.info();
+			case LUNAR_NEW_YEAR -> Messages.get(this, "fish_desc");
+			case APRIL_FOOLS -> Messages.get(this, "amulet_desc");
+			case EASTER -> Messages.get(this, "egg_desc");
+			case HALLOWEEN -> Messages.get(this, "pie_desc");
+			case WINTER_HOLIDAYS -> Messages.get(this, "cane_desc");
+		};
 	}
-	
+
 	@Override
 	public int value() {
 		return 20 * quantity;
@@ -152,7 +141,7 @@ public class Pasty extends Food {
 
 		{
 			image = ItemSpriteSheet.FISH_LEFTOVER;
-			energy = Hunger.HUNGRY/2;
+			energy = Hunger.HUNGRY / 2;
 		}
 
 		@Override

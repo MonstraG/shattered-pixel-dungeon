@@ -76,25 +76,25 @@ import com.watabou.utils.DeviceCompat;
 
 public enum HeroClass {
 
-	WARRIOR( HeroSubClass.BERSERKER, HeroSubClass.GLADIATOR ),
-	MAGE( HeroSubClass.BATTLEMAGE, HeroSubClass.WARLOCK ),
-	ROGUE( HeroSubClass.ASSASSIN, HeroSubClass.FREERUNNER ),
-	HUNTRESS( HeroSubClass.SNIPER, HeroSubClass.WARDEN ),
-	DUELIST( HeroSubClass.CHAMPION, HeroSubClass.MONK );
+	WARRIOR(HeroSubClass.BERSERKER, HeroSubClass.GLADIATOR),
+	MAGE(HeroSubClass.BATTLEMAGE, HeroSubClass.WARLOCK),
+	ROGUE(HeroSubClass.ASSASSIN, HeroSubClass.FREERUNNER),
+	HUNTRESS(HeroSubClass.SNIPER, HeroSubClass.WARDEN),
+	DUELIST(HeroSubClass.CHAMPION, HeroSubClass.MONK);
 
 	private HeroSubClass[] subClasses;
 
-	HeroClass( HeroSubClass...subClasses ) {
+	HeroClass(HeroSubClass... subClasses) {
 		this.subClasses = subClasses;
 	}
 
-	public void initHero( Hero hero ) {
+	public void initHero(Hero hero) {
 
 		hero.heroClass = this;
 		Talent.initClassTalents(hero);
 
 		Item i = new ClothArmor().identify();
-		if (!Challenges.isItemBlocked(i)) hero.belongings.armor = (ClothArmor)i;
+		if (!Challenges.isItemBlocked(i)) hero.belongings.armor = (ClothArmor) i;
 
 		i = new Food();
 		if (!Challenges.isItemBlocked(i)) i.collect();
@@ -109,23 +109,23 @@ public enum HeroClass {
 
 		switch (this) {
 			case WARRIOR:
-				initWarrior( hero );
+				initWarrior(hero);
 				break;
 
 			case MAGE:
-				initMage( hero );
+				initMage(hero);
 				break;
 
 			case ROGUE:
-				initRogue( hero );
+				initRogue(hero);
 				break;
 
 			case HUNTRESS:
-				initHuntress( hero );
+				initHuntress(hero);
 				break;
 
 			case DUELIST:
-				initDuelist( hero );
+				initDuelist(hero);
 				break;
 		}
 
@@ -141,28 +141,22 @@ public enum HeroClass {
 	}
 
 	public Badges.Badge masteryBadge() {
-		switch (this) {
-			case WARRIOR:
-				return Badges.Badge.MASTERY_WARRIOR;
-			case MAGE:
-				return Badges.Badge.MASTERY_MAGE;
-			case ROGUE:
-				return Badges.Badge.MASTERY_ROGUE;
-			case HUNTRESS:
-				return Badges.Badge.MASTERY_HUNTRESS;
-			case DUELIST:
-				return Badges.Badge.MASTERY_DUELIST;
-		}
-		return null;
+		return switch (this) {
+			case WARRIOR -> Badges.Badge.MASTERY_WARRIOR;
+			case MAGE -> Badges.Badge.MASTERY_MAGE;
+			case ROGUE -> Badges.Badge.MASTERY_ROGUE;
+			case HUNTRESS -> Badges.Badge.MASTERY_HUNTRESS;
+			case DUELIST -> Badges.Badge.MASTERY_DUELIST;
+		};
 	}
 
-	private static void initWarrior( Hero hero ) {
+	private static void initWarrior(Hero hero) {
 		(hero.belongings.weapon = new WornShortsword()).identify();
 		ThrowingStone stones = new ThrowingStone();
 		stones.quantity(3).collect();
 		Dungeon.quickslot.setSlot(0, stones);
 
-		if (hero.belongings.armor != null){
+		if (hero.belongings.armor != null) {
 			hero.belongings.armor.affixSeal(new BrokenSeal());
 		}
 
@@ -170,7 +164,7 @@ public enum HeroClass {
 		new ScrollOfRage().identify();
 	}
 
-	private static void initMage( Hero hero ) {
+	private static void initMage(Hero hero) {
 		MagesStaff staff;
 
 		staff = new MagesStaff(new WandOfMagicMissile());
@@ -184,12 +178,12 @@ public enum HeroClass {
 		new PotionOfLiquidFlame().identify();
 	}
 
-	private static void initRogue( Hero hero ) {
+	private static void initRogue(Hero hero) {
 		(hero.belongings.weapon = new Dagger()).identify();
 
 		CloakOfShadows cloak = new CloakOfShadows();
 		(hero.belongings.artifact = cloak).identify();
-		hero.belongings.artifact.activate( hero );
+		hero.belongings.artifact.activate(hero);
 
 		ThrowingKnife knives = new ThrowingKnife();
 		knives.quantity(3).collect();
@@ -201,7 +195,7 @@ public enum HeroClass {
 		new PotionOfInvisibility().identify();
 	}
 
-	private static void initHuntress( Hero hero ) {
+	private static void initHuntress(Hero hero) {
 
 		(hero.belongings.weapon = new Gloves()).identify();
 		SpiritBow bow = new SpiritBow();
@@ -213,7 +207,7 @@ public enum HeroClass {
 		new ScrollOfLullaby().identify();
 	}
 
-	private static void initDuelist( Hero hero ) {
+	private static void initDuelist(Hero hero) {
 
 		(hero.belongings.weapon = new Rapier()).identify();
 		hero.belongings.weapon.activate(hero);
@@ -232,83 +226,65 @@ public enum HeroClass {
 		return Messages.get(HeroClass.class, name());
 	}
 
-	public String desc(){
-		return Messages.get(HeroClass.class, name()+"_desc");
+	public String desc() {
+		return Messages.get(HeroClass.class, name() + "_desc");
 	}
 
-	public String shortDesc(){
-		return Messages.get(HeroClass.class, name()+"_desc_short");
+	public String shortDesc() {
+		return Messages.get(HeroClass.class, name() + "_desc_short");
 	}
 
 	public HeroSubClass[] subClasses() {
 		return subClasses;
 	}
 
-	public ArmorAbility[] armorAbilities(){
-		switch (this) {
-			case WARRIOR: default:
-				return new ArmorAbility[]{new HeroicLeap(), new Shockwave(), new Endure()};
-			case MAGE:
-				return new ArmorAbility[]{new ElementalBlast(), new WildMagic(), new WarpBeacon()};
-			case ROGUE:
-				return new ArmorAbility[]{new SmokeBomb(), new DeathMark(), new ShadowClone()};
-			case HUNTRESS:
-				return new ArmorAbility[]{new SpectralBlades(), new NaturesPower(), new SpiritHawk()};
-			case DUELIST:
-				return new ArmorAbility[]{new Challenge(), new ElementalStrike(), new Feint()};
-		}
+	public ArmorAbility[] armorAbilities() {
+		return switch (this) {
+			default -> new ArmorAbility[]{new HeroicLeap(), new Shockwave(), new Endure()};
+			case MAGE ->
+					new ArmorAbility[]{new ElementalBlast(), new WildMagic(), new WarpBeacon()};
+			case ROGUE -> new ArmorAbility[]{new SmokeBomb(), new DeathMark(), new ShadowClone()};
+			case HUNTRESS ->
+					new ArmorAbility[]{new SpectralBlades(), new NaturesPower(), new SpiritHawk()};
+			case DUELIST -> new ArmorAbility[]{new Challenge(), new ElementalStrike(), new Feint()};
+		};
 	}
 
 	public String spritesheet() {
-		switch (this) {
-			case WARRIOR: default:
-				return Assets.Sprites.WARRIOR;
-			case MAGE:
-				return Assets.Sprites.MAGE;
-			case ROGUE:
-				return Assets.Sprites.ROGUE;
-			case HUNTRESS:
-				return Assets.Sprites.HUNTRESS;
-			case DUELIST:
-				return Assets.Sprites.DUELIST;
-		}
+		return switch (this) {
+			default -> Assets.Sprites.WARRIOR;
+			case MAGE -> Assets.Sprites.MAGE;
+			case ROGUE -> Assets.Sprites.ROGUE;
+			case HUNTRESS -> Assets.Sprites.HUNTRESS;
+			case DUELIST -> Assets.Sprites.DUELIST;
+		};
 	}
 
-	public String splashArt(){
-		switch (this) {
-			case WARRIOR: default:
-				return Assets.Splashes.WARRIOR;
-			case MAGE:
-				return Assets.Splashes.MAGE;
-			case ROGUE:
-				return Assets.Splashes.ROGUE;
-			case HUNTRESS:
-				return Assets.Splashes.HUNTRESS;
-			case DUELIST:
-				return Assets.Splashes.DUELIST;
-		}
+	public String splashArt() {
+		return switch (this) {
+			default -> Assets.Splashes.WARRIOR;
+			case MAGE -> Assets.Splashes.MAGE;
+			case ROGUE -> Assets.Splashes.ROGUE;
+			case HUNTRESS -> Assets.Splashes.HUNTRESS;
+			case DUELIST -> Assets.Splashes.DUELIST;
+		};
 	}
-	
-	public boolean isUnlocked(){
+
+	public boolean isUnlocked() {
 		//always unlock on debug builds
 		if (DeviceCompat.isDebug()) return true;
 
-		switch (this){
-			case WARRIOR: default:
-				return true;
-			case MAGE:
-				return Badges.isUnlocked(Badges.Badge.UNLOCK_MAGE);
-			case ROGUE:
-				return Badges.isUnlocked(Badges.Badge.UNLOCK_ROGUE);
-			case HUNTRESS:
-				return Badges.isUnlocked(Badges.Badge.UNLOCK_HUNTRESS);
-			case DUELIST:
-				return Badges.isUnlocked(Badges.Badge.UNLOCK_DUELIST);
-		}
+		return switch (this) {
+			default -> true;
+			case MAGE -> Badges.isUnlocked(Badges.Badge.UNLOCK_MAGE);
+			case ROGUE -> Badges.isUnlocked(Badges.Badge.UNLOCK_ROGUE);
+			case HUNTRESS -> Badges.isUnlocked(Badges.Badge.UNLOCK_HUNTRESS);
+			case DUELIST -> Badges.isUnlocked(Badges.Badge.UNLOCK_DUELIST);
+		};
 	}
-	
+
 	public String unlockMsg() {
-		return shortDesc() + "\n\n" + Messages.get(HeroClass.class, name()+"_unlock");
+		return shortDesc() + "\n\n" + Messages.get(HeroClass.class, name() + "_unlock");
 	}
 
 }

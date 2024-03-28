@@ -511,7 +511,7 @@ public class PrisonBossLevel extends Level {
 				Sample.INSTANCE.play(Assets.Sounds.BLAST);
 
 				state = State.WON;
-				Game.runOnRenderThread(() -> Music.INSTANCE.fadeOut(5f, () -> Music.INSTANCE.end()));
+				Game.runOnRenderThread(() -> Music.INSTANCE.fadeOut(5f, Music.INSTANCE::end));
 				break;
 		}
 	}
@@ -572,11 +572,7 @@ public class PrisonBossLevel extends Level {
 
 		items.addAll(storedItems);
 
-		for (Item i : items.toArray(new Item[0])) {
-			if (i instanceof Tengu.BombAbility.BombItem || i instanceof Tengu.ShockerAbility.ShockerItem) {
-				items.remove(i);
-			}
-		}
+		items.removeIf(i -> i instanceof Tengu.BombAbility.BombItem || i instanceof Tengu.ShockerAbility.ShockerItem);
 
 		return items;
 	}
@@ -690,24 +686,19 @@ public class PrisonBossLevel extends Level {
 
 	@Override
 	public String tileName(int tile) {
-		switch (tile) {
-			case Terrain.WATER:
-				return Messages.get(PrisonLevel.class, "water_name");
-			default:
-				return super.tileName(tile);
-		}
+		return switch (tile) {
+			case Terrain.WATER -> Messages.get(PrisonLevel.class, "water_name");
+			default -> super.tileName(tile);
+		};
 	}
 
 	@Override
 	public String tileDesc(int tile) {
-		switch (tile) {
-			case Terrain.EMPTY_DECO:
-				return Messages.get(PrisonLevel.class, "empty_deco_desc");
-			case Terrain.BOOKSHELF:
-				return Messages.get(PrisonLevel.class, "bookshelf_desc");
-			default:
-				return super.tileDesc(tile);
-		}
+		return switch (tile) {
+			case Terrain.EMPTY_DECO -> Messages.get(PrisonLevel.class, "empty_deco_desc");
+			case Terrain.BOOKSHELF -> Messages.get(PrisonLevel.class, "bookshelf_desc");
+			default -> super.tileDesc(tile);
+		};
 	}
 
 	//TODO consider making this external to the prison boss level

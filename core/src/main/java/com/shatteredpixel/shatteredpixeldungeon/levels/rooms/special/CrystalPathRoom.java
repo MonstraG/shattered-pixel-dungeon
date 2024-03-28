@@ -186,7 +186,7 @@ public class CrystalPathRoom extends SpecialRoom {
 		}
 
 		//rarer potions/scrolls go later in the order
-		Collections.sort(potions, (a, b) -> {
+		potions.sort((a, b) -> {
 			int aVal = 0, bVal = 0;
 			for (int i = 0; i < Generator.Category.POTION.classes.length; i++) {
 				if (a.getClass() == Generator.Category.POTION.classes[i])
@@ -196,7 +196,7 @@ public class CrystalPathRoom extends SpecialRoom {
 			}
 			return bVal - aVal;
 		});
-		Collections.sort(scrolls, (a, b) -> {
+		scrolls.sort((a, b) -> {
 			int aVal = 0, bVal = 0;
 			for (int i = 0; i < Generator.Category.SCROLL.classes.length; i++) {
 				if (a.getClass() == Generator.Category.SCROLL.classes[i])

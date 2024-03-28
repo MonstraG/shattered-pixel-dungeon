@@ -285,7 +285,8 @@ public class ElementalStrike extends ArmorAbility {
 	public static class ElementalStrikeFurrowCounter extends CounterBuff {
 		{
 			revivePersists = true;
-		}}
+		}
+	}
 
 	;
 
@@ -404,7 +405,7 @@ public class ElementalStrike extends ArmorAbility {
 		} else if (ench instanceof Elastic) {
 
 			//sorts affected from furthest to closest
-			Collections.sort(affected, (a, b) -> Dungeon.level.distance(hero.pos, a.pos) - Dungeon.level.distance(hero.pos, b.pos));
+			affected.sort(Comparator.comparingInt(a -> Dungeon.level.distance(hero.pos, a.pos)));
 
 			for (Char ch : affected) {
 				if (ch == primaryTarget && oldEnemyPos != primaryTarget.pos) continue;

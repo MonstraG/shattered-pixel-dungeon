@@ -347,7 +347,7 @@ public class CityBossLevel extends Level {
 		}
 		Dungeon.observe();
 
-		Game.runOnRenderThread(() -> Music.INSTANCE.fadeOut(5f, () -> Music.INSTANCE.end()));
+		Game.runOnRenderThread(() -> Music.INSTANCE.fadeOut(5f, Music.INSTANCE::end));
 	}
 
 	private void spawnShop() {
@@ -359,36 +359,25 @@ public class CityBossLevel extends Level {
 
 	@Override
 	public String tileName(int tile) {
-		switch (tile) {
-			case Terrain.WATER:
-				return Messages.get(CityLevel.class, "water_name");
-			case Terrain.HIGH_GRASS:
-				return Messages.get(CityLevel.class, "high_grass_name");
-			default:
-				return super.tileName(tile);
-		}
+		return switch (tile) {
+			case Terrain.WATER -> Messages.get(CityLevel.class, "water_name");
+			case Terrain.HIGH_GRASS -> Messages.get(CityLevel.class, "high_grass_name");
+			default -> super.tileName(tile);
+		};
 	}
 
 	@Override
 	public String tileDesc(int tile) {
-		switch (tile) {
-			case Terrain.ENTRANCE:
-				return Messages.get(CityLevel.class, "entrance_desc");
-			case Terrain.EXIT:
-				return Messages.get(CityLevel.class, "exit_desc");
-			case Terrain.WALL_DECO:
-			case Terrain.EMPTY_DECO:
-				return Messages.get(CityLevel.class, "deco_desc");
-			case Terrain.EMPTY_SP:
-				return Messages.get(CityLevel.class, "sp_desc");
-			case Terrain.STATUE:
-			case Terrain.STATUE_SP:
-				return Messages.get(CityLevel.class, "statue_desc");
-			case Terrain.BOOKSHELF:
-				return Messages.get(CityLevel.class, "bookshelf_desc");
-			default:
-				return super.tileDesc(tile);
-		}
+		return switch (tile) {
+			case Terrain.ENTRANCE -> Messages.get(CityLevel.class, "entrance_desc");
+			case Terrain.EXIT -> Messages.get(CityLevel.class, "exit_desc");
+			case Terrain.WALL_DECO, Terrain.EMPTY_DECO ->
+					Messages.get(CityLevel.class, "deco_desc");
+			case Terrain.EMPTY_SP -> Messages.get(CityLevel.class, "sp_desc");
+			case Terrain.STATUE, Terrain.STATUE_SP -> Messages.get(CityLevel.class, "statue_desc");
+			case Terrain.BOOKSHELF -> Messages.get(CityLevel.class, "bookshelf_desc");
+			default -> super.tileDesc(tile);
+		};
 	}
 
 	@Override

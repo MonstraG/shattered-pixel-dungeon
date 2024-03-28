@@ -82,7 +82,7 @@ public class GamesInProgress {
 			Info curr = check(i);
 			if (curr != null) result.add(curr);
 		}
-		Collections.sort(result, scoreComparator);
+		result.sort(scoreComparator);
 		return result;
 	}
 

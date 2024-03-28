@@ -46,50 +46,50 @@ import com.watabou.utils.Signal;
 public class CellSelector extends ScrollArea {
 
 	public Listener listener = null;
-	
+
 	public boolean enabled;
-	
+
 	private float dragThreshold;
-	
-	public CellSelector( DungeonTilemap map ) {
-		super( map );
+
+	public CellSelector(DungeonTilemap map) {
+		super(map);
 		camera = map.camera();
-		
+
 		dragThreshold = PixelScene.defaultZoom * DungeonTilemap.SIZE / 2;
-		
+
 		mouseZoom = camera.zoom;
-		KeyEvent.addKeyListener( keyListener );
+		KeyEvent.addKeyListener(keyListener);
 	}
-	
+
 	private float mouseZoom;
-	
+
 	@Override
-	protected void onScroll( ScrollEvent event ) {
-		float diff = event.amount/10f;
-		
+	protected void onScroll(ScrollEvent event) {
+		float diff = event.amount / 10f;
+
 		//scale zoom difference so zooming is consistent
-		diff /= ((camera.zoom+1)/camera.zoom)-1;
+		diff /= ((camera.zoom + 1) / camera.zoom) - 1;
 		diff = Math.min(1, diff);
-		mouseZoom = GameMath.gate( PixelScene.minZoom, mouseZoom - diff, PixelScene.maxZoom );
-		
-		zoom( Math.round(mouseZoom) );
+		mouseZoom = GameMath.gate(PixelScene.minZoom, mouseZoom - diff, PixelScene.maxZoom);
+
+		zoom(Math.round(mouseZoom));
 	}
-	
+
 	@Override
-	protected void onClick( PointerEvent event ) {
+	protected void onClick(PointerEvent event) {
 		if (dragging) {
-			
+
 			dragging = false;
-			
+
 		} else {
-			
-			PointF p = Camera.main.screenToCamera( (int) event.current.x, (int) event.current.y );
+
+			PointF p = Camera.main.screenToCamera((int) event.current.x, (int) event.current.y);
 
 			//Prioritizes a sprite if it and a tile overlap, so long as that sprite isn't more than 4 pixels into another tile.
 			//The extra check prevents large sprites from blocking the player from clicking adjacent tiles
 
 			//hero first
-			if (Dungeon.hero.sprite != null && Dungeon.hero.sprite.overlapsPoint( p.x, p.y )){
+			if (Dungeon.hero.sprite != null && Dungeon.hero.sprite.overlapsPoint(p.x, p.y)) {
 				PointF c = DungeonTilemap.tileCenterToWorld(Dungeon.hero.pos);
 				if (Math.abs(p.x - c.x) <= 12 && Math.abs(p.y - c.y) <= 12) {
 					select(Dungeon.hero.pos, event.button);
@@ -98,8 +98,8 @@ public class CellSelector extends ScrollArea {
 			}
 
 			//then mobs
-			for (Char mob : Dungeon.level.mobs.toArray(new Mob[0])){
-				if (mob.sprite != null && mob.sprite.overlapsPoint( p.x, p.y )){
+			for (Char mob : Dungeon.level.mobs.toArray(new Mob[0])) {
+				if (mob.sprite != null && mob.sprite.overlapsPoint(p.x, p.y)) {
 					PointF c = DungeonTilemap.tileCenterToWorld(mob.pos);
 					if (Math.abs(p.x - c.x) <= 12 && Math.abs(p.y - c.y) <= 12) {
 						select(mob.pos, event.button);
@@ -109,8 +109,8 @@ public class CellSelector extends ScrollArea {
 			}
 
 			//then heaps
-			for (Heap heap : Dungeon.level.heaps.valueList()){
-				if (heap.sprite != null && heap.sprite.overlapsPoint( p.x, p.y)){
+			for (Heap heap : Dungeon.level.heaps.valueList()) {
+				if (heap.sprite != null && heap.sprite.overlapsPoint(p.x, p.y)) {
 					PointF c = DungeonTilemap.tileCenterToWorld(heap.pos);
 					if (Math.abs(p.x - c.x) <= 12 && Math.abs(p.y - c.y) <= 12) {
 						select(heap.pos, event.button);
@@ -118,78 +118,78 @@ public class CellSelector extends ScrollArea {
 					}
 				}
 			}
-			
-			select( ((DungeonTilemap)target).screenToTile(
-				(int) event.current.x,
-				(int) event.current.y,
-					true ), event.button );
+
+			select(((DungeonTilemap) target).screenToTile(
+					(int) event.current.x,
+					(int) event.current.y,
+					true), event.button);
 		}
 	}
 
-	private float zoom( float value ) {
+	private float zoom(float value) {
 
-		value = GameMath.gate( PixelScene.minZoom, value, PixelScene.maxZoom );
+		value = GameMath.gate(PixelScene.minZoom, value, PixelScene.maxZoom);
 		SPDSettings.zoom((int) (value - PixelScene.defaultZoom));
-		camera.zoom( value );
+		camera.zoom(value);
 
 		//Resets char and item sprite positions with the new camera zoom
 		//This is important as sprites are centered on a 16x16 tile, but may have any sprite size
 		//This can lead to none-whole coordinate, which need to be aligned with the zoom
-		for (Char c : Actor.chars()){
-			if (c.sprite != null && !c.sprite.isMoving){
+		for (Char c : Actor.chars()) {
+			if (c.sprite != null && !c.sprite.isMoving) {
 				c.sprite.point(c.sprite.worldToCamera(c.pos));
 			}
 		}
-		for (Heap heap : Dungeon.level.heaps.valueList()){
-			if (heap.sprite != null){
+		for (Heap heap : Dungeon.level.heaps.valueList()) {
+			if (heap.sprite != null) {
 				heap.sprite.point(heap.sprite.worldToCamera(heap.pos));
 			}
 		}
 
 		return value;
 	}
-	
-	public void select( int cell, int button ) {
+
+	public void select(int cell, int button) {
 		if (enabled && Dungeon.hero.ready && !GameScene.interfaceBlockingHero()
 				&& listener != null && cell != -1) {
 
-			switch (button){
+			switch (button) {
 				default:
-					listener.onSelect( cell );
+					listener.onSelect(cell);
 					break;
 				case PointerEvent.RIGHT:
-					listener.onRightClick( cell );
+					listener.onRightClick(cell);
 					break;
 			}
 			GameScene.ready();
-			
+
 		} else {
-			
+
 			GameScene.cancel();
-			
+
 		}
 	}
-	
+
 	private boolean pinching = false;
 	private PointerEvent another;
 	private float startZoom;
 	private float startSpan;
-	
+
 	@Override
-	protected void onPointerDown( PointerEvent event ) {
+	protected void onPointerDown(PointerEvent event) {
 		camera.edgeScroll.set(-1);
 		if (event != curEvent && another == null) {
-					
+
 			if (curEvent.type == PointerEvent.Type.UP) {
 				curEvent = event;
-				onPointerDown( event );
+				onPointerDown(event);
 				return;
 			}
-			
+
 			pinching = true;
-			
+
 			another = event;
-			startSpan = PointF.distance( curEvent.current, another.current );
+			startSpan = PointF.distance(curEvent.current, another.current);
 			startZoom = camera.zoom;
 
 			dragging = false;
@@ -197,53 +197,53 @@ public class CellSelector extends ScrollArea {
 			reset();
 		}
 	}
-	
+
 	@Override
-	protected void onPointerUp( PointerEvent event ) {
+	protected void onPointerUp(PointerEvent event) {
 		camera.edgeScroll.set(1);
 		if (pinching && (event == curEvent || event == another)) {
-			
+
 			pinching = false;
-			
-			zoom(Math.round( camera.zoom ));
-			
+
+			zoom(Math.round(camera.zoom));
+
 			dragging = true;
 			if (event == curEvent) {
 				curEvent = another;
 			}
 			another = null;
-			lastPos.set( curEvent.current );
+			lastPos.set(curEvent.current);
 		}
 	}
-	
+
 	private boolean dragging = false;
 	private PointF lastPos = new PointF();
-	
+
 	@Override
-	protected void onDrag( PointerEvent event ) {
+	protected void onDrag(PointerEvent event) {
 
 		if (pinching) {
 
-			float curSpan = PointF.distance( curEvent.current, another.current );
+			float curSpan = PointF.distance(curEvent.current, another.current);
 			float zoom = (startZoom * curSpan / startSpan);
-			camera.zoom( GameMath.gate(
-				PixelScene.minZoom,
+			camera.zoom(GameMath.gate(
+					PixelScene.minZoom,
 					zoom - (zoom % 0.1f),
-				PixelScene.maxZoom ) );
+					PixelScene.maxZoom));
 
 		} else {
-		
-			if (!dragging && PointF.distance( event.current, event.start ) > dragThreshold) {
-				
+
+			if (!dragging && PointF.distance(event.current, event.start) > dragThreshold) {
+
 				dragging = true;
-				lastPos.set( event.current );
-				
+				lastPos.set(event.current);
+
 			} else if (dragging) {
-				camera.shift( PointF.diff( lastPos, event.current ).invScale( camera.zoom ) );
-				lastPos.set( event.current );
+				camera.shift(PointF.diff(lastPos, event.current).invScale(camera.zoom));
+				lastPos.set(event.current);
 			}
 		}
-		
+
 	}
 
 	//used for movement
@@ -255,63 +255,58 @@ public class CellSelector extends ScrollArea {
 	private float heldDelay = 0f;
 	private boolean delayingForRelease = false;
 
-	private static float initialDelay(){
-		switch (SPDSettings.movementHoldSensitivity()){
-			case 0:
-				return Float.POSITIVE_INFINITY;
-			case 1:
-				return 0.13f;
-			case 2:
-				return 0.09f;
+	private static float initialDelay() {
+		return switch (SPDSettings.movementHoldSensitivity()) {
+			case 0 -> Float.POSITIVE_INFINITY;
+			case 1 -> 0.13f;
+			case 2 -> 0.09f;
 			//note that delay starts ticking down on the frame it is processed
 			// so in most cases the actual default wait is 50-58ms
-			case 3: default:
-				return 0.06f;
-			case 4:
-				return 0.03f;
-		}
+			default -> 0.06f;
+			case 4 -> 0.03f;
+		};
 	}
-	
-	private Signal.Listener<KeyEvent> keyListener = new Signal.Listener<KeyEvent>() {
+
+	private Signal.Listener<KeyEvent> keyListener = new Signal.Listener<>() {
 		@Override
 		public boolean onSignal(KeyEvent event) {
-			GameAction action = KeyBindings.getActionForKey( event );
-			if (!event.pressed){
+			GameAction action = KeyBindings.getActionForKey(event);
+			if (!event.pressed) {
 
-				if (action == SPDAction.ZOOM_IN){
-					zoom( camera.zoom+1 );
+				if (action == SPDAction.ZOOM_IN) {
+					zoom(camera.zoom + 1);
 					mouseZoom = camera.zoom;
 					return true;
 
-				} else if (action == SPDAction.ZOOM_OUT){
-					zoom( camera.zoom-1 );
+				} else if (action == SPDAction.ZOOM_OUT) {
+					zoom(camera.zoom - 1);
 					mouseZoom = camera.zoom;
 					return true;
 				}
-				
+
 				if (heldAction1 != SPDAction.NONE && heldAction1 == action) {
 					heldAction1 = SPDAction.NONE;
-					if (heldAction2 != SPDAction.NONE){
+					if (heldAction2 != SPDAction.NONE) {
 						heldAction1 = heldAction2;
 						heldAction2 = SPDAction.NONE;
-						if (heldAction3 != SPDAction.NONE){
+						if (heldAction3 != SPDAction.NONE) {
 							heldAction2 = heldAction3;
 							heldAction3 = SPDAction.NONE;
 						}
 					}
-				} else if (heldAction2 != SPDAction.NONE && heldAction2 == action){
+				} else if (heldAction2 != SPDAction.NONE && heldAction2 == action) {
 					heldAction2 = SPDAction.NONE;
-					if (heldAction3 != SPDAction.NONE){
+					if (heldAction3 != SPDAction.NONE) {
 						heldAction2 = heldAction3;
 						heldAction3 = SPDAction.NONE;
 					}
-				} else if (heldAction3 != SPDAction.NONE && heldAction3 == action){
+				} else if (heldAction3 != SPDAction.NONE && heldAction3 == action) {
 					heldAction3 = SPDAction.NONE;
 				}
 
 				//move from the action immediately if it was being delayed
 				// and another key wasn't recently released
-				if (heldDelay > 0f && !delayingForRelease){
+				if (heldDelay > 0f && !delayingForRelease) {
 					heldDelay = 0f;
 					moveFromActions(action, heldAction1, heldAction2);
 				}
@@ -330,22 +325,22 @@ public class CellSelector extends ScrollArea {
 
 				Dungeon.hero.resting = false;
 				lastCellMoved = -1;
-				if (heldAction1 == SPDAction.NONE){
+				if (heldAction1 == SPDAction.NONE) {
 					heldAction1 = action;
 					heldDelay = initialDelay();
 					delayingForRelease = false;
-				} else if (heldAction2 == SPDAction.NONE){
+				} else if (heldAction2 == SPDAction.NONE) {
 					heldAction2 = action;
 				} else {
 					heldAction3 = action;
 				}
 
 				return true;
-			} else if (Dungeon.hero != null && Dungeon.hero.resting){
+			} else if (Dungeon.hero != null && Dungeon.hero.resting) {
 				Dungeon.hero.resting = false;
 				return true;
 			}
-			
+
 			return false;
 		}
 	};
@@ -356,29 +351,29 @@ public class CellSelector extends ScrollArea {
 	public void update() {
 		super.update();
 
-		if (GameScene.interfaceBlockingHero()){
+		if (GameScene.interfaceBlockingHero()) {
 			return;
 		}
 
 		GameAction newLeftStick = actionFromStick(ControllerHandler.leftStickPosition.x,
 				ControllerHandler.leftStickPosition.y);
 
-		if (newLeftStick != leftStickAction){
-			if (leftStickAction == SPDAction.NONE){
+		if (newLeftStick != leftStickAction) {
+			if (leftStickAction == SPDAction.NONE) {
 				heldDelay = initialDelay();
 				Dungeon.hero.resting = false;
-			} else if (newLeftStick == SPDAction.NONE && heldDelay > 0f){
+			} else if (newLeftStick == SPDAction.NONE && heldDelay > 0f) {
 				heldDelay = 0f;
 				moveFromActions(leftStickAction);
 			}
 			leftStickAction = newLeftStick;
 		}
 
-		if (heldDelay > 0){
+		if (heldDelay > 0) {
 			heldDelay -= Game.elapsed;
 		}
 
-		if ((heldAction1 != SPDAction.NONE || leftStickAction != SPDAction.NONE) && Dungeon.hero.ready){
+		if ((heldAction1 != SPDAction.NONE || leftStickAction != SPDAction.NONE) && Dungeon.hero.ready) {
 			processKeyHold();
 		} else if (Dungeon.hero.ready) {
 			lastCellMoved = -1;
@@ -388,12 +383,12 @@ public class CellSelector extends ScrollArea {
 	//prevents repeated inputs when the hero isn't moving
 	private int lastCellMoved = 0;
 
-	private boolean moveFromActions(GameAction... actions){
-		if (Dungeon.hero == null || !Dungeon.hero.ready){
+	private boolean moveFromActions(GameAction... actions) {
+		if (Dungeon.hero == null || !Dungeon.hero.ready) {
 			return false;
 		}
 
-		if (GameScene.cancelCellSelector()){
+		if (GameScene.cancelCellSelector()) {
 			return false;
 		}
 
@@ -406,9 +401,9 @@ public class CellSelector extends ScrollArea {
 		cell += GameMath.gate(-1, direction.x, +1);
 		cell += GameMath.gate(-1, direction.y, +1) * Dungeon.level.width();
 
-		if (cell != Dungeon.hero.pos && cell != lastCellMoved){
+		if (cell != Dungeon.hero.pos && cell != lastCellMoved) {
 			lastCellMoved = cell;
-			if (Dungeon.hero.handle( cell )) {
+			if (Dungeon.hero.handle(cell)) {
 				Dungeon.hero.next();
 			}
 			return true;
@@ -419,39 +414,40 @@ public class CellSelector extends ScrollArea {
 
 	}
 
-	private Point directionFromAction(GameAction action){
-		if (action == SPDAction.N)  return new Point( 0, -1);
+	private Point directionFromAction(GameAction action) {
+		if (action == SPDAction.N) return new Point(0, -1);
 		if (action == SPDAction.NE) return new Point(+1, -1);
-		if (action == SPDAction.E)  return new Point(+1,  0);
+		if (action == SPDAction.E) return new Point(+1, 0);
 		if (action == SPDAction.SE) return new Point(+1, +1);
-		if (action == SPDAction.S)  return new Point( 0, +1);
-		if (action == SPDAction.SW) return new Point(-1, +1);;
-		if (action == SPDAction.W)  return new Point(-1,  0);
+		if (action == SPDAction.S) return new Point(0, +1);
+		if (action == SPDAction.SW) return new Point(-1, +1);
+		;
+		if (action == SPDAction.W) return new Point(-1, 0);
 		if (action == SPDAction.NW) return new Point(-1, -1);
-		else                        return new Point();
+		else return new Point();
 	}
 
 	//~80% deadzone
-	private GameAction actionFromStick(float x, float y){
-		if (x > 0.5f){
-			if (y < -0.5f){
+	private GameAction actionFromStick(float x, float y) {
+		if (x > 0.5f) {
+			if (y < -0.5f) {
 				return SPDAction.NE;
-			} else if (y > 0.5f){
+			} else if (y > 0.5f) {
 				return SPDAction.SE;
-			} else if (x > 0.8f){
+			} else if (x > 0.8f) {
 				return SPDAction.E;
 			}
-		} else if (x < -0.5f){
-			if (y < -0.5f){
+		} else if (x < -0.5f) {
+			if (y < -0.5f) {
 				return SPDAction.NW;
-			} else if (y > 0.5f){
+			} else if (y > 0.5f) {
 				return SPDAction.SW;
-			} else if (x < -0.8f){
+			} else if (x < -0.8f) {
 				return SPDAction.W;
 			}
-		} else if (y > 0.8f){
+		} else if (y > 0.8f) {
 			return SPDAction.S;
-		} else if (y < -0.8f){
+		} else if (y < -0.8f) {
 			return SPDAction.N;
 		}
 		return SPDAction.NONE;
@@ -466,7 +462,7 @@ public class CellSelector extends ScrollArea {
 				Dungeon.hero.ready = false;
 			}
 		} else if (!(directionFromAction(heldAction1).offset(directionFromAction(heldAction2)).isZero())
-				&& heldDelay <= 0){
+				&& heldDelay <= 0) {
 			enabled = Dungeon.hero.ready = true;
 			Dungeon.observe();
 			if (moveFromActions(heldAction1, heldAction2)) {
@@ -474,17 +470,17 @@ public class CellSelector extends ScrollArea {
 			}
 		}
 	}
-	
-	public void resetKeyHold(){
+
+	public void resetKeyHold() {
 		heldAction1 = heldAction2 = heldAction3 = SPDAction.NONE;
 	}
-	
+
 	public void cancel() {
-		
+
 		if (listener != null) {
-			listener.onSelect( null );
+			listener.onSelect(null);
 		}
-		
+
 		GameScene.ready();
 	}
 
@@ -492,29 +488,30 @@ public class CellSelector extends ScrollArea {
 	public void reset() {
 		super.reset();
 		another = null;
-		if (pinching){
+		if (pinching) {
 			pinching = false;
 
-			zoom( Math.round( camera.zoom ) );
+			zoom(Math.round(camera.zoom));
 		}
 	}
 
-	public void enable(boolean value){
-		if (enabled != value){
+	public void enable(boolean value) {
+		if (enabled != value) {
 			enabled = value;
 		}
 	}
-	
+
 	@Override
 	public void destroy() {
 		super.destroy();
-		KeyEvent.removeKeyListener( keyListener );
+		KeyEvent.removeKeyListener(keyListener);
 	}
-	
-	public static abstract class Listener {
-		public abstract void onSelect( Integer cell );
 
-		public void onRightClick( Integer cell ){} //do nothing by default
+	public static abstract class Listener {
+		public abstract void onSelect(Integer cell);
+
+		public void onRightClick(Integer cell) {
+		} //do nothing by default
 
 		public abstract String prompt();
 	}

@@ -42,32 +42,32 @@ import com.watabou.utils.Random;
 import java.util.ArrayList;
 
 public class RegrowthBomb extends Bomb {
-	
+
 	{
 		image = ItemSpriteSheet.REGROWTH_BOMB;
 	}
-	
+
 	@Override
 	public boolean explodesDestructively() {
 		return false;
 	}
-	
+
 	@Override
 	public void explode(int cell) {
 		super.explode(cell);
-		
+
 		if (Dungeon.level.heroFOV[cell]) {
 			Splash.at(cell, 0x00FF00, 30);
 		}
-		
+
 		ArrayList<Integer> plantCandidates = new ArrayList<>();
-		
-		PathFinder.buildDistanceMap( cell, BArray.not( Dungeon.level.solid, null ), 2 );
+
+		PathFinder.buildDistanceMap(cell, BArray.not(Dungeon.level.solid, null), 2);
 		for (int i = 0; i < PathFinder.distance.length; i++) {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE) {
 				Char ch = Actor.findChar(i);
 				int t = Dungeon.level.map[i];
-				if (ch != null){
+				if (ch != null) {
 					if (ch.alignment == Dungeon.hero.alignment) {
 						//same as a healing potion
 						PotionOfHealing.cure(ch);
@@ -75,10 +75,10 @@ public class RegrowthBomb extends Bomb {
 					}
 				} else if ((t == Terrain.EMPTY || t == Terrain.EMPTY_DECO || t == Terrain.EMBERS
 						|| t == Terrain.GRASS || t == Terrain.FURROWED_GRASS || t == Terrain.HIGH_GRASS)
-						&& Dungeon.level.plants.get(i) == null){
+						&& Dungeon.level.plants.get(i) == null) {
 					plantCandidates.add(i);
 				}
-				GameScene.add( Blob.seed( i, 10, Regrowth.class ) );
+				GameScene.add(Blob.seed(i, 10, Regrowth.class));
 			}
 		}
 
@@ -91,25 +91,18 @@ public class RegrowthBomb extends Bomb {
 				plantCandidates.remove(plantPos);
 			}
 		}
-		
+
 		Integer plantPos = Random.element(plantCandidates);
-		if (plantPos != null){
-			Plant.Seed plant;
-			switch (Random.chances(new float[]{0, 6, 3, 1})){
-				case 1: default:
-					plant = new WandOfRegrowth.Dewcatcher.Seed();
-					break;
-				case 2:
-					plant = new WandOfRegrowth.Seedpod.Seed();
-					break;
-				case 3:
-					plant = new Starflower.Seed();
-					break;
-			}
-			Dungeon.level.plant( plant, plantPos);
+		if (plantPos != null) {
+			Plant.Seed plant = switch (Random.chances(new float[]{0, 6, 3, 1})) {
+				default -> new WandOfRegrowth.Dewcatcher.Seed();
+				case 2 -> new WandOfRegrowth.Seedpod.Seed();
+				case 3 -> new Starflower.Seed();
+			};
+			Dungeon.level.plant(plant, plantPos);
 		}
 	}
-	
+
 	@Override
 	public int value() {
 		//prices of ingredients

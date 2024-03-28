@@ -80,6 +80,7 @@ import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class DriedRose extends Artifact {
 
@@ -949,11 +950,7 @@ public class DriedRose extends Artifact {
 				}
 			};
 			btnWeapon.setRect((WIDTH - BTN_GAP) / 2 - BTN_SIZE, message.top() + message.height() + GAP, BTN_SIZE, BTN_SIZE);
-			if (rose.weapon != null) {
-				btnWeapon.item(rose.weapon);
-			} else {
-				btnWeapon.item(new WndBag.Placeholder(ItemSpriteSheet.WEAPON_HOLDER));
-			}
+			btnWeapon.item(Objects.requireNonNullElseGet(rose.weapon, () -> new WndBag.Placeholder(ItemSpriteSheet.WEAPON_HOLDER)));
 			add(btnWeapon);
 
 			btnArmor = new ItemButton() {
@@ -1015,11 +1012,7 @@ public class DriedRose extends Artifact {
 				}
 			};
 			btnArmor.setRect(btnWeapon.right() + BTN_GAP, btnWeapon.top(), BTN_SIZE, BTN_SIZE);
-			if (rose.armor != null) {
-				btnArmor.item(rose.armor);
-			} else {
-				btnArmor.item(new WndBag.Placeholder(ItemSpriteSheet.ARMOR_HOLDER));
-			}
+			btnArmor.item(Objects.requireNonNullElseGet(rose.armor, () -> new WndBag.Placeholder(ItemSpriteSheet.ARMOR_HOLDER)));
 			add(btnArmor);
 
 			resize(WIDTH, (int) (btnArmor.bottom() + GAP));

@@ -65,7 +65,7 @@ public class MagesStaff extends MeleeWeapon {
 	private Wand wand;
 
 	public static final String AC_IMBUE = "IMBUE";
-	public static final String AC_ZAP	= "ZAP";
+	public static final String AC_ZAP = "ZAP";
 
 	private static final float STAFF_SCALE_FACTOR = 0.75f;
 
@@ -89,11 +89,11 @@ public class MagesStaff extends MeleeWeapon {
 
 	@Override
 	public int max(int lvl) {
-		return  Math.round(3f*(tier+1)) +   //6 base damage, down from 10
-				lvl*(tier+1);               //scaling unaffected
+		return Math.round(3f * (tier + 1)) +   //6 base damage, down from 10
+				lvl * (tier + 1);               //scaling unaffected
 	}
 
-	public MagesStaff(Wand wand){
+	public MagesStaff(Wand wand) {
 		this();
 		wand.identify();
 		wand.cursed = false;
@@ -104,10 +104,10 @@ public class MagesStaff extends MeleeWeapon {
 
 	@Override
 	public ArrayList<String> actions(Hero hero) {
-		ArrayList<String> actions = super.actions( hero );
+		ArrayList<String> actions = super.actions(hero);
 		actions.add(AC_IMBUE);
-		if (wand!= null && wand.curCharges > 0) {
-			actions.add( AC_ZAP );
+		if (wand != null && wand.curCharges > 0) {
+			actions.add(AC_ZAP);
 		}
 		return actions;
 	}
@@ -118,7 +118,7 @@ public class MagesStaff extends MeleeWeapon {
 	}
 
 	@Override
-	public void activate( Char ch ) {
+	public void activate(Char ch) {
 		super.activate(ch);
 		applyWandChargeBuff(ch);
 	}
@@ -142,7 +142,7 @@ public class MagesStaff extends MeleeWeapon {
 			curUser = hero;
 			GameScene.selectItem(itemSelector);
 
-		} else if (action.equals(AC_ZAP)){
+		} else if (action.equals(AC_ZAP)) {
 
 			if (wand == null) {
 				GameScene.show(new WndUseItem(null, this));
@@ -150,14 +150,14 @@ public class MagesStaff extends MeleeWeapon {
 			}
 
 			if (cursed || hasCurseEnchant()) wand.cursed = true;
-			else                             wand.cursed = false;
+			else wand.cursed = false;
 			wand.execute(hero, AC_ZAP);
 		}
 	}
 
 	@Override
 	public int buffedVisiblyUpgraded() {
-		if (wand != null){
+		if (wand != null) {
 			return Math.max(super.buffedVisiblyUpgraded(), wand.buffedVisiblyUpgraded());
 		} else {
 			return super.buffedVisiblyUpgraded();
@@ -166,26 +166,25 @@ public class MagesStaff extends MeleeWeapon {
 
 	@Override
 	public int proc(Char attacker, Char defender, int damage) {
-		if (attacker instanceof Hero && ((Hero) attacker).hasTalent(Talent.MYSTICAL_CHARGE)){
-			Hero hero = (Hero) attacker;
-			ArtifactRecharge.chargeArtifacts(hero, hero.pointsInTalent(Talent.MYSTICAL_CHARGE)/2f);
+		if (attacker instanceof Hero hero && ((Hero) attacker).hasTalent(Talent.MYSTICAL_CHARGE)) {
+			ArtifactRecharge.chargeArtifacts(hero, hero.pointsInTalent(Talent.MYSTICAL_CHARGE) / 2f);
 		}
 
 		Talent.EmpoweredStrikeTracker empoweredStrike = attacker.buff(Talent.EmpoweredStrikeTracker.class);
-		if (empoweredStrike != null){
-			damage = Math.round( damage * (1f + Dungeon.hero.pointsInTalent(Talent.EMPOWERED_STRIKE)/6f));
+		if (empoweredStrike != null) {
+			damage = Math.round(damage * (1f + Dungeon.hero.pointsInTalent(Talent.EMPOWERED_STRIKE) / 6f));
 		}
 
 		if (wand != null &&
-				attacker instanceof Hero && ((Hero)attacker).subClass == HeroSubClass.BATTLEMAGE) {
+				attacker instanceof Hero && ((Hero) attacker).subClass == HeroSubClass.BATTLEMAGE) {
 			if (wand.curCharges < wand.maxCharges) wand.partialCharge += 0.5f;
-			ScrollOfRecharging.charge((Hero)attacker);
+			ScrollOfRecharging.charge((Hero) attacker);
 			wand.onHit(this, attacker, defender, damage);
 		}
 
-		if (empoweredStrike != null){
+		if (empoweredStrike != null) {
 			empoweredStrike.detach();
-			if (!(defender instanceof Mob) || !((Mob) defender).surprisedBy(attacker)){
+			if (!(defender instanceof Mob) || !((Mob) defender).surprisedBy(attacker)) {
 				Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG, 0.75f, 1.2f);
 			}
 		}
@@ -197,14 +196,14 @@ public class MagesStaff extends MeleeWeapon {
 		int reach = super.reachFactor(owner);
 		if (owner instanceof Hero
 				&& wand instanceof WandOfDisintegration
-				&& ((Hero)owner).subClass == HeroSubClass.BATTLEMAGE){
+				&& ((Hero) owner).subClass == HeroSubClass.BATTLEMAGE) {
 			reach += Math.round(Wand.procChanceMultiplier(owner));
 		}
 		return reach;
 	}
 
 	@Override
-	public boolean collect( Bag container ) {
+	public boolean collect(Bag container) {
 		if (super.collect(container)) {
 			if (container.owner != null) {
 				applyWandChargeBuff(container.owner);
@@ -216,17 +215,17 @@ public class MagesStaff extends MeleeWeapon {
 	}
 
 	@Override
-	public void onDetach( ) {
+	public void onDetach() {
 		if (wand != null) wand.stopCharging();
 	}
 
-	public Item imbueWand(Wand wand, Char owner){
+	public Item imbueWand(Wand wand, Char owner) {
 
 		int oldStaffcharges = this.wand != null ? this.wand.curCharges : 0;
 
-		if (owner == Dungeon.hero && Dungeon.hero.hasTalent(Talent.WAND_PRESERVATION)){
+		if (owner == Dungeon.hero && Dungeon.hero.hasTalent(Talent.WAND_PRESERVATION)) {
 			Talent.WandPreservationCounter counter = Buff.affect(Dungeon.hero, Talent.WandPreservationCounter.class);
-			if (counter.count() < 5 && Random.Float() < 0.34f + 0.33f*Dungeon.hero.pointsInTalent(Talent.WAND_PRESERVATION)){
+			if (counter.count() < 5 && Random.Float() < 0.34f + 0.33f * Dungeon.hero.pointsInTalent(Talent.WAND_PRESERVATION)) {
 				counter.countUp(1);
 				this.wand.level(0);
 				if (!this.wand.collect()) {
@@ -254,55 +253,55 @@ public class MagesStaff extends MeleeWeapon {
 
 		//if the staff's level is being overridden by the wand, preserve 1 upgrade
 		if (wand.trueLevel() >= this.trueLevel() && this.trueLevel() > 0) targetLevel++;
-		
+
 		level(targetLevel);
 		this.wand = wand;
 		updateWand(false);
-		wand.curCharges = Math.min(wand.maxCharges, wand.curCharges+oldStaffcharges);
-		if (owner != null){
+		wand.curCharges = Math.min(wand.maxCharges, wand.curCharges + oldStaffcharges);
+		if (owner != null) {
 			applyWandChargeBuff(owner);
- 		} else if (Dungeon.hero.belongings.contains(this)){
+		} else if (Dungeon.hero.belongings.contains(this)) {
 			applyWandChargeBuff(Dungeon.hero);
 		}
 
 		//This is necessary to reset any particles.
 		//FIXME this is gross, should implement a better way to fully reset quickslot visuals
 		int slot = Dungeon.quickslot.getSlot(this);
-		if (slot != -1){
+		if (slot != -1) {
 			Dungeon.quickslot.clearSlot(slot);
 			updateQuickslot();
-			Dungeon.quickslot.setSlot( slot, this );
+			Dungeon.quickslot.setSlot(slot, this);
 			updateQuickslot();
 		}
-		
+
 		Badges.validateItemLevelAquired(this);
 
 		return this;
 	}
 
-	public void gainCharge( float amt ){
+	public void gainCharge(float amt) {
 		gainCharge(amt, false);
 	}
 
-	public void gainCharge( float amt, boolean overcharge ){
-		if (wand != null){
+	public void gainCharge(float amt, boolean overcharge) {
+		if (wand != null) {
 			wand.gainCharge(amt, overcharge);
 		}
 	}
 
-	public void applyWandChargeBuff(Char owner){
-		if (wand != null){
+	public void applyWandChargeBuff(Char owner) {
+		if (wand != null) {
 			wand.charge(owner, STAFF_SCALE_FACTOR);
 		}
 	}
 
-	public Class<?extends Wand> wandClass(){
+	public Class<? extends Wand> wandClass() {
 		return wand != null ? wand.getClass() : null;
 	}
 
 	@Override
 	public Item upgrade(boolean enchant) {
-		super.upgrade( enchant );
+		super.upgrade(enchant);
 
 		updateWand(true);
 
@@ -317,8 +316,8 @@ public class MagesStaff extends MeleeWeapon {
 
 		return this;
 	}
-	
-	public void updateWand(boolean levelled){
+
+	public void updateWand(boolean levelled) {
 		if (wand != null) {
 			int curCharges = wand.curCharges;
 			wand.level(level());
@@ -341,7 +340,7 @@ public class MagesStaff extends MeleeWeapon {
 			return super.name();
 		} else {
 			String name = Messages.get(wand, "staff_name");
-			return enchantment != null && (cursedKnown || !enchantment.curse()) ? enchantment.name( name ) : name;
+			return enchantment != null && (cursedKnown || !enchantment.curse()) ? enchantment.name(name) : name;
 		}
 	}
 
@@ -349,12 +348,12 @@ public class MagesStaff extends MeleeWeapon {
 	public String info() {
 		String info = super.info();
 
-		if (wand != null){
+		if (wand != null) {
 			info += "\n\n" + Messages.get(this, "has_wand", Messages.get(wand, "name"));
-			if ((!cursed && !hasCurseEnchant()) || !cursedKnown)    info += " " + wand.statsDesc();
-			else                                                    info += " " + Messages.get(this, "cursed_wand");
+			if ((!cursed && !hasCurseEnchant()) || !cursedKnown) info += " " + wand.statsDesc();
+			else info += " " + Messages.get(this, "cursed_wand");
 
-			if (Dungeon.hero.subClass == HeroSubClass.BATTLEMAGE){
+			if (Dungeon.hero.subClass == HeroSubClass.BATTLEMAGE) {
 				info += "\n\n" + Messages.get(wand, "bmage_desc");
 			}
 		}
@@ -393,16 +392,16 @@ public class MagesStaff extends MeleeWeapon {
 	public int value() {
 		return 0;
 	}
-	
+
 	@Override
 	public Weapon enchant(Enchantment ench) {
-		if (curseInfusionBonus && (ench == null || !ench.curse())){
+		if (curseInfusionBonus && (ench == null || !ench.curse())) {
 			curseInfusionBonus = false;
 			updateWand(false);
 		}
 		return super.enchant(ench);
 	}
-	
+
 	private final WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
 
 		@Override
@@ -411,7 +410,7 @@ public class MagesStaff extends MeleeWeapon {
 		}
 
 		@Override
-		public Class<?extends Bag> preferredBag(){
+		public Class<? extends Bag> preferredBag() {
 			return MagicalHolster.class;
 		}
 
@@ -421,35 +420,35 @@ public class MagesStaff extends MeleeWeapon {
 		}
 
 		@Override
-		public void onSelect( final Item item ) {
+		public void onSelect(final Item item) {
 			if (item != null) {
 
 				if (!item.isIdentified()) {
 					GLog.w(Messages.get(MagesStaff.class, "id_first"));
 					return;
-				} else if (item.cursed){
+				} else if (item.cursed) {
 					GLog.w(Messages.get(MagesStaff.class, "cursed"));
 					return;
 				}
 
-				if (wand == null){
-					applyWand((Wand)item);
+				if (wand == null) {
+					applyWand((Wand) item);
 				} else {
 					int newLevel;
 					int itemLevel = item.trueLevel();
-					if (itemLevel >= trueLevel()){
-						if (trueLevel() > 0)    newLevel = itemLevel + 1;
-						else                    newLevel = itemLevel;
+					if (itemLevel >= trueLevel()) {
+						if (trueLevel() > 0) newLevel = itemLevel + 1;
+						else newLevel = itemLevel;
 					} else {
 						newLevel = trueLevel();
 					}
 
 					String bodyText = Messages.get(MagesStaff.class, "imbue_desc", newLevel);
 					int preservesLeft = Dungeon.hero.hasTalent(Talent.WAND_PRESERVATION) ? 5 : 0;
-					if (Dungeon.hero.buff(Talent.WandPreservationCounter.class) != null){
+					if (Dungeon.hero.buff(Talent.WandPreservationCounter.class) != null) {
 						preservesLeft -= Dungeon.hero.buff(Talent.WandPreservationCounter.class).count();
 					}
-					if (Dungeon.hero.hasTalent(Talent.WAND_PRESERVATION)){
+					if (Dungeon.hero.hasTalent(Talent.WAND_PRESERVATION)) {
 						int preserveChance = Dungeon.hero.pointsInTalent(Talent.WAND_PRESERVATION) == 1 ? 67 : 100;
 						bodyText += "\n\n" + Messages.get(MagesStaff.class, "imbue_talent", preserveChance, preservesLeft);
 					} else {
@@ -465,7 +464,7 @@ public class MagesStaff extends MeleeWeapon {
 								@Override
 								protected void onSelect(int index) {
 									if (index == 0) {
-										applyWand((Wand)item);
+										applyWand((Wand) item);
 									}
 								}
 							}
@@ -474,17 +473,17 @@ public class MagesStaff extends MeleeWeapon {
 			}
 		}
 
-		private void applyWand(Wand wand){
+		private void applyWand(Wand wand) {
 			Sample.INSTANCE.play(Assets.Sounds.BURNING);
-			curUser.sprite.emitter().burst( ElmoParticle.FACTORY, 12 );
+			curUser.sprite.emitter().burst(ElmoParticle.FACTORY, 12);
 			evoke(curUser);
 
 			Dungeon.quickslot.clearItem(wand);
 
 			wand.detach(curUser.belongings.backpack);
 
-			GLog.p( Messages.get(MagesStaff.class, "imbue", wand.name()));
-			imbueWand( wand, curUser );
+			GLog.p(Messages.get(MagesStaff.class, "imbue", wand.name()));
+			imbueWand(wand, curUser);
 
 			updateQuickslot();
 		}
@@ -493,8 +492,8 @@ public class MagesStaff extends MeleeWeapon {
 	private final Emitter.Factory StaffParticleFactory = new Emitter.Factory() {
 		@Override
 		//reimplementing this is needed as instance creation of new staff particles must be within this class.
-		public void emit( Emitter emitter, int index, float x, float y ) {
-			StaffParticle c = (StaffParticle)emitter.getFirstAvailable(StaffParticle.class);
+		public void emit(Emitter emitter, int index, float x, float y) {
+			StaffParticle c = (StaffParticle) emitter.getFirstAvailable(StaffParticle.class);
 			if (c == null) {
 				c = new StaffParticle();
 				emitter.add(c);
@@ -514,17 +513,17 @@ public class MagesStaff extends MeleeWeapon {
 	};
 
 	//determines particle effects to use based on wand the staff owns.
-	public class StaffParticle extends PixelParticle{
+	public class StaffParticle extends PixelParticle {
 
 		private float minSize;
 		private float maxSize;
 		public float sizeJitter = 0;
 
-		public StaffParticle(){
+		public StaffParticle() {
 			super();
 		}
 
-		public void reset( float x, float y ) {
+		public void reset(float x, float y) {
 			revive();
 
 			speed.set(0);
@@ -533,34 +532,34 @@ public class MagesStaff extends MeleeWeapon {
 			this.y = y;
 
 			if (wand != null)
-				wand.staffFx( this );
+				wand.staffFx(this);
 
 		}
 
-		public void setSize( float minSize, float maxSize ){
+		public void setSize(float minSize, float maxSize) {
 			this.minSize = minSize;
 			this.maxSize = maxSize;
 		}
 
-		public void setLifespan( float life ){
+		public void setLifespan(float life) {
 			lifespan = left = life;
 		}
 
-		public void shuffleXY(float amt){
+		public void shuffleXY(float amt) {
 			x += Random.Float(-amt, amt);
 			y += Random.Float(-amt, amt);
 		}
 
-		public void radiateXY(float amt){
-			float hypot = (float)Math.hypot(speed.x, speed.y);
-			this.x += speed.x/hypot*amt;
-			this.y += speed.y/hypot*amt;
+		public void radiateXY(float amt) {
+			float hypot = (float) Math.hypot(speed.x, speed.y);
+			this.x += speed.x / hypot * amt;
+			this.y += speed.y / hypot * amt;
 		}
 
 		@Override
 		public void update() {
 			super.update();
-			size(minSize + (left / lifespan)*(maxSize-minSize) + Random.Float(sizeJitter));
+			size(minSize + (left / lifespan) * (maxSize - minSize) + Random.Float(sizeJitter));
 		}
 	}
 }

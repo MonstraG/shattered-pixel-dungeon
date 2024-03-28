@@ -57,12 +57,12 @@ public class RingOfWealth extends Ring {
 
 	private float triesToDrop = Float.MIN_VALUE;
 	private int dropsToRare = Integer.MIN_VALUE;
-	
+
 	public String statsInfo() {
-		if (isIdentified()){
+		if (isIdentified()) {
 			String info = Messages.get(this, "stats",
 					Messages.decimalFormat("#.##", 100f * (Math.pow(1.20f, soloBuffedBonus()) - 1f)));
-			if (isEquipped(Dungeon.hero) && soloBuffedBonus() != combinedBuffedBonus(Dungeon.hero)){
+			if (isEquipped(Dungeon.hero) && soloBuffedBonus() != combinedBuffedBonus(Dungeon.hero)) {
 				info += "\n\n" + Messages.get(this, "combined_stats",
 						Messages.decimalFormat("#.##", 100f * (Math.pow(1.20f, combinedBuffedBonus(Dungeon.hero)) - 1f)));
 			}
@@ -90,26 +90,26 @@ public class RingOfWealth extends Ring {
 	}
 
 	@Override
-	protected RingBuff buff( ) {
+	protected RingBuff buff() {
 		return new Wealth();
 	}
-	
-	public static float dropChanceMultiplier( Char target ){
-		return (float)Math.pow(1.20, getBuffedBonus(target, Wealth.class));
+
+	public static float dropChanceMultiplier(Char target) {
+		return (float) Math.pow(1.20, getBuffedBonus(target, Wealth.class));
 	}
-	
-	public static ArrayList<Item> tryForBonusDrop(Char target, int tries ){
+
+	public static ArrayList<Item> tryForBonusDrop(Char target, int tries) {
 		int bonus = getBuffedBonus(target, Wealth.class);
 
 		if (bonus <= 0) return null;
-		
+
 		HashSet<Wealth> buffs = target.buffs(Wealth.class);
 		float triesToDrop = Float.MIN_VALUE;
 		int dropsToEquip = Integer.MIN_VALUE;
-		
+
 		//find the largest count (if they aren't synced yet)
-		for (Wealth w : buffs){
-			if (w.triesToDrop() > triesToDrop){
+		for (Wealth w : buffs) {
+			if (w.triesToDrop() > triesToDrop) {
 				triesToDrop = w.triesToDrop();
 				dropsToEquip = w.dropsToRare();
 			}
@@ -125,15 +125,15 @@ public class RingOfWealth extends Ring {
 		ArrayList<Item> drops = new ArrayList<>();
 
 		triesToDrop -= tries;
-		while ( triesToDrop <= 0 ){
-			if (dropsToEquip <= 0){
+		while (triesToDrop <= 0) {
+			if (dropsToEquip <= 0) {
 				int equipBonus = 0;
 
 				//A second ring of wealth can be at most +1 when calculating wealth bonus for equips
 				//This is to prevent using an upgraded wealth to farm another upgraded wealth and
 				//using the two to get substantially more upgrade value than intended
-				for (Wealth w : target.buffs(Wealth.class)){
-					if (w.buffedLvl() > equipBonus){
+				for (Wealth w : target.buffs(Wealth.class)) {
+					if (w.buffedLvl() > equipBonus) {
 						equipBonus = w.buffedLvl() + Math.min(equipBonus, 2);
 					} else {
 						equipBonus += Math.min(w.buffedLvl(), 2);
@@ -158,11 +158,11 @@ public class RingOfWealth extends Ring {
 		}
 
 		//store values back into rings
-		for (Wealth w : buffs){
+		for (Wealth w : buffs) {
 			w.triesToDrop(triesToDrop);
 			w.dropsToRare(dropsToEquip);
 		}
-		
+
 		return drops;
 	}
 
@@ -171,9 +171,9 @@ public class RingOfWealth extends Ring {
 	// 3 used for +0-1 equips, 4 used for +2 or higher equips
 	private static int latestDropTier = 0;
 
-	public static void showFlareForBonusDrop( Visual vis ){
+	public static void showFlareForBonusDrop(Visual vis) {
 		if (vis == null || vis.parent == null) return;
-		switch (latestDropTier){
+		switch (latestDropTier) {
 			default:
 				break; //do nothing
 			case 1:
@@ -191,66 +191,65 @@ public class RingOfWealth extends Ring {
 		}
 		latestDropTier = 0;
 	}
-	
+
 	public static Item genConsumableDrop(int level) {
 		float roll = Random.Float();
 		//60% chance - 4% per level. Starting from +15: 0%
 		if (roll < (0.6f - 0.04f * level)) {
 			latestDropTier = 1;
 			return genLowValueConsumable();
-		//30% chance + 2% per level. Starting from +15: 60%-2%*(lvl-15)
+			//30% chance + 2% per level. Starting from +15: 60%-2%*(lvl-15)
 		} else if (roll < (0.9f - 0.02f * level)) {
 			latestDropTier = 2;
 			return genMidValueConsumable();
-		//10% chance + 2% per level. Starting from +15: 40%+2%*(lvl-15)
+			//10% chance + 2% per level. Starting from +15: 40%+2%*(lvl-15)
 		} else {
 			latestDropTier = 3;
 			return genHighValueConsumable();
 		}
 	}
 
-	private static Item genLowValueConsumable(){
-		switch (Random.Int(4)){
-			case 0: default:
+	private static Item genLowValueConsumable() {
+		return switch (Random.Int(4)) {
+			default -> {
 				Item i = new Gold().random();
-				return i.quantity(i.quantity()/2);
-			case 1:
-				return Generator.randomUsingDefaults(Generator.Category.STONE);
-			case 2:
-				return Generator.randomUsingDefaults(Generator.Category.POTION);
-			case 3:
-				return Generator.randomUsingDefaults(Generator.Category.SCROLL);
-		}
+				yield i.quantity(i.quantity() / 2);
+			}
+			case 1 -> Generator.randomUsingDefaults(Generator.Category.STONE);
+			case 2 -> Generator.randomUsingDefaults(Generator.Category.POTION);
+			case 3 -> Generator.randomUsingDefaults(Generator.Category.SCROLL);
+		};
 	}
 
-	private static Item genMidValueConsumable(){
-		switch (Random.Int(6)){
-			case 0: default:
+	private static Item genMidValueConsumable() {
+		return switch (Random.Int(6)) {
+			default -> {
 				Item i = genLowValueConsumable();
-				return i.quantity(i.quantity()*2);
-			case 1:
+				yield i.quantity(i.quantity() * 2);
+			}
+			case 1 -> {
 				i = Generator.randomUsingDefaults(Generator.Category.POTION);
-				return Reflection.newInstance(ExoticPotion.regToExo.get(i.getClass()));
-			case 2:
+				yield Reflection.newInstance(ExoticPotion.regToExo.get(i.getClass()));
+			}
+			case 2 -> {
 				i = Generator.randomUsingDefaults(Generator.Category.SCROLL);
-				return Reflection.newInstance(ExoticScroll.regToExo.get(i.getClass()));
-			case 3:
-				return Random.Int(2) == 0 ? new ArcaneCatalyst() : new AlchemicalCatalyst();
-			case 4:
-				return new Bomb();
-			case 5:
-				return new Honeypot();
-		}
+				yield Reflection.newInstance(ExoticScroll.regToExo.get(i.getClass()));
+			}
+			case 3 -> Random.Int(2) == 0 ? new ArcaneCatalyst() : new AlchemicalCatalyst();
+			case 4 -> new Bomb();
+			case 5 -> new Honeypot();
+		};
 	}
 
-	private static Item genHighValueConsumable(){
-		switch (Random.Int(4)){
-			case 0: default:
+	private static Item genHighValueConsumable() {
+		switch (Random.Int(4)) {
+			case 0:
+			default:
 				Item i = genMidValueConsumable();
-				if (i instanceof Bomb){
+				if (i instanceof Bomb) {
 					return new Bomb.DoubleBomb();
 				} else {
-					return i.quantity(i.quantity()*2);
+					return i.quantity(i.quantity() * 2);
 				}
 			case 1:
 				return new StoneOfEnchantment();
@@ -261,21 +260,23 @@ public class RingOfWealth extends Ring {
 		}
 	}
 
-	private static Item genEquipmentDrop( int level ){
+	private static Item genEquipmentDrop(int level) {
 		Item result;
 		//each upgrade increases depth used for calculating drops by 1
-		int floorset = (Dungeon.depth + level)/5;
-		switch (Random.Int(5)){
-			default: case 0: case 1:
+		int floorset = (Dungeon.depth + level) / 5;
+		switch (Random.Int(5)) {
+			default:
+			case 0:
+			case 1:
 				Weapon w = Generator.randomWeapon(floorset, true);
-				if (!w.hasGoodEnchant() && Random.Int(10) < level)      w.enchant();
-				else if (w.hasCurseEnchant())                           w.enchant(null);
+				if (!w.hasGoodEnchant() && Random.Int(10) < level) w.enchant();
+				else if (w.hasCurseEnchant()) w.enchant(null);
 				result = w;
 				break;
 			case 2:
 				Armor a = Generator.randomArmor(floorset);
-				if (!a.hasGoodGlyph() && Random.Int(10) < level)        a.inscribe();
-				else if (a.hasCurseGlyph())                             a.inscribe(null);
+				if (!a.hasGoodGlyph() && Random.Int(10) < level) a.inscribe();
+				else if (a.hasCurseGlyph()) a.inscribe(null);
 				result = a;
 				break;
 			case 3:
@@ -286,9 +287,9 @@ public class RingOfWealth extends Ring {
 				break;
 		}
 		//minimum level is 1/2/3/4/5/6 when ring level is 1/3/5/7/9/11
-		if (result.isUpgradable()){
-			int minLevel = (level+1)/2;
-			if (result.level() < minLevel){
+		if (result.isUpgradable()) {
+			int minLevel = (level + 1) / 2;
+			if (result.level() < minLevel) {
 				result.level(minLevel);
 			}
 		}
@@ -303,22 +304,22 @@ public class RingOfWealth extends Ring {
 	}
 
 	public class Wealth extends RingBuff {
-		
-		private void triesToDrop( float val ){
+
+		private void triesToDrop(float val) {
 			triesToDrop = val;
 		}
-		
-		private float triesToDrop(){
+
+		private float triesToDrop() {
 			return triesToDrop;
 		}
 
-		private void dropsToRare( int val ) {
+		private void dropsToRare(int val) {
 			dropsToRare = val;
 		}
 
-		private int dropsToRare(){
+		private int dropsToRare() {
 			return dropsToRare;
 		}
-		
+
 	}
 }

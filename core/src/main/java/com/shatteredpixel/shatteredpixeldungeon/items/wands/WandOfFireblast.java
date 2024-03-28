@@ -59,20 +59,17 @@ public class WandOfFireblast extends DamageWand {
 	}
 
 	//1/2/3 base damage with 1/2/3 scaling based on charges used
-	public int min(int lvl){
-		return (1+lvl) * chargesPerCast();
+	public int min(int lvl) {
+		return (1 + lvl) * chargesPerCast();
 	}
 
 	//2/8/18 base damage with 2/4/6 scaling based on charges used
-	public int max(int lvl){
-		switch (chargesPerCast()){
-			case 1: default:
-				return 2 + 2*lvl;
-			case 2:
-				return 2*(4 + 2*lvl);
-			case 3:
-				return 3*(6+2*lvl);
-		}
+	public int max(int lvl) {
+		return switch (chargesPerCast()) {
+			default -> 2 + 2 * lvl;
+			case 2 -> 2 * (4 + 2 * lvl);
+			case 3 -> 3 * (6 + 2 * lvl);
+		};
 	}
 
 	ConeAOE cone;
@@ -82,55 +79,55 @@ public class WandOfFireblast extends DamageWand {
 
 		ArrayList<Char> affectedChars = new ArrayList<>();
 		ArrayList<Integer> adjacentCells = new ArrayList<>();
-		for( int cell : cone.cells ){
+		for (int cell : cone.cells) {
 
 			//ignore caster cell
-			if (cell == bolt.sourcePos){
+			if (cell == bolt.sourcePos) {
 				continue;
 			}
 
 			//knock doors open
-			if (Dungeon.level.map[cell] == Terrain.DOOR){
+			if (Dungeon.level.map[cell] == Terrain.DOOR) {
 				Level.set(cell, Terrain.OPEN_DOOR);
 				GameScene.updateMap(cell);
 			}
 
 			//only ignite cells directly near caster if they are flammable or solid
 			if (Dungeon.level.adjacent(bolt.sourcePos, cell)
-					&& !(Dungeon.level.flamable[cell] || Dungeon.level.solid[cell])){
+					&& !(Dungeon.level.flamable[cell] || Dungeon.level.solid[cell])) {
 				adjacentCells.add(cell);
 				//do burn any heaps located here though
-				if (Dungeon.level.heaps.get(cell) != null){
+				if (Dungeon.level.heaps.get(cell) != null) {
 					Dungeon.level.heaps.get(cell).burn();
 				}
 			} else {
-				GameScene.add( Blob.seed( cell, 1+chargesPerCast(), Fire.class ) );
+				GameScene.add(Blob.seed(cell, 1 + chargesPerCast(), Fire.class));
 			}
 
-			Char ch = Actor.findChar( cell );
+			Char ch = Actor.findChar(cell);
 			if (ch != null) {
 				affectedChars.add(ch);
 			}
 		}
 
 		//if wand was shot right at a wall
-		if (cone.cells.isEmpty()){
+		if (cone.cells.isEmpty()) {
 			adjacentCells.add(bolt.sourcePos);
 		}
 
 		//ignite cells that share a side with an adjacent cell, are flammable, and are closer to the collision pos
 		//This prevents short-range casts not igniting barricades or bookshelves
-		for (int cell : adjacentCells){
-			for (int i : PathFinder.NEIGHBOURS8){
-				if (Dungeon.level.trueDistance(cell+i, bolt.collisionPos) < Dungeon.level.trueDistance(cell, bolt.collisionPos)
-						&& Dungeon.level.flamable[cell+i]
-						&& Fire.volumeAt(cell+i, Fire.class) == 0){
-					GameScene.add( Blob.seed( cell+i, 1+chargesPerCast(), Fire.class ) );
+		for (int cell : adjacentCells) {
+			for (int i : PathFinder.NEIGHBOURS8) {
+				if (Dungeon.level.trueDistance(cell + i, bolt.collisionPos) < Dungeon.level.trueDistance(cell, bolt.collisionPos)
+						&& Dungeon.level.flamable[cell + i]
+						&& Fire.volumeAt(cell + i, Fire.class) == 0) {
+					GameScene.add(Blob.seed(cell + i, 1 + chargesPerCast(), Fire.class));
 				}
 			}
 		}
 
-		for ( Char ch : affectedChars ){
+		for (Char ch : affectedChars) {
 			wandProc(ch, chargesPerCast());
 			ch.damage(damageRoll(), this);
 			if (ch.isAlive()) {
@@ -152,7 +149,7 @@ public class WandOfFireblast extends DamageWand {
 	@Override
 	public void onHit(MagesStaff staff, Char attacker, Char defender, int damage) {
 		//acts like blazing enchantment
-		new FireBlastOnHit().proc( staff, attacker, defender, damage);
+		new FireBlastOnHit().proc(staff, attacker, defender, damage);
 	}
 
 	private static class FireBlastOnHit extends Blazing {
@@ -167,20 +164,20 @@ public class WandOfFireblast extends DamageWand {
 		//need to perform flame spread logic here so we can determine what cells to put flames in.
 
 		// 5/7/9 distance
-		int maxDist = 3 + 2*chargesPerCast();
+		int maxDist = 3 + 2 * chargesPerCast();
 
-		cone = new ConeAOE( bolt,
+		cone = new ConeAOE(bolt,
 				maxDist,
-				30 + 20*chargesPerCast(),
+				30 + 20 * chargesPerCast(),
 				Ballistica.STOP_TARGET | Ballistica.STOP_SOLID | Ballistica.IGNORE_SOFT_SOLID);
 
 		//cast to cells at the tip, rather than all cells, better performance.
 		Ballistica longestRay = null;
-		for (Ballistica ray : cone.outerRays){
-			if (longestRay == null || ray.dist > longestRay.dist){
+		for (Ballistica ray : cone.outerRays) {
+			if (longestRay == null || ray.dist > longestRay.dist) {
 				longestRay = ray;
 			}
-			((MagicMissile)curUser.sprite.parent.recycle( MagicMissile.class )).reset(
+			((MagicMissile) curUser.sprite.parent.recycle(MagicMissile.class)).reset(
 					MagicMissile.FIRE_CONE,
 					curUser.sprite,
 					ray.path.get(ray.dist),
@@ -189,22 +186,22 @@ public class WandOfFireblast extends DamageWand {
 		}
 
 		//final zap at half distance of the longest ray, for timing of the actual wand effect
-		MagicMissile.boltFromChar( curUser.sprite.parent,
+		MagicMissile.boltFromChar(curUser.sprite.parent,
 				MagicMissile.FIRE_CONE,
 				curUser.sprite,
-				longestRay.path.get(longestRay.dist/2),
-				callback );
-		Sample.INSTANCE.play( Assets.Sounds.ZAP );
-		Sample.INSTANCE.play( Assets.Sounds.BURNING );
+				longestRay.path.get(longestRay.dist / 2),
+				callback);
+		Sample.INSTANCE.play(Assets.Sounds.ZAP);
+		Sample.INSTANCE.play(Assets.Sounds.BURNING);
 	}
 
 	@Override
 	protected int chargesPerCast() {
-		if (cursed || charger != null && charger.target.buff(WildMagic.WildMagicTracker.class) != null){
+		if (cursed || charger != null && charger.target.buff(WildMagic.WildMagicTracker.class) != null) {
 			return 1;
 		}
 		//consumes 30% of current charges, rounded up, with a min of 1 and a max of 3.
-		return (int) GameMath.gate(1, (int)Math.ceil(curCharges*0.3f), 3);
+		return (int) GameMath.gate(1, (int) Math.ceil(curCharges * 0.3f), 3);
 	}
 
 	@Override
@@ -217,12 +214,12 @@ public class WandOfFireblast extends DamageWand {
 
 	@Override
 	public void staffFx(MagesStaff.StaffParticle particle) {
-		particle.color( 0xEE7722 );
+		particle.color(0xEE7722);
 		particle.am = 0.5f;
 		particle.setLifespan(0.6f);
 		particle.acc.set(0, -40);
-		particle.setSize( 0f, 3f);
-		particle.shuffleXY( 1.5f );
+		particle.setSize(0f, 3f);
+		particle.shuffleXY(1.5f);
 	}
 
 }

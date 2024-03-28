@@ -342,34 +342,23 @@ public class HallsBossLevel extends Level {
 
 	@Override
 	public String tileName(int tile) {
-		switch (tile) {
-			case Terrain.WATER:
-				return Messages.get(HallsLevel.class, "water_name");
-			case Terrain.GRASS:
-				return Messages.get(HallsLevel.class, "grass_name");
-			case Terrain.HIGH_GRASS:
-				return Messages.get(HallsLevel.class, "high_grass_name");
-			case Terrain.STATUE:
-			case Terrain.STATUE_SP:
-				return Messages.get(HallsLevel.class, "statue_name");
-			default:
-				return super.tileName(tile);
-		}
+		return switch (tile) {
+			case Terrain.WATER -> Messages.get(HallsLevel.class, "water_name");
+			case Terrain.GRASS -> Messages.get(HallsLevel.class, "grass_name");
+			case Terrain.HIGH_GRASS -> Messages.get(HallsLevel.class, "high_grass_name");
+			case Terrain.STATUE, Terrain.STATUE_SP -> Messages.get(HallsLevel.class, "statue_name");
+			default -> super.tileName(tile);
+		};
 	}
 
 	@Override
 	public String tileDesc(int tile) {
-		switch (tile) {
-			case Terrain.WATER:
-				return Messages.get(HallsLevel.class, "water_desc");
-			case Terrain.STATUE:
-			case Terrain.STATUE_SP:
-				return Messages.get(HallsLevel.class, "statue_desc");
-			case Terrain.BOOKSHELF:
-				return Messages.get(HallsLevel.class, "bookshelf_desc");
-			default:
-				return super.tileDesc(tile);
-		}
+		return switch (tile) {
+			case Terrain.WATER -> Messages.get(HallsLevel.class, "water_desc");
+			case Terrain.STATUE, Terrain.STATUE_SP -> Messages.get(HallsLevel.class, "statue_desc");
+			case Terrain.BOOKSHELF -> Messages.get(HallsLevel.class, "bookshelf_desc");
+			default -> super.tileDesc(tile);
+		};
 	}
 
 	@Override

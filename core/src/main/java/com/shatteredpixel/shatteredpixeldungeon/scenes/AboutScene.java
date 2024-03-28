@@ -50,14 +50,14 @@ public class AboutScene extends PixelScene {
 		int h = Camera.main.height;
 
 		Archs archs = new Archs();
-		archs.setSize( w, h );
-		add( archs );
+		archs.setSize(w, h);
+		add(archs);
 
 		//darkens the arches
 		add(new ColorBlock(w, h, 0x88000000));
 
-		ScrollPane list = new ScrollPane( new Component() );
-		add( list );
+		ScrollPane list = new ScrollPane(new Component());
+		add(list);
 
 		Component content = list.content();
 		content.clear();
@@ -76,10 +76,10 @@ public class AboutScene extends PixelScene {
 				"Developed by: _Evan Debenham_\nBased on Pixel Dungeon's open source",
 				"ShatteredPixel.com",
 				shpxLink);
-		if (landscape()){
-			shpx.setRect((w - fullWidth)/2f - 6, 10, 120, 0);
+		if (landscape()) {
+			shpx.setRect((w - fullWidth) / 2f - 6, 10, 120, 0);
 		} else {
-			shpx.setRect((w - fullWidth)/2f, 6, 120, 0);
+			shpx.setRect((w - fullWidth) / 2f, 6, 120, 0);
 		}
 		content.add(shpx);
 
@@ -89,11 +89,11 @@ public class AboutScene extends PixelScene {
 				"Aleksandar Komitov",
 				"akomitov.artstation.com",
 				"https://akomitov.artstation.com/");
-		alex.setSize(colWidth/2f, 0);
-		if (landscape()){
-			alex.setPos(shpx.right(), shpx.top() + (shpx.height() - alex.height()*2)/2f);
+		alex.setSize(colWidth / 2f, 0);
+		if (landscape()) {
+			alex.setPos(shpx.right(), shpx.top() + (shpx.height() - alex.height() * 2) / 2f);
 		} else {
-			alex.setPos(w/2f - colWidth/2f, shpx.bottom()+5);
+			alex.setPos(w / 2f - colWidth / 2f, shpx.bottom() + 5);
 		}
 		content.add(alex);
 
@@ -103,7 +103,7 @@ public class AboutScene extends PixelScene {
 				"Celesti",
 				"s9menine.itch.io",
 				"https://s9menine.itch.io");
-		charlie.setRect(alex.right(), alex.top(), colWidth/2f, 0);
+		charlie.setRect(alex.right(), alex.top(), colWidth / 2f, 0);
 		content.add(charlie);
 
 		CreditsBlock kristjan = new CreditsBlock(false, Window.SHPX_COLOR,
@@ -112,7 +112,7 @@ public class AboutScene extends PixelScene {
 				"Kristjan Haaristo",
 				"youtube.com/@kristjan...",
 				"https://www.youtube.com/@kristjanthomashaaristo");
-		kristjan.setRect(alex.right() - colWidth/4f, alex.bottom() + 5, colWidth/2f, 0);
+		kristjan.setRect(alex.right() - colWidth / 4f, alex.bottom() + 5, colWidth / 2f, 0);
 		content.add(kristjan);
 
 		//*** Pixel Dungeon Credits ***
@@ -124,7 +124,7 @@ public class AboutScene extends PixelScene {
 				"Developed by: _Watabou_\nInspired by Brian Walker's Brogue",
 				"watabou.itch.io",
 				"https://watabou.itch.io/");
-		if (landscape()){
+		if (landscape()) {
 			wata.setRect(shpx.left(), kristjan.bottom() + 8, colWidth, 0);
 		} else {
 			wata.setRect(shpx.left(), kristjan.bottom() + 8, colWidth, 0);
@@ -139,11 +139,11 @@ public class AboutScene extends PixelScene {
 				"Cube Code",
 				null,
 				null);
-		cube.setSize(colWidth/2f, 0);
-		if (landscape()){
-			cube.setPos(wata.right() + colWidth/4f, wata.top() + (wata.height() - cube.height())/2f);
+		cube.setSize(colWidth / 2f, 0);
+		if (landscape()) {
+			cube.setPos(wata.right() + colWidth / 4f, wata.top() + (wata.height() - cube.height()) / 2f);
 		} else {
-			cube.setPos(alex.left() + colWidth/4f, wata.bottom()+5);
+			cube.setPos(alex.left() + colWidth / 4f, wata.bottom() + 5);
 		}
 		content.add(cube);
 
@@ -157,7 +157,7 @@ public class AboutScene extends PixelScene {
 				"ShatteredPD is powered by _libGDX_!",
 				"libgdx.com",
 				"https://libgdx.com/");
-		if (landscape()){
+		if (landscape()) {
 			gdx.setRect(wata.left(), wata.bottom() + 8, colWidth, 0);
 		} else {
 			gdx.setRect(wata.left(), cube.bottom() + 8, colWidth, 0);
@@ -172,11 +172,11 @@ public class AboutScene extends PixelScene {
 				"Edu García",
 				"gamedev.place/@arcnor",
 				"https://mastodon.gamedev.place/@arcnor");
-		arcnor.setSize(colWidth/2f, 0);
-		if (landscape()){
-			arcnor.setPos(gdx.right(), gdx.top() + (gdx.height() - arcnor.height())/2f);
+		arcnor.setSize(colWidth / 2f, 0);
+		if (landscape()) {
+			arcnor.setPos(gdx.right(), gdx.top() + (gdx.height() - arcnor.height()) / 2f);
 		} else {
-			arcnor.setPos(alex.left(), gdx.bottom()+5);
+			arcnor.setPos(alex.left(), gdx.bottom() + 5);
 		}
 		content.add(arcnor);
 
@@ -186,7 +186,7 @@ public class AboutScene extends PixelScene {
 				"Kevin MacMartin",
 				"github.com/prurigro",
 				"https://github.com/prurigro/");
-		purigro.setRect(arcnor.right()+2, arcnor.top(), colWidth/2f, 0);
+		purigro.setRect(arcnor.right() + 2, arcnor.top(), colWidth / 2f, 0);
 		content.add(purigro);
 
 		//*** Transifex Credits ***
@@ -198,7 +198,7 @@ public class AboutScene extends PixelScene {
 				"ShatteredPD is community-translated via _Transifex_! Thank you so much to all of Shattered's volunteer translators!",
 				"transifex.com/shattered-pixel/...",
 				"https://explore.transifex.com/shattered-pixel/shattered-pixel-dungeon/");
-		transifex.setRect((Camera.main.width - colWidth)/2f, purigro.bottom() + 12, colWidth, 0);
+		transifex.setRect((Camera.main.width - colWidth) / 2f, purigro.bottom() + 12, colWidth, 0);
 		content.add(transifex);
 
 		addLine(transifex.top() - 4, content);
@@ -211,51 +211,52 @@ public class AboutScene extends PixelScene {
 				Window.TITLE_COLOR,
 				null,
 				null,
-				"Shattered Pixel Dungeon uses the following sound samples from _freesound.org_:\n\n" +
+				"""
+						Shattered Pixel Dungeon uses the following sound samples from _freesound.org_:
 
-				"Creative Commons Attribution License:\n" +
-				"_SFX ATTACK SWORD 001.wav_ by _JoelAudio_\n" +
-				"_Pack: Slingshots and Longbows_ by _saturdaysoundguy_\n" +
-				"_Cracking/Crunching, A.wav_ by _InspectorJ_\n" +
-				"_Extracting a sword.mp3_ by _Taira Komori_\n" +
-				"_Pack: Uni Sound Library_ by _timmy h123_\n\n" +
+						Creative Commons Attribution License:
+						_SFX ATTACK SWORD 001.wav_ by _JoelAudio_
+						_Pack: Slingshots and Longbows_ by _saturdaysoundguy_
+						_Cracking/Crunching, A.wav_ by _InspectorJ_
+						_Extracting a sword.mp3_ by _Taira Komori_
+						_Pack: Uni Sound Library_ by _timmy h123_
 
-				"Creative Commons Zero License:\n" +
-				"_Pack: Movie Foley: Swords_ by _Black Snow_\n" +
-				"_machine gun shot 2.flac_ by _qubodup_\n" +
-				"_m240h machine gun burst 4.flac_ by _qubodup_\n" +
-				"_Pack: Onomatopoeia_ by _Adam N_\n" +
-				"_Pack: Watermelon_ by _lolamadeus_\n" +
-				"_metal chain_ by _Mediapaja2009_\n" +
-				"_Pack: Sword Clashes Pack_ by _JohnBuhr_\n" +
-				"_Pack: Metal Clangs and Pings_ by _wilhellboy_\n" +
-				"_Pack: Stabbing Stomachs & Crushing Skulls_ by _TheFilmLook_\n" +
-				"_Sheep bleating_ by _zachrau_\n" +
-				"_Lemon,Juicy,Squeeze,Fruit.wav_ by _Filipe Chagas_\n" +
-				"_Lemon,Squeeze,Squishy,Fruit.wav_ by _Filipe Chagas_",
+						Creative Commons Zero License:
+						_Pack: Movie Foley: Swords_ by _Black Snow_
+						_machine gun shot 2.flac_ by _qubodup_
+						_m240h machine gun burst 4.flac_ by _qubodup_
+						_Pack: Onomatopoeia_ by _Adam N_
+						_Pack: Watermelon_ by _lolamadeus_
+						_metal chain_ by _Mediapaja2009_
+						_Pack: Sword Clashes Pack_ by _JohnBuhr_
+						_Pack: Metal Clangs and Pings_ by _wilhellboy_
+						_Pack: Stabbing Stomachs & Crushing Skulls_ by _TheFilmLook_
+						_Sheep bleating_ by _zachrau_
+						_Lemon,Juicy,Squeeze,Fruit.wav_ by _Filipe Chagas_
+						_Lemon,Squeeze,Squishy,Fruit.wav_ by _Filipe Chagas_""",
 				"www.freesound.org",
 				"https://www.freesound.org");
-		freesound.setRect(transifex.left()-10, transifex.bottom() + 8, colWidth+20, 0);
+		freesound.setRect(transifex.left() - 10, transifex.bottom() + 8, colWidth + 20, 0);
 		content.add(freesound);
 
-		content.setSize( fullWidth, freesound.bottom()+10 );
+		content.setSize(fullWidth, freesound.bottom() + 10);
 
-		list.setRect( 0, 0, w, h );
+		list.setRect(0, 0, w, h);
 		list.scrollTo(0, 0);
 
 		ExitButton btnExit = new ExitButton();
-		btnExit.setPos( Camera.main.width - btnExit.width(), 0 );
-		add( btnExit );
+		btnExit.setPos(Camera.main.width - btnExit.width(), 0);
+		add(btnExit);
 
 		//fadeIn();
 	}
-	
+
 	@Override
 	protected void onBackPressed() {
 		ShatteredPixelDungeon.switchScene(TitleScene.class);
 	}
 
-	private void addLine( float y, Group content ){
+	private void addLine(float y, Group content) {
 		ColorBlock line = new ColorBlock(Camera.main.width, 1, 0xFF333333);
 		line.y = y;
 		content.add(line);
@@ -274,7 +275,7 @@ public class AboutScene extends PixelScene {
 		PointerArea linkButton;
 
 		//many elements can be null, but body is assumed to have content.
-		private CreditsBlock(boolean large, int highlight, String title, Image avatar, String body, String linkText, String linkUrl){
+		private CreditsBlock(boolean large, int highlight, String title, Image avatar, String body, String linkText, String linkUrl) {
 			super();
 
 			this.large = large;
@@ -285,13 +286,13 @@ public class AboutScene extends PixelScene {
 				add(this.title);
 			}
 
-			if (avatar != null){
+			if (avatar != null) {
 				this.avatar = avatar;
 				add(this.avatar);
 			}
 
-			if (large && highlight != -1 && this.avatar != null){
-				this.flare = new Flare( 7, 24 ).color( highlight, true ).show(this.avatar, 0);
+			if (large && highlight != -1 && this.avatar != null) {
+				this.flare = new Flare(7, 24).color(highlight, true).show(this.avatar, 0);
 				this.flare.angularSpeed = 20;
 			}
 
@@ -300,7 +301,7 @@ public class AboutScene extends PixelScene {
 			if (large) this.body.align(RenderedTextBlock.CENTER_ALIGN);
 			add(this.body);
 
-			if (linkText != null && linkUrl != null){
+			if (linkText != null && linkUrl != null) {
 
 				int color = 0xFFFFFFFF;
 				if (highlight != -1) color = 0xFF000000 | highlight;
@@ -311,10 +312,10 @@ public class AboutScene extends PixelScene {
 				if (highlight != -1) this.link.hardlight(highlight);
 				add(this.link);
 
-				linkButton = new PointerArea(0, 0, 0, 0){
+				linkButton = new PointerArea(0, 0, 0, 0) {
 					@Override
-					protected void onClick( PointerEvent event ) {
-						ShatteredPixelDungeon.platform.openURI( linkUrl );
+					protected void onClick(PointerEvent event) {
+						ShatteredPixelDungeon.platform.openURI(linkUrl);
 					}
 				};
 				add(linkButton);
@@ -328,70 +329,70 @@ public class AboutScene extends PixelScene {
 
 			float topY = top();
 
-			if (title != null){
-				title.maxWidth((int)width());
-				title.setPos( x + (width() - title.width())/2f, topY);
+			if (title != null) {
+				title.maxWidth((int) width());
+				title.setPos(x + (width() - title.width()) / 2f, topY);
 				topY += title.height() + (large ? 2 : 1);
 			}
 
-			if (large){
+			if (large) {
 
-				if (avatar != null){
-					avatar.x = x + (width()-avatar.width())/2f;
+				if (avatar != null) {
+					avatar.x = x + (width() - avatar.width()) / 2f;
 					avatar.y = topY;
 					PixelScene.align(avatar);
-					if (flare != null){
+					if (flare != null) {
 						flare.point(avatar.center());
 					}
 					topY = avatar.y + avatar.height() + 2;
 				}
 
-				body.maxWidth((int)width());
-				body.setPos( x + (width() - body.width())/2f, topY);
+				body.maxWidth((int) width());
+				body.setPos(x + (width() - body.width()) / 2f, topY);
 				topY += body.height() + 2;
 
 			} else {
 
-				if (avatar != null){
+				if (avatar != null) {
 					avatar.x = x;
-					body.maxWidth((int)(width() - avatar.width - 1));
+					body.maxWidth((int) (width() - avatar.width - 1));
 
 					float fullAvHeight = Math.max(avatar.height(), 16);
-					if (fullAvHeight > body.height()){
-						avatar.y = topY + (fullAvHeight - avatar.height())/2f;
+					if (fullAvHeight > body.height()) {
+						avatar.y = topY + (fullAvHeight - avatar.height()) / 2f;
 						PixelScene.align(avatar);
-						body.setPos( avatar.x + avatar.width() + 1, topY + (fullAvHeight - body.height())/2f);
+						body.setPos(avatar.x + avatar.width() + 1, topY + (fullAvHeight - body.height()) / 2f);
 						topY += fullAvHeight + 1;
 					} else {
-						avatar.y = topY + (body.height() - fullAvHeight)/2f;
+						avatar.y = topY + (body.height() - fullAvHeight) / 2f;
 						PixelScene.align(avatar);
-						body.setPos( avatar.x + avatar.width() + 1, topY);
+						body.setPos(avatar.x + avatar.width() + 1, topY);
 						topY += body.height() + 2;
 					}
 
 				} else {
 					topY += 1;
-					body.maxWidth((int)width());
-					body.setPos( x, topY);
-					topY += body.height()+2;
+					body.maxWidth((int) width());
+					body.setPos(x, topY);
+					topY += body.height() + 2;
 				}
 
 			}
 
-			if (link != null){
+			if (link != null) {
 				if (large) topY += 1;
-				link.maxWidth((int)width());
-				link.setPos( x + (width() - link.width())/2f, topY);
+				link.maxWidth((int) width());
+				link.setPos(x + (width() - link.width()) / 2f, topY);
 				topY += link.height() + 2;
 
-				linkButton.x = link.left()-1;
-				linkButton.y = link.top()-1;
-				linkButton.width = link.width()+2;
-				linkButton.height = link.height()+2;
+				linkButton.x = link.left() - 1;
+				linkButton.y = link.top() - 1;
+				linkButton.width = link.width() + 2;
+				linkButton.height = link.height() + 2;
 
 				linkUnderline.size(link.width(), PixelScene.align(0.49f));
 				linkUnderline.x = link.left();
-				linkUnderline.y = link.bottom()+1;
+				linkUnderline.y = link.bottom() + 1;
 
 			}
 

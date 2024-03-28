@@ -226,14 +226,11 @@ public class Combo extends Buff implements ActionIndicator.Action {
 		}
 
 		public String desc(int count) {
-			switch (this) {
-				default:
-					return Messages.get(this, name() + ".desc");
-				case SLAM:
-					return Messages.get(this, name() + ".desc", count * 20);
-				case CRUSH:
-					return Messages.get(this, name() + ".desc", count * 25);
-			}
+			return switch (this) {
+				default -> Messages.get(this, name() + ".desc");
+				case SLAM -> Messages.get(this, name() + ".desc", count * 20);
+				case CRUSH -> Messages.get(this, name() + ".desc", count * 25);
+			};
 
 		}
 

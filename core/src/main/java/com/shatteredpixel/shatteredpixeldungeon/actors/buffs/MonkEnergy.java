@@ -160,8 +160,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 		else energyGain = 1;
 
 		float enGainMulti = 1f;
-		if (target instanceof Hero) {
-			Hero hero = (Hero) target;
+		if (target instanceof Hero hero) {
 			if (hero.hasTalent(Talent.UNENCUMBERED_SPIRIT)) {
 				int points = hero.pointsInTalent(Talent.UNENCUMBERED_SPIRIT);
 

@@ -135,7 +135,7 @@ public enum Rankings {
 
 		records.add(rec);
 
-		Collections.sort(records, scoreComparator);
+		records.sort(scoreComparator);
 
 		lastRecord = records.indexOf(rec);
 		int size = records.size();

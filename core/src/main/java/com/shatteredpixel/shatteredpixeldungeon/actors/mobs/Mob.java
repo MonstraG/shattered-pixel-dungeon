@@ -1274,8 +1274,7 @@ public abstract class Mob extends Char {
 			if (gravitatePos == -1) {
 				Collections.shuffle(candidatePositions);
 			} else {
-				Collections.sort(candidatePositions, (t1, t2) -> Dungeon.level.distance(gravitatePos, t1) -
-						Dungeon.level.distance(gravitatePos, t2));
+				candidatePositions.sort(Comparator.comparingInt(t -> Dungeon.level.distance(gravitatePos, t)));
 			}
 
 			for (Mob ally : heldAllies) {

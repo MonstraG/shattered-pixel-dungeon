@@ -42,33 +42,32 @@ import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
 public class Dagger extends MeleeWeapon {
-	
+
 	{
 		image = ItemSpriteSheet.DAGGER;
 		hitSound = Assets.Sounds.HIT_STAB;
 		hitSoundPitch = 1.1f;
 
 		tier = 1;
-		
+
 		bones = false;
 	}
 
 	@Override
 	public int max(int lvl) {
-		return  4*(tier+1) +    //8 base, down from 10
-				lvl*(tier+1);   //scaling unchanged
+		return 4 * (tier + 1) +    //8 base, down from 10
+				lvl * (tier + 1);   //scaling unchanged
 	}
-	
+
 	@Override
 	public int damageRoll(Char owner) {
-		if (owner instanceof Hero) {
-			Hero hero = (Hero)owner;
+		if (owner instanceof Hero hero) {
 			Char enemy = hero.enemy();
 			if (enemy instanceof Mob && ((Mob) enemy).surprisedBy(hero)) {
 				//deals 75% toward max to max on surprise, instead of min to max.
 				int diff = max() - min();
 				int damage = augment.damageFactor(Random.NormalIntRange(
-						min() + Math.round(diff*0.75f),
+						min() + Math.round(diff * 0.75f),
 						max()));
 				int exStr = hero.STR() - STRReq();
 				if (exStr > 0) {
@@ -85,12 +84,12 @@ public class Dagger extends MeleeWeapon {
 		return Messages.get(this, "prompt");
 	}
 
-	public boolean useTargeting(){
+	public boolean useTargeting() {
 		return false;
 	}
 
 	@Override
-	protected int baseChargeUse(Hero hero, Char target){
+	protected int baseChargeUse(Hero hero, Char target) {
 		return 2;
 	}
 
@@ -99,14 +98,14 @@ public class Dagger extends MeleeWeapon {
 		sneakAbility(hero, target, 6, this);
 	}
 
-	public static void sneakAbility(Hero hero, Integer target, int maxDist, MeleeWeapon wep){
+	public static void sneakAbility(Hero hero, Integer target, int maxDist, MeleeWeapon wep) {
 		if (target == null) {
 			return;
 		}
 
 		if (Actor.findChar(target) != null || !Dungeon.level.heroFOV[target] || hero.rooted) {
 			GLog.w(Messages.get(wep, "ability_bad_position"));
-			if (Dungeon.hero.rooted) PixelScene.shake( 1, 1f );
+			if (Dungeon.hero.rooted) PixelScene.shake(1, 1f);
 			return;
 		}
 
@@ -120,16 +119,16 @@ public class Dagger extends MeleeWeapon {
 		Buff.affect(hero, Invisibility.class, Actor.TICK);
 		hero.next();
 
-		Dungeon.hero.sprite.turnTo( Dungeon.hero.pos, target);
+		Dungeon.hero.sprite.turnTo(Dungeon.hero.pos, target);
 		Dungeon.hero.pos = target;
 		Dungeon.level.occupyCell(Dungeon.hero);
 		Dungeon.observe();
 		GameScene.updateFog();
 		Dungeon.hero.checkVisibleMobs();
 
-		Dungeon.hero.sprite.place( Dungeon.hero.pos );
-		CellEmitter.get( Dungeon.hero.pos ).burst( Speck.factory( Speck.WOOL ), 6 );
-		Sample.INSTANCE.play( Assets.Sounds.PUFF );
+		Dungeon.hero.sprite.place(Dungeon.hero.pos);
+		CellEmitter.get(Dungeon.hero.pos).burst(Speck.factory(Speck.WOOL), 6);
+		Sample.INSTANCE.play(Assets.Sounds.PUFF);
 
 		wep.afterAbilityUsed(hero);
 	}

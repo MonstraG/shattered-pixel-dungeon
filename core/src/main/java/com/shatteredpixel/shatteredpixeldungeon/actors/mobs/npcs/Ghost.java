@@ -156,23 +156,20 @@ public class Ghost extends NPC {
 			}
 		} else {
 			Mob questBoss;
-			String txt_quest;
-
-			switch (Quest.type) {
-				case 1:
-				default:
+			String txt_quest = switch (Quest.type) {
+				default -> {
 					questBoss = new FetidRat();
-					txt_quest = Messages.get(this, "rat_1", Messages.titleCase(Dungeon.hero.name()));
-					break;
-				case 2:
+					yield Messages.get(this, "rat_1", Messages.titleCase(Dungeon.hero.name()));
+				}
+				case 2 -> {
 					questBoss = new GnollTrickster();
-					txt_quest = Messages.get(this, "gnoll_1", Messages.titleCase(Dungeon.hero.name()));
-					break;
-				case 3:
+					yield Messages.get(this, "gnoll_1", Messages.titleCase(Dungeon.hero.name()));
+				}
+				case 3 -> {
 					questBoss = new GreatCrab();
-					txt_quest = Messages.get(this, "crab_1", Messages.titleCase(Dungeon.hero.name()));
-					break;
-			}
+					yield Messages.get(this, "crab_1", Messages.titleCase(Dungeon.hero.name()));
+				}
+			};
 
 			questBoss.pos = Dungeon.level.randomRespawnCell(this);
 

@@ -46,37 +46,37 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.watabou.utils.Random;
 
 public class HighGrass {
-	
+
 	//prevents items dropped from grass, from trampling that same grass.
 	//yes this is a bit ugly, oh well.
 	private static boolean freezeTrample = false;
 
-	public static void trample( Level level, int pos ) {
-		
+	public static void trample(Level level, int pos) {
+
 		if (freezeTrample) return;
-		
+
 		Char ch = Actor.findChar(pos);
-		
-		if (level.map[pos] == Terrain.FURROWED_GRASS){
-			if (ch instanceof Hero && ((Hero) ch).heroClass == HeroClass.HUNTRESS){
+
+		if (level.map[pos] == Terrain.FURROWED_GRASS) {
+			if (ch instanceof Hero && ((Hero) ch).heroClass == HeroClass.HUNTRESS) {
 				//Do nothing
 				freezeTrample = true;
 			} else {
 				Level.set(pos, Terrain.GRASS);
 			}
-			
+
 		} else {
-			if (ch instanceof Hero && ((Hero) ch).heroClass == HeroClass.HUNTRESS){
+			if (ch instanceof Hero && ((Hero) ch).heroClass == HeroClass.HUNTRESS) {
 				Level.set(pos, Terrain.FURROWED_GRASS);
 				freezeTrample = true;
 			} else {
 				Level.set(pos, Terrain.GRASS);
 			}
-			
+
 			int naturalismLevel = 0;
-			
+
 			if (ch != null) {
-				SandalsOfNature.Naturalism naturalism = ch.buff( SandalsOfNature.Naturalism.class );
+				SandalsOfNature.Naturalism naturalism = ch.buff(SandalsOfNature.Naturalism.class);
 				if (naturalism != null) {
 					if (!naturalism.isCursed()) {
 						naturalismLevel = naturalism.itemLevel() + 1;
@@ -87,8 +87,8 @@ public class HighGrass {
 				}
 
 				//berries try to drop on floors 2/3/4/6/7/8, to a max of 4/6
-				if (ch instanceof Hero && ((Hero) ch).hasTalent(Talent.NATURES_BOUNTY)){
-					int berriesAvailable = 2 + 2*((Hero) ch).pointsInTalent(Talent.NATURES_BOUNTY);
+				if (ch instanceof Hero && ((Hero) ch).hasTalent(Talent.NATURES_BOUNTY)) {
+					int berriesAvailable = 2 + 2 * ((Hero) ch).pointsInTalent(Talent.NATURES_BOUNTY);
 
 					Talent.NatureBerriesDropped dropped = Buff.affect(ch, Talent.NatureBerriesDropped.class);
 					berriesAvailable -= dropped.count();
@@ -116,47 +116,44 @@ public class HighGrass {
 			//grass gives 1/3 the normal amount of loot in fungi level
 			if (Dungeon.level instanceof MiningLevel
 					&& Blacksmith.Quest.Type() == Blacksmith.Quest.FUNGI
-					&& Random.Int(3) != 0){
+					&& Random.Int(3) != 0) {
 				naturalismLevel = -1;
 			}
-			
+
 			if (naturalismLevel >= 0) {
 				// Seed, scales from 1/25 to 1/9
 				if (Random.Int(25 - (naturalismLevel * 4)) == 0) {
 					level.drop(Generator.random(Generator.Category.SEED), pos).sprite.drop();
 				}
-				
+
 				// Dew, scales from 1/6 to 1/4
-				if (Random.Int(6 - naturalismLevel/2) == 0) {
+				if (Random.Int(6 - naturalismLevel / 2) == 0) {
 					level.drop(new Dewdrop(), pos).sprite.drop();
 				}
 			}
 
 			//Camouflage
-			if (ch instanceof Hero) {
-				Hero hero = (Hero) ch;
+			if (ch instanceof Hero hero) {
 				if (hero.belongings.armor() != null && hero.belongings.armor().hasGlyph(Camouflage.class, hero)) {
 					Camouflage.activate(hero, hero.belongings.armor.buffedLvl());
 				}
-			} else if (ch instanceof DriedRose.GhostHero){
-				DriedRose.GhostHero ghost = (DriedRose.GhostHero) ch;
-				if (ghost.armor() != null && ghost.armor().hasGlyph(Camouflage.class, ghost)){
+			} else if (ch instanceof DriedRose.GhostHero ghost) {
+				if (ghost.armor() != null && ghost.armor().hasGlyph(Camouflage.class, ghost)) {
 					Camouflage.activate(ghost, ghost.armor().buffedLvl());
 				}
-			} else if (ch instanceof ArmoredStatue){
-				ArmoredStatue statue = (ArmoredStatue) ch;
-				if (statue.armor() != null && statue.armor().hasGlyph(Camouflage.class, statue)){
+			} else if (ch instanceof ArmoredStatue statue) {
+				if (statue.armor() != null && statue.armor().hasGlyph(Camouflage.class, statue)) {
 					Camouflage.activate(statue, statue.armor().buffedLvl());
 				}
 			}
-			
+
 		}
-		
+
 		freezeTrample = false;
-		
+
 		if (ShatteredPixelDungeon.scene() instanceof GameScene) {
 			GameScene.updateMap(pos);
-			
+
 			CellEmitter.get(pos).burst(LeafParticle.LEVEL_SPECIFIC, 4);
 			if (Dungeon.level.heroFOV[pos]) Dungeon.observe();
 		}

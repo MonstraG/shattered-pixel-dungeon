@@ -26,14 +26,14 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
 public class RegionLorePage {
 
-	public static DocumentPage pageForDoc( Document doc ){
-		switch (doc){
-			case SEWERS_GUARD: default:     return new RegionLorePage.Sewers();
-			case PRISON_WARDEN:             return new RegionLorePage.Prison();
-			case CAVES_EXPLORER:            return new RegionLorePage.Caves();
-			case CITY_WARLOCK:              return new RegionLorePage.City();
-			case HALLS_KING:                return new RegionLorePage.Halls();
-		}
+	public static DocumentPage pageForDoc(Document doc) {
+		return switch (doc) {
+			default -> new Sewers();
+			case PRISON_WARDEN -> new Prison();
+			case CAVES_EXPLORER -> new Caves();
+			case CITY_WARLOCK -> new City();
+			case HALLS_KING -> new Halls();
+		};
 	}
 
 	public static class Sewers extends DocumentPage {

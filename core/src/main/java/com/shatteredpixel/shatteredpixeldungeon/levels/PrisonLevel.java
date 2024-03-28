@@ -166,24 +166,19 @@ public class PrisonLevel extends RegularLevel {
 
 	@Override
 	public String tileName(int tile) {
-		switch (tile) {
-			case Terrain.WATER:
-				return Messages.get(PrisonLevel.class, "water_name");
-			default:
-				return super.tileName(tile);
-		}
+		return switch (tile) {
+			case Terrain.WATER -> Messages.get(PrisonLevel.class, "water_name");
+			default -> super.tileName(tile);
+		};
 	}
 
 	@Override
 	public String tileDesc(int tile) {
-		switch (tile) {
-			case Terrain.EMPTY_DECO:
-				return Messages.get(PrisonLevel.class, "empty_deco_desc");
-			case Terrain.BOOKSHELF:
-				return Messages.get(PrisonLevel.class, "bookshelf_desc");
-			default:
-				return super.tileDesc(tile);
-		}
+		return switch (tile) {
+			case Terrain.EMPTY_DECO -> Messages.get(PrisonLevel.class, "empty_deco_desc");
+			case Terrain.BOOKSHELF -> Messages.get(PrisonLevel.class, "bookshelf_desc");
+			default -> super.tileDesc(tile);
+		};
 	}
 
 	@Override

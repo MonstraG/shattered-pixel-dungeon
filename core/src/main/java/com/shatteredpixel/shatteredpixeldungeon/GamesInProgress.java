@@ -34,79 +34,79 @@ import java.util.Comparator;
 import java.util.HashMap;
 
 public class GamesInProgress {
-	
+
 	public static final int MAX_SLOTS = HeroClass.values().length;
-	
+
 	//null means we have loaded info and it is empty, no entry means unknown.
 	private static HashMap<Integer, Info> slotStates = new HashMap<>();
 	public static int curSlot;
-	
+
 	public static HeroClass selectedClass;
-	
+
 	private static final String GAME_FOLDER = "game%d";
-	private static final String GAME_FILE	= "game.dat";
-	private static final String DEPTH_FILE	= "depth%d.dat";
-	private static final String DEPTH_BRANCH_FILE	= "depth%d-branch%d.dat";
-	
-	public static boolean gameExists( int slot ){
+	private static final String GAME_FILE = "game.dat";
+	private static final String DEPTH_FILE = "depth%d.dat";
+	private static final String DEPTH_BRANCH_FILE = "depth%d-branch%d.dat";
+
+	public static boolean gameExists(int slot) {
 		return FileUtils.dirExists(gameFolder(slot))
 				&& FileUtils.fileLength(gameFile(slot)) > 1;
 	}
-	
-	public static String gameFolder( int slot ){
+
+	public static String gameFolder(int slot) {
 		return Messages.format(GAME_FOLDER, slot);
 	}
-	
-	public static String gameFile( int slot ){
+
+	public static String gameFile(int slot) {
 		return gameFolder(slot) + "/" + GAME_FILE;
 	}
-	
-	public static String depthFile( int slot, int depth, int branch ) {
+
+	public static String depthFile(int slot, int depth, int branch) {
 		if (branch == 0) {
 			return gameFolder(slot) + "/" + Messages.format(DEPTH_FILE, depth);
 		} else {
 			return gameFolder(slot) + "/" + Messages.format(DEPTH_BRANCH_FILE, depth, branch);
 		}
 	}
-	
-	public static int firstEmpty(){
-		for (int i = 1; i <= MAX_SLOTS; i++){
+
+	public static int firstEmpty() {
+		for (int i = 1; i <= MAX_SLOTS; i++) {
 			if (check(i) == null) return i;
 		}
 		return -1;
 	}
-	
-	public static ArrayList<Info> checkAll(){
+
+	public static ArrayList<Info> checkAll() {
 		ArrayList<Info> result = new ArrayList<>();
-		for (int i = 1; i <= MAX_SLOTS; i++){
+		for (int i = 1; i <= MAX_SLOTS; i++) {
 			Info curr = check(i);
 			if (curr != null) result.add(curr);
 		}
 		Collections.sort(result, scoreComparator);
 		return result;
 	}
-	
-	public static Info check( int slot ) {
-		
-		if (slotStates.containsKey( slot )) {
-			
-			return slotStates.get( slot );
-			
-		} else if (!gameExists( slot )) {
-			
+
+	public static Info check(int slot) {
+
+		if (slotStates.containsKey(slot)) {
+
+			return slotStates.get(slot);
+
+		} else if (!gameExists(slot)) {
+
 			slotStates.put(slot, null);
 			return null;
-			
+
 		} else {
-			
+
 			Info info;
 			try {
-				
+
 				Bundle bundle = FileUtils.bundleFromFile(gameFile(slot));
 				info = new Info();
 				info.slot = slot;
 				Dungeon.preview(info, bundle);
-				
+
 				//saves from before v1.4.3 are not supported
 				if (info.version < ShatteredPixelDungeon.v1_4_3) {
 					info = null;
@@ -114,21 +114,21 @@ public class GamesInProgress {
 
 			} catch (IOException e) {
 				info = null;
-			} catch (Exception e){
-				ShatteredPixelDungeon.reportException( e );
+			} catch (Exception e) {
+				ShatteredPixelDungeon.reportException(e);
 				info = null;
 			}
-			
-			slotStates.put( slot, info );
+
+			slotStates.put(slot, info);
 			return info;
-			
+
 		}
 	}
 
 	public static void set(int slot) {
 		Info info = new Info();
 		info.slot = slot;
-		
+
 		info.depth = Dungeon.depth;
 		info.challenges = Dungeon.challenges;
 
@@ -136,7 +136,7 @@ public class GamesInProgress {
 		info.customSeed = Dungeon.customSeedText;
 		info.daily = Dungeon.daily;
 		info.dailyReplay = Dungeon.dailyReplay;
-		
+
 		info.level = Dungeon.hero.lvl;
 		info.str = Dungeon.hero.STR;
 		info.strBonus = Dungeon.hero.STR() - Dungeon.hero.STR;
@@ -147,24 +147,24 @@ public class GamesInProgress {
 		info.heroClass = Dungeon.hero.heroClass;
 		info.subClass = Dungeon.hero.subClass;
 		info.armorTier = Dungeon.hero.tier();
-		
+
 		info.goldCollected = Statistics.goldCollected;
 		info.maxDepth = Statistics.deepestFloor;
 
-		slotStates.put( slot, info );
+		slotStates.put(slot, info);
 	}
-	
-	public static void setUnknown( int slot ) {
-		slotStates.remove( slot );
+
+	public static void setUnknown(int slot) {
+		slotStates.remove(slot);
 	}
-	
-	public static void delete( int slot ) {
-		slotStates.put( slot, null );
+
+	public static void delete(int slot) {
+		slotStates.put(slot, null);
 	}
-	
+
 	public static class Info {
 		public int slot;
-		
+
 		public int depth;
 		public int version;
 		public int challenges;
@@ -184,17 +184,14 @@ public class GamesInProgress {
 		public HeroClass heroClass;
 		public HeroSubClass subClass;
 		public int armorTier;
-		
+
 		public int goldCollected;
 		public int maxDepth;
 	}
-	
-	public static final Comparator<GamesInProgress.Info> scoreComparator = new Comparator<GamesInProgress.Info>() {
-		@Override
-		public int compare(GamesInProgress.Info lhs, GamesInProgress.Info rhs ) {
-			int lScore = (lhs.level * lhs.maxDepth * 100) + lhs.goldCollected;
-			int rScore = (rhs.level * rhs.maxDepth * 100) + rhs.goldCollected;
-			return (int)Math.signum( rScore - lScore );
-		}
+
+	public static final Comparator<GamesInProgress.Info> scoreComparator = (lhs, rhs) -> {
+		int lScore = (lhs.level * lhs.maxDepth * 100) + lhs.goldCollected;
+		int rScore = (rhs.level * rhs.maxDepth * 100) + rhs.goldCollected;
+		return (int) Math.signum(rScore - lScore);
 	};
 }

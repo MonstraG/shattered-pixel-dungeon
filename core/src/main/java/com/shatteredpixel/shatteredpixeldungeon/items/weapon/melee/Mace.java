@@ -50,8 +50,8 @@ public class Mace extends MeleeWeapon {
 
 	@Override
 	public int max(int lvl) {
-		return  4*(tier+1) +    //16 base, down from 20
-				lvl*(tier+1);   //scaling unchanged
+		return 4 * (tier + 1) +    //16 base, down from 20
+				lvl * (tier + 1);   //scaling unchanged
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class Mace extends MeleeWeapon {
 	}
 
 	@Override
-	protected int baseChargeUse(Hero hero, Char target){
+	protected int baseChargeUse(Hero hero, Char target) {
 		if (target == null || (target instanceof Mob && ((Mob) target).surprisedBy(hero))) {
 			return 1;
 		} else {
@@ -73,7 +73,7 @@ public class Mace extends MeleeWeapon {
 		Mace.heavyBlowAbility(hero, target, 1.40f, this);
 	}
 
-	public static void heavyBlowAbility(Hero hero, Integer target, float dmgMulti, MeleeWeapon wep){
+	public static void heavyBlowAbility(Hero hero, Integer target, float dmgMulti, MeleeWeapon wep) {
 		if (target == null) {
 			return;
 		}
@@ -85,7 +85,7 @@ public class Mace extends MeleeWeapon {
 		}
 
 		hero.belongings.abilityWeapon = wep;
-		if (!hero.canAttack(enemy)){
+		if (!hero.canAttack(enemy)) {
 			GLog.w(Messages.get(wep, "ability_bad_position"));
 			hero.belongings.abilityWeapon = null;
 			return;
@@ -93,38 +93,35 @@ public class Mace extends MeleeWeapon {
 		hero.belongings.abilityWeapon = null;
 
 		//need to separately check charges here, as non-surprise attacks cost 2
-		if (enemy instanceof Mob && !((Mob) enemy).surprisedBy(hero)){
+		if (enemy instanceof Mob && !((Mob) enemy).surprisedBy(hero)) {
 			Charger charger = Buff.affect(hero, Charger.class);
 			if (Dungeon.hero.belongings.weapon == wep) {
-				if (charger.charges + charger.partialCharge < wep.abilityChargeUse(hero, enemy)){
+				if (charger.charges + charger.partialCharge < wep.abilityChargeUse(hero, enemy)) {
 					GLog.w(Messages.get(wep, "ability_no_charge"));
 					return;
 				}
 			} else {
-				if (charger.secondCharges + charger.secondPartialCharge < wep.abilityChargeUse(hero, enemy)){
+				if (charger.secondCharges + charger.secondPartialCharge < wep.abilityChargeUse(hero, enemy)) {
 					GLog.w(Messages.get(wep, "ability_no_charge"));
 					return;
 				}
 			}
 		}
 
-		hero.sprite.attack(enemy.pos, new Callback() {
-			@Override
-			public void call() {
-				wep.beforeAbilityUsed(hero, enemy);
-				AttackIndicator.target(enemy);
-				if (hero.attack(enemy, dmgMulti, 0, Char.INFINITE_ACCURACY)) {
-					Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
-					if (enemy.isAlive()){
-						Buff.affect(enemy, Daze.class, Daze.DURATION);
-					} else {
-						wep.onAbilityKill(hero, enemy);
-					}
+		hero.sprite.attack(enemy.pos, () -> {
+			wep.beforeAbilityUsed(hero, enemy);
+			AttackIndicator.target(enemy);
+			if (hero.attack(enemy, dmgMulti, 0, Char.INFINITE_ACCURACY)) {
+				Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
+				if (enemy.isAlive()) {
+					Buff.affect(enemy, Daze.class, Daze.DURATION);
+				} else {
+					wep.onAbilityKill(hero, enemy);
 				}
-				Invisibility.dispel();
-				hero.spendAndNext(hero.attackDelay());
-				wep.afterAbilityUsed(hero);
 			}
+			Invisibility.dispel();
+			hero.spendAndNext(hero.attackDelay());
+			wep.afterAbilityUsed(hero);
 		});
 	}
 

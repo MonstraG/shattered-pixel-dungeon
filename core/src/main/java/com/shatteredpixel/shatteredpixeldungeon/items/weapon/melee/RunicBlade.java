@@ -51,8 +51,8 @@ public class RunicBlade extends MeleeWeapon {
 
 	@Override
 	public int max(int lvl) {
-		return  5*(tier) +                	//20 base, down from 25
-				Math.round(lvl*(tier+2));	//+6 per level, up from +5
+		return 5 * (tier) +                    //20 base, down from 25
+				Math.round(lvl * (tier + 2));    //+6 per level, up from +5
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public class RunicBlade extends MeleeWeapon {
 		//we apply here because of projecting
 		RunicSlashTracker tracker = Buff.affect(hero, RunicSlashTracker.class);
 		hero.belongings.abilityWeapon = this;
-		if (!hero.canAttack(enemy)){
+		if (!hero.canAttack(enemy)) {
 			GLog.w(Messages.get(this, "ability_bad_position"));
 			tracker.detach();
 			hero.belongings.abilityWeapon = null;
@@ -83,25 +83,25 @@ public class RunicBlade extends MeleeWeapon {
 		}
 		hero.belongings.abilityWeapon = null;
 
-		hero.sprite.attack(enemy.pos, new Callback() {
-			@Override
-			public void call() {
-				beforeAbilityUsed(hero, enemy);
-				AttackIndicator.target(enemy);
-				if (hero.attack(enemy, 1f, 0, Char.INFINITE_ACCURACY)){
-					Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
-					if (!enemy.isAlive()){
-						onAbilityKill(hero, enemy);
-					}
+		hero.sprite.attack(enemy.pos, () -> {
+			beforeAbilityUsed(hero, enemy);
+			AttackIndicator.target(enemy);
+			if (hero.attack(enemy, 1f, 0, Char.INFINITE_ACCURACY)) {
+				Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
+				if (!enemy.isAlive()) {
+					onAbilityKill(hero, enemy);
 				}
-				tracker.detach();
-				Invisibility.dispel();
-				hero.spendAndNext(hero.attackDelay());
-				afterAbilityUsed(hero);
 			}
+			tracker.detach();
+			Invisibility.dispel();
+			hero.spendAndNext(hero.attackDelay());
+			afterAbilityUsed(hero);
 		});
 	}
 
-	public static class RunicSlashTracker extends FlavourBuff{};
+	public static class RunicSlashTracker extends FlavourBuff {
+	}
+
+	;
 
 }

@@ -87,31 +87,29 @@ public class CursedWand {
 	private static float RARE_CHANCE = 0.09f;
 	private static float VERY_RARE_CHANCE = 0.01f;
 
-	public static void cursedZap(final Item origin, final Char user, final Ballistica bolt, final Callback afterZap){
+	public static void cursedZap(final Item origin, final Char user, final Ballistica bolt, final Callback afterZap) {
 
-		cursedFX(user, bolt, new Callback() {
-			@Override
-			public void call() {
-				if (cursedEffect(origin, user, bolt.collisionPos)){
-					if (afterZap != null) afterZap.call();
-				}
+		cursedFX(user, bolt, () -> {
+			if (cursedEffect(origin, user, bolt.collisionPos)) {
+				if (afterZap != null) afterZap.call();
 			}
 		});
 	}
 
-	public static void tryForWandProc( Char target, Item origin ){
-		if (target != null && origin instanceof Wand){
+	public static void tryForWandProc(Char target, Item origin) {
+		if (target != null && origin instanceof Wand) {
 			Wand.wandProc(target, origin.buffedLvl(), 1);
 		}
 	}
 
-	public static boolean cursedEffect(final Item origin, final Char user, final Char target){
+	public static boolean cursedEffect(final Item origin, final Char user, final Char target) {
 		return cursedEffect(origin, user, target.pos);
 	}
 
-	public static boolean cursedEffect(final Item origin, final Char user, final int targetPos){
-		switch (Random.chances(new float[]{COMMON_CHANCE, UNCOMMON_CHANCE, RARE_CHANCE, VERY_RARE_CHANCE})){
-			case 0: default:
+	public static boolean cursedEffect(final Item origin, final Char user, final int targetPos) {
+		switch (Random.chances(new float[]{COMMON_CHANCE, UNCOMMON_CHANCE, RARE_CHANCE, VERY_RARE_CHANCE})) {
+			case 0:
+			default:
 				return commonEffect(origin, user, targetPos);
 			case 1:
 				return uncommonEffect(origin, user, targetPos);
@@ -122,11 +120,12 @@ public class CursedWand {
 		}
 	}
 
-	private static boolean commonEffect(final Item origin, final Char user, final int targetPos){
-		switch(Random.Int(4)){
+	private static boolean commonEffect(final Item origin, final Char user, final int targetPos) {
+		switch (Random.Int(4)) {
 
 			//anti-entropy
-			case 0: default:
+			case 0:
+			default:
 				Char target = Actor.findChar(targetPos);
 				if (Random.Int(2) == 0) {
 					if (target != null) Buff.affect(target, Burning.class).reignite(target);
@@ -140,20 +139,20 @@ public class CursedWand {
 
 			//spawns some regrowth
 			case 1:
-				GameScene.add( Blob.seed(targetPos, 30, Regrowth.class));
+				GameScene.add(Blob.seed(targetPos, 30, Regrowth.class));
 				tryForWandProc(Actor.findChar(targetPos), origin);
 				return true;
 
 			//random teleportation
 			case 2:
-				if(Random.Int(2) == 0) {
+				if (Random.Int(2) == 0) {
 					if (user != null && !user.properties().contains(Char.Property.IMMOVABLE)) {
 						ScrollOfTeleportation.teleportChar(user);
 					} else {
 						return cursedEffect(origin, user, targetPos);
 					}
 				} else {
-					Char ch = Actor.findChar( targetPos );
+					Char ch = Actor.findChar(targetPos);
 					if (ch != null && !ch.properties().contains(Char.Property.IMMOVABLE)) {
 						ScrollOfTeleportation.teleportChar(ch);
 						tryForWandProc(ch, origin);
@@ -165,28 +164,30 @@ public class CursedWand {
 
 			//random gas at location
 			case 3:
-				Sample.INSTANCE.play( Assets.Sounds.GAS );
+				Sample.INSTANCE.play(Assets.Sounds.GAS);
 				tryForWandProc(Actor.findChar(targetPos), origin);
 				switch (Random.Int(3)) {
-					case 0: default:
-						GameScene.add( Blob.seed( targetPos, 800, ConfusionGas.class ) );
+					case 0:
+					default:
+						GameScene.add(Blob.seed(targetPos, 800, ConfusionGas.class));
 						return true;
 					case 1:
-						GameScene.add( Blob.seed( targetPos, 500, ToxicGas.class ) );
+						GameScene.add(Blob.seed(targetPos, 500, ToxicGas.class));
 						return true;
 					case 2:
-						GameScene.add( Blob.seed( targetPos, 200, ParalyticGas.class ) );
+						GameScene.add(Blob.seed(targetPos, 200, ParalyticGas.class));
 						return true;
 				}
 		}
 
 	}
 
-	private static boolean uncommonEffect(final Item origin, final Char user, final int targetPos){
-		switch(Random.Int(4)){
+	private static boolean uncommonEffect(final Item origin, final Char user, final int targetPos) {
+		switch (Random.Int(4)) {
 
 			//Random plant
-			case 0: default:
+			case 0:
+			default:
 				int pos = targetPos;
 
 				if (Dungeon.level.map[pos] != Terrain.ALCHEMY
@@ -203,12 +204,12 @@ public class CursedWand {
 
 			//Health transfer
 			case 1:
-				final Char target = Actor.findChar( targetPos );
+				final Char target = Actor.findChar(targetPos);
 				if (target != null) {
 					int damage = Dungeon.scalingDepth() * 2;
 					Char toHeal, toDamage;
 
-					if (Random.Int(2) == 0){
+					if (Random.Int(2) == 0) {
 						toHeal = user;
 						toDamage = target;
 					} else {
@@ -217,21 +218,21 @@ public class CursedWand {
 					}
 					toHeal.HP = Math.min(toHeal.HT, toHeal.HP + damage);
 					toHeal.sprite.emitter().burst(Speck.factory(Speck.HEALING), 3);
-					toHeal.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(damage), FloatingText.HEALING );
+					toHeal.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(damage), FloatingText.HEALING);
 
 					toDamage.damage(damage, new CursedWand());
 					toDamage.sprite.emitter().start(ShadowParticle.UP, 0.05f, 10);
 
-					if (toDamage == Dungeon.hero){
+					if (toDamage == Dungeon.hero) {
 						Sample.INSTANCE.play(Assets.Sounds.CURSED);
 						if (!toDamage.isAlive()) {
 							if (user == Dungeon.hero && origin != null) {
 								Badges.validateDeathFromFriendlyMagic();
-								Dungeon.fail( origin );
-								GLog.n( Messages.get( CursedWand.class, "ondeath", origin.name() ) );
+								Dungeon.fail(origin);
+								GLog.n(Messages.get(CursedWand.class, "ondeath", origin.name()));
 							} else {
 								Badges.validateDeathFromEnemyMagic();
-								Dungeon.fail( toHeal );
+								Dungeon.fail(toHeal);
 							}
 						}
 					} else {
@@ -251,7 +252,7 @@ public class CursedWand {
 
 			//shock and recharge
 			case 3:
-				new ShockingTrap().set( user.pos ).activate();
+				new ShockingTrap().set(user.pos).activate();
 				Buff.prolong(user, Recharging.class, Recharging.DURATION);
 				ScrollOfRecharging.charge(user);
 				SpellSprite.show(user, SpellSprite.CHARGE);
@@ -260,16 +261,17 @@ public class CursedWand {
 
 	}
 
-	private static boolean rareEffect(final Item origin, final Char user, final int targetPos){
-		switch(Random.Int(4)){
+	private static boolean rareEffect(final Item origin, final Char user, final int targetPos) {
+		switch (Random.Int(4)) {
 
 			//sheep transformation
-			case 0: default:
+			case 0:
+			default:
 
-				Char ch = Actor.findChar( targetPos );
+				Char ch = Actor.findChar(targetPos);
 				if (ch != null && !(ch instanceof Hero)
 						&& !ch.properties().contains(Char.Property.BOSS)
-						&& !ch.properties().contains(Char.Property.MINIBOSS)){
+						&& !ch.properties().contains(Char.Property.MINIBOSS)) {
 					Sheep sheep = new Sheep();
 					sheep.lifespan = 10;
 					sheep.pos = ch.pos;
@@ -289,7 +291,7 @@ public class CursedWand {
 			//curses!
 			case 1:
 				if (user instanceof Hero) {
-					CursingTrap.curse( (Hero) user );
+					CursingTrap.curse((Hero) user);
 				} else {
 					return cursedEffect(origin, user, targetPos);
 				}
@@ -300,9 +302,9 @@ public class CursedWand {
 				if (Dungeon.depth > 1 && Dungeon.interfloorTeleportAllowed() && user == Dungeon.hero) {
 
 					//each depth has 1 more weight than the previous depth.
-					float[] depths = new float[Dungeon.depth-1];
-					for (int i = 1; i < Dungeon.depth; i++) depths[i-1] = i;
-					int depth = 1+Random.chances(depths);
+					float[] depths = new float[Dungeon.depth - 1];
+					for (int i = 1; i < Dungeon.depth; i++) depths[i - 1] = i;
+					int depth = 1 + Random.chances(depths);
 
 					Level.beforeTransition();
 					InterlevelScene.mode = InterlevelScene.Mode.RETURN;
@@ -319,18 +321,19 @@ public class CursedWand {
 
 			//summon monsters
 			case 3:
-				new SummoningTrap().set( targetPos ).activate();
+				new SummoningTrap().set(targetPos).activate();
 				return true;
 		}
 	}
 
-	private static boolean veryRareEffect(final Item origin, final Char user, final int targetPos){
-		switch(Random.Int(4)){
+	private static boolean veryRareEffect(final Item origin, final Char user, final int targetPos) {
+		switch (Random.Int(4)) {
 
 			//great forest fire!
-			case 0: default:
-				for (int i = 0; i < Dungeon.level.length(); i++){
-					GameScene.add( Blob.seed(i, 15, Regrowth.class));
+			case 0:
+			default:
+				for (int i = 0; i < Dungeon.level.length(); i++) {
+					GameScene.add(Blob.seed(i, 15, Regrowth.class));
 				}
 				do {
 					GameScene.add(Blob.seed(Dungeon.level.randomDestination(null), 10, Fire.class));
@@ -346,15 +349,15 @@ public class CursedWand {
 
 				Char ch = Actor.findChar(targetPos);
 				int spawnCell = targetPos;
-				if (ch != null){
+				if (ch != null) {
 					ArrayList<Integer> candidates = new ArrayList<Integer>();
 					for (int n : PathFinder.NEIGHBOURS8) {
 						int cell = targetPos + n;
-						if (Dungeon.level.passable[cell] && Actor.findChar( cell ) == null) {
-							candidates.add( cell );
+						if (Dungeon.level.passable[cell] && Actor.findChar(cell) == null) {
+							candidates.add(cell);
 						}
 					}
-					if (!candidates.isEmpty()){
+					if (!candidates.isEmpty()) {
 						spawnCell = Random.element(candidates);
 					} else {
 						return cursedEffect(origin, user, targetPos);
@@ -379,51 +382,46 @@ public class CursedWand {
 
 			//crashes the game, yes, really.
 			case 2:
-				
+
 				try {
 					Dungeon.saveAll();
-					if(Messages.lang() != Languages.ENGLISH){
+					if (Messages.lang() != Languages.ENGLISH) {
 						//Don't bother doing this joke to none-english speakers, I doubt it would translate.
 						return cursedEffect(origin, user, targetPos);
 					} else {
 						ShatteredPixelDungeon.runOnRenderThread(
-								new Callback() {
-									@Override
-									public void call() {
-										GameScene.show(
-												new WndOptions(Icons.get(Icons.WARNING),
-														"CURSED WAND ERROR",
-														"this application will now self-destruct",
-														"abort",
-														"retry",
-														"fail") {
+								() -> GameScene.show(
+										new WndOptions(Icons.get(Icons.WARNING),
+												"CURSED WAND ERROR",
+												"this application will now self-destruct",
+												"abort",
+												"retry",
+												"fail") {
 
-													@Override
-													protected void onSelect(int index) {
-														Game.instance.finish();
-													}
+											@Override
+											protected void onSelect(int index) {
+												Game.instance.finish();
+											}
 
-													@Override
-													public void onBackPressed() {
-														//do nothing
-													}
-												}
-										);
-									}
-								}
+											@Override
+											public void onBackPressed() {
+												//do nothing
+											}
+										}
+								)
 						);
 						return false;
 					}
-				} catch(IOException e){
+				} catch (IOException e) {
 					ShatteredPixelDungeon.reportException(e);
 					//maybe don't kill the game if the save failed.
 					return cursedEffect(origin, user, targetPos);
 				}
 
-			//random transmogrification
+				//random transmogrification
 			case 3:
 				//skips this effect if there is no item to transmogrify
-				if (origin == null || user != Dungeon.hero || !Dungeon.hero.belongings.contains(origin)){
+				if (origin == null || user != Dungeon.hero || !Dungeon.hero.belongings.contains(origin)) {
 					return cursedEffect(origin, user, targetPos);
 				}
 				origin.detach(Dungeon.hero.belongings.backpack);
@@ -434,23 +432,23 @@ public class CursedWand {
 				} while (result.cursed);
 				if (result.isUpgradable()) result.upgrade();
 				result.cursed = result.cursedKnown = true;
-				if (origin instanceof Wand){
-					GLog.w( Messages.get(CursedWand.class, "transmogrify_wand") );
+				if (origin instanceof Wand) {
+					GLog.w(Messages.get(CursedWand.class, "transmogrify_wand"));
 				} else {
-					GLog.w( Messages.get(CursedWand.class, "transmogrify_other") );
+					GLog.w(Messages.get(CursedWand.class, "transmogrify_other"));
 				}
 				Dungeon.level.drop(result, user.pos).sprite.drop();
 				return true;
 		}
 	}
 
-	private static void cursedFX(final Char user, final Ballistica bolt, final Callback callback){
-		MagicMissile.boltFromChar( user.sprite.parent,
+	private static void cursedFX(final Char user, final Ballistica bolt, final Callback callback) {
+		MagicMissile.boltFromChar(user.sprite.parent,
 				MagicMissile.RAINBOW,
 				user.sprite,
 				bolt.collisionPos,
 				callback);
-		Sample.INSTANCE.play( Assets.Sounds.ZAP );
+		Sample.INSTANCE.play(Assets.Sounds.ZAP);
 	}
 
 }

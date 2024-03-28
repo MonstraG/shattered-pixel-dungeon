@@ -50,8 +50,8 @@ public class Spear extends MeleeWeapon {
 
 	@Override
 	public int max(int lvl) {
-		return  Math.round(6.67f*(tier+1)) +    //20 base, up from 15
-				lvl*Math.round(1.33f*(tier+1)); //+4 per level, up from +3
+		return Math.round(6.67f * (tier + 1)) +    //20 base, up from 15
+				lvl * Math.round(1.33f * (tier + 1)); //+4 per level, up from +3
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class Spear extends MeleeWeapon {
 		Spear.spikeAbility(hero, target, 1.45f, this);
 	}
 
-	public static void spikeAbility(Hero hero, Integer target, float dmgMulti, MeleeWeapon wep){
+	public static void spikeAbility(Hero hero, Integer target, float dmgMulti, MeleeWeapon wep) {
 		if (target == null) {
 			return;
 		}
@@ -76,36 +76,33 @@ public class Spear extends MeleeWeapon {
 		}
 
 		hero.belongings.abilityWeapon = wep;
-		if (!hero.canAttack(enemy) || Dungeon.level.adjacent(hero.pos, enemy.pos)){
+		if (!hero.canAttack(enemy) || Dungeon.level.adjacent(hero.pos, enemy.pos)) {
 			GLog.w(Messages.get(wep, "ability_bad_position"));
 			hero.belongings.abilityWeapon = null;
 			return;
 		}
 		hero.belongings.abilityWeapon = null;
 
-		hero.sprite.attack(enemy.pos, new Callback() {
-			@Override
-			public void call() {
-				wep.beforeAbilityUsed(hero, enemy);
-				AttackIndicator.target(enemy);
-				int oldPos = enemy.pos;
-				if (hero.attack(enemy, dmgMulti, 0, Char.INFINITE_ACCURACY)) {
-					if (enemy.isAlive() && enemy.pos == oldPos){
-						//trace a ballistica to our target (which will also extend past them
-						Ballistica trajectory = new Ballistica(hero.pos, enemy.pos, Ballistica.STOP_TARGET);
-						//trim it to just be the part that goes past them
-						trajectory = new Ballistica(trajectory.collisionPos, trajectory.path.get(trajectory.path.size() - 1), Ballistica.PROJECTILE);
-						//knock them back along that ballistica
-						WandOfBlastWave.throwChar(enemy, trajectory, 1, true, false, hero);
-					} else {
-						wep.onAbilityKill(hero, enemy);
-					}
-					Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
+		hero.sprite.attack(enemy.pos, () -> {
+			wep.beforeAbilityUsed(hero, enemy);
+			AttackIndicator.target(enemy);
+			int oldPos = enemy.pos;
+			if (hero.attack(enemy, dmgMulti, 0, Char.INFINITE_ACCURACY)) {
+				if (enemy.isAlive() && enemy.pos == oldPos) {
+					//trace a ballistica to our target (which will also extend past them
+					Ballistica trajectory = new Ballistica(hero.pos, enemy.pos, Ballistica.STOP_TARGET);
+					//trim it to just be the part that goes past them
+					trajectory = new Ballistica(trajectory.collisionPos, trajectory.path.get(trajectory.path.size() - 1), Ballistica.PROJECTILE);
+					//knock them back along that ballistica
+					WandOfBlastWave.throwChar(enemy, trajectory, 1, true, false, hero);
+				} else {
+					wep.onAbilityKill(hero, enemy);
 				}
-				Invisibility.dispel();
-				hero.spendAndNext(hero.attackDelay());
-				wep.afterAbilityUsed(hero);
+				Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
 			}
+			Invisibility.dispel();
+			hero.spendAndNext(hero.attackDelay());
+			wep.afterAbilityUsed(hero);
 		});
 	}
 

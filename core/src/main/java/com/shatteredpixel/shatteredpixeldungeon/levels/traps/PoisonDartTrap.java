@@ -41,19 +41,19 @@ public class PoisonDartTrap extends Trap {
 	{
 		color = GREEN;
 		shape = CROSSHAIR;
-		
+
 		canBeHidden = false;
 		avoidsHallways = true;
 	}
-	
-	protected int poisonAmount(){
-		return 8 + Math.round(2*scalingDepth() / 3f);
+
+	protected int poisonAmount() {
+		return 8 + Math.round(2 * scalingDepth() / 3f);
 	}
-	
-	protected boolean canTarget( Char ch ){
+
+	protected boolean canTarget(Char ch) {
 		return true;
 	}
-	
+
 	@Override
 	public void activate() {
 
@@ -69,19 +69,19 @@ public class PoisonDartTrap extends Trap {
 				Actor.remove(this);
 				Char target = Actor.findChar(pos);
 
-				if (target != null && !canTarget(target)){
+				if (target != null && !canTarget(target)) {
 					target = null;
 				}
 
 				//find the closest char that can be aimed at
-				if (target == null){
+				if (target == null) {
 					float closestDist = Float.MAX_VALUE;
-					for (Char ch : Actor.chars()){
+					for (Char ch : Actor.chars()) {
 						if (!ch.isAlive()) continue;
 						float curDist = Dungeon.level.trueDistance(pos, ch.pos);
 						if (ch.invisible > 0) curDist += 1000;
 						Ballistica bolt = new Ballistica(pos, ch.pos, Ballistica.PROJECTILE);
-						if (canTarget(ch) && bolt.collisionPos == ch.pos && curDist < closestDist){
+						if (canTarget(ch) && bolt.collisionPos == ch.pos && curDist < closestDist) {
 							target = ch;
 							closestDist = curDist;
 						}
@@ -92,32 +92,29 @@ public class PoisonDartTrap extends Trap {
 					final Char finalTarget = target;
 					if (Dungeon.level.heroFOV[pos] || Dungeon.level.heroFOV[target.pos]) {
 						((MissileSprite) ShatteredPixelDungeon.scene().recycle(MissileSprite.class)).
-								reset(pos, finalTarget.sprite, new PoisonDart(), new Callback() {
-									@Override
-									public void call() {
-										int dmg = Random.NormalIntRange(4, 8) - finalTarget.drRoll();
-										finalTarget.damage(dmg, PoisonDartTrap.this);
-										if (finalTarget == Dungeon.hero){
-											//for the poison dart traps in the Tengu fight
-											if (Dungeon.depth == 10) {
-												Statistics.qualifiedForBossChallengeBadge = false;
-												Statistics.bossScores[1] -= 100;
-											}
-											if (!finalTarget.isAlive()) {
-												Dungeon.fail(PoisonDartTrap.this);
-											}
+								reset(pos, finalTarget.sprite, new PoisonDart(), () -> {
+									int dmg = Random.NormalIntRange(4, 8) - finalTarget.drRoll();
+									finalTarget.damage(dmg, PoisonDartTrap.this);
+									if (finalTarget == Dungeon.hero) {
+										//for the poison dart traps in the Tengu fight
+										if (Dungeon.depth == 10) {
+											Statistics.qualifiedForBossChallengeBadge = false;
+											Statistics.bossScores[1] -= 100;
 										}
-										Buff.affect( finalTarget, Poison.class ).set( poisonAmount() );
-										Sample.INSTANCE.play(Assets.Sounds.HIT, 1, 1, Random.Float(0.8f, 1.25f));
-										finalTarget.sprite.bloodBurstA(finalTarget.sprite.center(), dmg);
-										finalTarget.sprite.flash();
-										next();
+										if (!finalTarget.isAlive()) {
+											Dungeon.fail(PoisonDartTrap.this);
+										}
 									}
+									Buff.affect(finalTarget, Poison.class).set(poisonAmount());
+									Sample.INSTANCE.play(Assets.Sounds.HIT, 1, 1, Random.Float(0.8f, 1.25f));
+									finalTarget.sprite.bloodBurstA(finalTarget.sprite.center(), dmg);
+									finalTarget.sprite.flash();
+									next();
 								});
 						return false;
 					} else {
 						finalTarget.damage(Random.NormalIntRange(4, 8) - finalTarget.drRoll(), PoisonDartTrap.this);
-						Buff.affect( finalTarget, Poison.class ).set( poisonAmount() );
+						Buff.affect(finalTarget, Poison.class).set(poisonAmount());
 						return true;
 					}
 				} else {

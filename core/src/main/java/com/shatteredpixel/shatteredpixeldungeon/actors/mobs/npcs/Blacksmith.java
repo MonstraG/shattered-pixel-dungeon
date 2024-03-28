@@ -50,60 +50,76 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class Blacksmith extends NPC {
-	
+
 	{
 		spriteClass = BlacksmithSprite.class;
 
 		properties.add(Property.IMMOVABLE);
 	}
-	
+
 	@Override
 	protected boolean act() {
-		if (Dungeon.hero.buff(AscensionChallenge.class) != null){
+		if (Dungeon.hero.buff(AscensionChallenge.class) != null) {
 			die(null);
-			Notes.remove( Notes.Landmark.TROLL );
+			Notes.remove(Notes.Landmark.TROLL);
 			return true;
 		}
-		if (Dungeon.level.visited[pos] && !Quest.started()){
-			Notes.add( Notes.Landmark.TROLL );
+		if (Dungeon.level.visited[pos] && !Quest.started()) {
+			Notes.add(Notes.Landmark.TROLL);
 		}
 		return super.act();
 	}
-	
+
 	@Override
 	public boolean interact(Char c) {
-		
-		sprite.turnTo( pos, c.pos );
 
-		if (c != Dungeon.hero){
+		sprite.turnTo(pos, c.pos);
+
+		if (c != Dungeon.hero) {
 			return true;
 		}
-		
+
 		if (!Quest.given) {
 
 			String msg1 = "";
 			String msg2 = "";
 
-			if (Quest.type == Quest.OLD){
+			if (Quest.type == Quest.OLD) {
 				//pre-v2.2.0 saves
 				msg1 = Quest.alternative ? Messages.get(Blacksmith.this, "blood_1") : Messages.get(Blacksmith.this, "gold_1");
 			} else {
 
-				switch (Dungeon.hero.heroClass){
-					case WARRIOR:   msg1 += Messages.get(Blacksmith.this, "intro_quest_warrior"); break;
-					case MAGE:      msg1 += Messages.get(Blacksmith.this, "intro_quest_mage"); break;
-					case ROGUE:     msg1 += Messages.get(Blacksmith.this, "intro_quest_rogue"); break;
-					case HUNTRESS:  msg1 += Messages.get(Blacksmith.this, "intro_quest_huntress"); break;
-					case DUELIST:   msg1 += Messages.get(Blacksmith.this, "intro_quest_duelist"); break;
+				switch (Dungeon.hero.heroClass) {
+					case WARRIOR:
+						msg1 += Messages.get(Blacksmith.this, "intro_quest_warrior");
+						break;
+					case MAGE:
+						msg1 += Messages.get(Blacksmith.this, "intro_quest_mage");
+						break;
+					case ROGUE:
+						msg1 += Messages.get(Blacksmith.this, "intro_quest_rogue");
+						break;
+					case HUNTRESS:
+						msg1 += Messages.get(Blacksmith.this, "intro_quest_huntress");
+						break;
+					case DUELIST:
+						msg1 += Messages.get(Blacksmith.this, "intro_quest_duelist");
+						break;
 					//case CLERIC: msg1 += Messages.get(Blacksmith.this, "intro_quest_cleric"); break;
 				}
 
 				msg1 += "\n\n" + Messages.get(Blacksmith.this, "intro_quest_start");
 
-				switch (Quest.type){
-					case Quest.CRYSTAL: msg2 += Messages.get(Blacksmith.this, "intro_quest_crystal"); break;
-					case Quest.GNOLL:   msg2 += Messages.get(Blacksmith.this, "intro_quest_gnoll"); break;
-					case Quest.FUNGI:   msg2 += Messages.get(Blacksmith.this, "intro_quest_fungi"); break;
+				switch (Quest.type) {
+					case Quest.CRYSTAL:
+						msg2 += Messages.get(Blacksmith.this, "intro_quest_crystal");
+						break;
+					case Quest.GNOLL:
+						msg2 += Messages.get(Blacksmith.this, "intro_quest_gnoll");
+						break;
+					case Quest.FUNGI:
+						msg2 += Messages.get(Blacksmith.this, "intro_quest_fungi");
+						break;
 				}
 
 			}
@@ -120,24 +136,24 @@ public class Blacksmith extends NPC {
 
 							Quest.given = true;
 							Quest.completed = false;
-							Notes.add( Notes.Landmark.TROLL );
+							Notes.add(Notes.Landmark.TROLL);
 							Item pick = Quest.pickaxe != null ? Quest.pickaxe : new Pickaxe();
-							if (pick.doPickUp( Dungeon.hero )) {
-								GLog.i( Messages.capitalize(Messages.get(Dungeon.hero, "you_now_have", pick.name()) ));
+							if (pick.doPickUp(Dungeon.hero)) {
+								GLog.i(Messages.capitalize(Messages.get(Dungeon.hero, "you_now_have", pick.name())));
 							} else {
-								Dungeon.level.drop( pick, Dungeon.hero.pos ).sprite.drop();
+								Dungeon.level.drop(pick, Dungeon.hero.pos).sprite.drop();
 							}
 							Quest.pickaxe = null;
 
-							if (msg2Final != ""){
+							if (msg2Final != "") {
 								GameScene.show(new WndQuest(Blacksmith.this, msg2Final));
 							}
 
 						}
-					} );
+					});
 				}
 			});
-			
+
 		} else if (!Quest.completed) {
 
 			if (Quest.type == Quest.OLD) {
@@ -191,70 +207,63 @@ public class Blacksmith extends NPC {
 			} else {
 
 				String msg = Messages.get(this, "reminder") + "\n\n";
-				switch (Quest.type){
-					case Quest.CRYSTAL: msg += Messages.get(Blacksmith.this, "reminder_crystal"); break;
-					case Quest.GNOLL:   msg += Messages.get(Blacksmith.this, "reminder_gnoll"); break;
-					case Quest.FUNGI:   msg += Messages.get(Blacksmith.this, "reminder_fungi"); break;
+				switch (Quest.type) {
+					case Quest.CRYSTAL:
+						msg += Messages.get(Blacksmith.this, "reminder_crystal");
+						break;
+					case Quest.GNOLL:
+						msg += Messages.get(Blacksmith.this, "reminder_gnoll");
+						break;
+					case Quest.FUNGI:
+						msg += Messages.get(Blacksmith.this, "reminder_fungi");
+						break;
 				}
 				tell(msg);
 
 			}
 		} else if (Quest.type == Quest.OLD && Quest.reforges == 0) {
-			
-			Game.runOnRenderThread(new Callback() {
-				@Override
-				public void call() {
-					GameScene.show( new WndBlacksmith.WndReforge( Blacksmith.this, null ) );
-				}
-			});
+
+			Game.runOnRenderThread(() -> GameScene.show(new WndBlacksmith.WndReforge(Blacksmith.this, null)));
 
 		} else if (Quest.rewardsAvailable()) {
 
-			Game.runOnRenderThread(new Callback() {
-				@Override
-				public void call() {
-					//in case game was closed during smith reward selection
-					if (Quest.smithRewards != null && Quest.smiths > 0){
-						GameScene.show( new WndBlacksmith.WndSmith( Blacksmith.this, Dungeon.hero ) );
-					} else {
-						GameScene.show(new WndBlacksmith(Blacksmith.this, Dungeon.hero));
-					}
+			Game.runOnRenderThread(() -> {
+				//in case game was closed during smith reward selection
+				if (Quest.smithRewards != null && Quest.smiths > 0) {
+					GameScene.show(new WndBlacksmith.WndSmith(Blacksmith.this, Dungeon.hero));
+				} else {
+					GameScene.show(new WndBlacksmith(Blacksmith.this, Dungeon.hero));
 				}
 			});
 
 		} else {
-			
-			tell( Messages.get(this, "get_lost") );
-			
+
+			tell(Messages.get(this, "get_lost"));
+
 		}
 
 		return true;
 	}
-	
-	private void tell( String text ) {
-		Game.runOnRenderThread(new Callback() {
-			@Override
-			public void call() {
-				GameScene.show( new WndQuest( Blacksmith.this, text ) );
-			}
-		});
+
+	private void tell(String text) {
+		Game.runOnRenderThread(() -> GameScene.show(new WndQuest(Blacksmith.this, text)));
 	}
 
 	@Override
-	public int defenseSkill( Char enemy ) {
+	public int defenseSkill(Char enemy) {
 		return INFINITE_EVASION;
 	}
-	
+
 	@Override
-	public void damage( int dmg, Object src ) {
+	public void damage(int dmg, Object src) {
 		//do nothing
 	}
 
 	@Override
-	public boolean add( Buff buff ) {
+	public boolean add(Buff buff) {
 		return false;
 	}
-	
+
 	@Override
 	public boolean reset() {
 		return true;
@@ -287,140 +296,140 @@ public class Blacksmith extends NPC {
 
 		//pre-generate these so they are consistent between seeds
 		public static ArrayList<Item> smithRewards;
-		
+
 		public static void reset() {
-			type        = 0;
+			type = 0;
 			alternative = false;
 
-			spawned		= false;
-			given		= false;
-			started     = false;
-			bossBeaten  = false;
-			completed	= false;
+			spawned = false;
+			given = false;
+			started = false;
+			bossBeaten = false;
+			completed = false;
 
-			favor       = 0;
-			pickaxe     = new Pickaxe().identify();
-			reforges    = 0;
-			hardens     = 0;
-			upgrades    = 0;
-			smiths      = 0;
+			favor = 0;
+			pickaxe = new Pickaxe().identify();
+			reforges = 0;
+			hardens = 0;
+			upgrades = 0;
+			smiths = 0;
 
 			smithRewards = null;
 		}
-		
-		private static final String NODE	= "blacksmith";
 
-		private static final String TYPE    	= "type";
-		private static final String ALTERNATIVE	= "alternative";
+		private static final String NODE = "blacksmith";
 
-		private static final String SPAWNED		= "spawned";
-		private static final String GIVEN		= "given";
-		private static final String STARTED		= "started";
-		private static final String BOSS_BEATEN	= "boss_beaten";
-		private static final String COMPLETED	= "completed";
+		private static final String TYPE = "type";
+		private static final String ALTERNATIVE = "alternative";
 
-		private static final String FAVOR	    = "favor";
-		private static final String PICKAXE	    = "pickaxe";
-		private static final String REFORGES	= "reforges";
-		private static final String HARDENS	    = "hardens";
-		private static final String UPGRADES	= "upgrades";
-		private static final String SMITHS	    = "smiths";
+		private static final String SPAWNED = "spawned";
+		private static final String GIVEN = "given";
+		private static final String STARTED = "started";
+		private static final String BOSS_BEATEN = "boss_beaten";
+		private static final String COMPLETED = "completed";
+
+		private static final String FAVOR = "favor";
+		private static final String PICKAXE = "pickaxe";
+		private static final String REFORGES = "reforges";
+		private static final String HARDENS = "hardens";
+		private static final String UPGRADES = "upgrades";
+		private static final String SMITHS = "smiths";
 		private static final String SMITH_REWARDS = "smith_rewards";
-		
-		public static void storeInBundle( Bundle bundle ) {
-			
+
+		public static void storeInBundle(Bundle bundle) {
+
 			Bundle node = new Bundle();
-			
-			node.put( SPAWNED, spawned );
-			
+
+			node.put(SPAWNED, spawned);
+
 			if (spawned) {
-				node.put( TYPE, type );
-				node.put( ALTERNATIVE, alternative );
+				node.put(TYPE, type);
+				node.put(ALTERNATIVE, alternative);
 
-				node.put( GIVEN, given );
-				node.put( STARTED, started );
-				node.put( BOSS_BEATEN, bossBeaten );
-				node.put( COMPLETED, completed );
+				node.put(GIVEN, given);
+				node.put(STARTED, started);
+				node.put(BOSS_BEATEN, bossBeaten);
+				node.put(COMPLETED, completed);
 
-				node.put( FAVOR, favor );
-				if (pickaxe != null) node.put( PICKAXE, pickaxe );
-				node.put( REFORGES, reforges );
-				node.put( HARDENS, hardens );
-				node.put( UPGRADES, upgrades );
-				node.put( SMITHS, smiths );
+				node.put(FAVOR, favor);
+				if (pickaxe != null) node.put(PICKAXE, pickaxe);
+				node.put(REFORGES, reforges);
+				node.put(HARDENS, hardens);
+				node.put(UPGRADES, upgrades);
+				node.put(SMITHS, smiths);
 
-				if (smithRewards != null) node.put( SMITH_REWARDS, smithRewards );
+				if (smithRewards != null) node.put(SMITH_REWARDS, smithRewards);
 			}
-			
-			bundle.put( NODE, node );
+
+			bundle.put(NODE, node);
 		}
-		
-		public static void restoreFromBundle( Bundle bundle ) {
 
-			Bundle node = bundle.getBundle( NODE );
-			
-			if (!node.isNull() && (spawned = node.getBoolean( SPAWNED ))) {
+		public static void restoreFromBundle(Bundle bundle) {
+
+			Bundle node = bundle.getBundle(NODE);
+
+			if (!node.isNull() && (spawned = node.getBoolean(SPAWNED))) {
 				type = node.getInt(TYPE);
-				alternative	=  node.getBoolean( ALTERNATIVE );
+				alternative = node.getBoolean(ALTERNATIVE);
 
-				given = node.getBoolean( GIVEN );
-				started = node.getBoolean( STARTED );
-				bossBeaten = node.getBoolean( BOSS_BEATEN );
-				completed = node.getBoolean( COMPLETED );
+				given = node.getBoolean(GIVEN);
+				started = node.getBoolean(STARTED);
+				bossBeaten = node.getBoolean(BOSS_BEATEN);
+				completed = node.getBoolean(COMPLETED);
 
-				favor = node.getInt( FAVOR );
+				favor = node.getInt(FAVOR);
 				if (node.contains(PICKAXE)) {
 					pickaxe = (Item) node.get(PICKAXE);
 				} else {
 					pickaxe = null;
 				}
-				if (node.contains("reforged")){
+				if (node.contains("reforged")) {
 					//pre-v2.2.0 saves
-					reforges = node.getBoolean( "reforged" ) ? 1 : 0;
+					reforges = node.getBoolean("reforged") ? 1 : 0;
 				} else {
-					reforges = node.getInt( REFORGES );
+					reforges = node.getInt(REFORGES);
 				}
-				hardens = node.getInt( HARDENS );
-				upgrades = node.getInt( UPGRADES );
-				smiths = node.getInt( SMITHS );
+				hardens = node.getInt(HARDENS);
+				upgrades = node.getInt(UPGRADES);
+				smiths = node.getInt(SMITHS);
 
-				if (node.contains( SMITH_REWARDS )){
-					smithRewards = new ArrayList<>((Collection<Item>) ((Collection<?>) node.getCollection( SMITH_REWARDS )));
+				if (node.contains(SMITH_REWARDS)) {
+					smithRewards = new ArrayList<>((Collection<Item>) ((Collection<?>) node.getCollection(SMITH_REWARDS)));
 				}
 
 			} else {
 				reset();
 			}
 		}
-		
-		public static ArrayList<Room> spawn( ArrayList<Room> rooms ) {
-			if (!spawned && Dungeon.depth > 11 && Random.Int( 15 - Dungeon.depth ) == 0) {
-				
+
+		public static ArrayList<Room> spawn(ArrayList<Room> rooms) {
+			if (!spawned && Dungeon.depth > 11 && Random.Int(15 - Dungeon.depth) == 0) {
+
 				rooms.add(new BlacksmithRoom());
 				spawned = true;
 
 				//Currently cannot roll the fungi quest, as it is not fully implemented
 				type = Random.IntRange(1, 2);
 				alternative = false;
-				
+
 				given = false;
-				generateRewards( true );
-				
+				generateRewards(true);
+
 			}
 			return rooms;
 		}
 
-		public static void generateRewards( boolean useDecks ){
+		public static void generateRewards(boolean useDecks) {
 			smithRewards = new ArrayList<>();
 			smithRewards.add(Generator.randomWeapon(3, useDecks));
 			smithRewards.add(Generator.randomWeapon(3, useDecks));
 			ArrayList<Item> toUndo = new ArrayList<>();
 			while (smithRewards.get(0).getClass() == smithRewards.get(1).getClass()) {
-				if (useDecks)   toUndo.add(smithRewards.get(1));
+				if (useDecks) toUndo.add(smithRewards.get(1));
 				smithRewards.remove(1);
 				smithRewards.add(Generator.randomWeapon(3, useDecks));
 			}
-			for (Item i : toUndo){
+			for (Item i : toUndo) {
 				Generator.undoDrop(i);
 			}
 			smithRewards.add(Generator.randomArmor(3));
@@ -428,62 +437,62 @@ public class Blacksmith extends NPC {
 			//30%:+0, 45%:+1, 20%:+2, 5%:+3
 			int rewardLevel;
 			float itemLevelRoll = Random.Float();
-			if (itemLevelRoll < 0.3f){
+			if (itemLevelRoll < 0.3f) {
 				rewardLevel = 0;
-			} else if (itemLevelRoll < 0.75f){
+			} else if (itemLevelRoll < 0.75f) {
 				rewardLevel = 1;
-			} else if (itemLevelRoll < 0.95f){
+			} else if (itemLevelRoll < 0.95f) {
 				rewardLevel = 2;
 			} else {
 				rewardLevel = 3;
 			}
 
-			for (Item i : smithRewards){
+			for (Item i : smithRewards) {
 				i.level(rewardLevel);
 				if (i instanceof Weapon) {
 					((Weapon) i).enchant(null);
-				} else if (i instanceof Armor){
+				} else if (i instanceof Armor) {
 					((Armor) i).inscribe(null);
 				}
 				i.cursed = false;
 			}
 		}
 
-		public static int Type(){
+		public static int Type() {
 			return type;
 		}
 
-		public static boolean given(){
+		public static boolean given() {
 			return given;
 		}
 
-		public static boolean started(){
+		public static boolean started() {
 			return started;
 		}
 
-		public static void start(){
+		public static void start() {
 			started = true;
 		}
 
-		public static boolean beatBoss(){
+		public static boolean beatBoss() {
 			return bossBeaten = true;
 		}
 
-		public static boolean bossBeaten(){
+		public static boolean bossBeaten() {
 			return bossBeaten;
 		}
 
-		public static boolean completed(){
+		public static boolean completed() {
 			return given && completed;
 		}
 
-		public static void complete(){
+		public static void complete() {
 			completed = true;
 
 			favor = 0;
 			DarkGold gold = Dungeon.hero.belongings.getItem(DarkGold.class);
-			if (gold != null){
-				favor += Math.min(2000, gold.quantity()*50);
+			if (gold != null) {
+				favor += Math.min(2000, gold.quantity() * 50);
 				gold.detachAll(Dungeon.hero.belongings.backpack);
 			}
 
@@ -502,22 +511,22 @@ public class Blacksmith extends NPC {
 			Statistics.questScores[2] = favor;
 		}
 
-		public static boolean rewardsAvailable(){
+		public static boolean rewardsAvailable() {
 			return favor > 0
 					|| (Quest.smithRewards != null && Quest.smiths > 0)
 					|| (pickaxe != null && Statistics.questScores[2] >= 2500);
 		}
 
 		//if the blacksmith is generated pre-v2.2.0, and the player never spawned a mining test floor
-		public static boolean oldQuestMineBlocked(){
+		public static boolean oldQuestMineBlocked() {
 			return type == OLD && !Dungeon.levelHasBeenGenerated(Dungeon.depth, 1);
 		}
 
-		public static boolean oldBloodQuest(){
+		public static boolean oldBloodQuest() {
 			return type == OLD && alternative;
 		}
 
-		public static boolean oldMiningQuest(){
+		public static boolean oldMiningQuest() {
 			return type == OLD && !alternative;
 		}
 	}

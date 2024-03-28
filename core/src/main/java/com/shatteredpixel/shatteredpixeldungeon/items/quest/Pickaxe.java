@@ -58,24 +58,24 @@ import java.util.ArrayList;
 
 //various code in here supports old blacksmith quest logic from before v2.2.0
 public class Pickaxe extends MeleeWeapon {
-	
-	public static final String AC_MINE	= "MINE";
-	
+
+	public static final String AC_MINE = "MINE";
+
 	public static final float TIME_TO_MINE = 2;
-	
-	private static final Glowing BLOODY = new Glowing( 0x550000 );
-	
+
+	private static final Glowing BLOODY = new Glowing(0x550000);
+
 	{
 		image = ItemSpriteSheet.PICKAXE;
 
 		levelKnown = true;
-		
+
 		unique = true;
 		bones = false;
 
 		tier = 2;
 	}
-	
+
 	public boolean bloodStained = false;
 
 	@Override
@@ -84,71 +84,67 @@ public class Pickaxe extends MeleeWeapon {
 	}
 
 	@Override
-	public ArrayList<String> actions( Hero hero ) {
-		ArrayList<String> actions = super.actions( hero );
+	public ArrayList<String> actions(Hero hero) {
+		ArrayList<String> actions = super.actions(hero);
 		if (Blacksmith.Quest.oldMiningQuest()) {
 			actions.add(AC_MINE);
 		}
-		if (Dungeon.level instanceof MiningLevel){
+		if (Dungeon.level instanceof MiningLevel) {
 			actions.remove(AC_DROP);
 			actions.remove(AC_THROW);
 		}
 		return actions;
 	}
-	
-	@Override
-	public void execute( final Hero hero, String action ) {
 
-		super.execute( hero, action );
-		
+	@Override
+	public void execute(final Hero hero, String action) {
+
+		super.execute(hero, action);
+
 		if (action.equals(AC_MINE)) {
-			
+
 			if (Dungeon.depth < 11 || Dungeon.depth > 15) {
-				GLog.w( Messages.get(this, "no_vein") );
+				GLog.w(Messages.get(this, "no_vein"));
 				return;
 			}
-			
+
 			for (int i = 0; i < PathFinder.NEIGHBOURS8.length; i++) {
-				
+
 				final int pos = hero.pos + PathFinder.NEIGHBOURS8[i];
 				if (Dungeon.level.map[pos] == Terrain.WALL_DECO) {
-				
-					hero.spend( TIME_TO_MINE );
-					hero.busy();
-					
-					hero.sprite.attack( pos, new Callback() {
-						
-						@Override
-						public void call() {
 
-							CellEmitter.center( pos ).burst( Speck.factory( Speck.STAR ), 7 );
-							Sample.INSTANCE.play( Assets.Sounds.EVOKE );
-							
-							Level.set( pos, Terrain.WALL );
-							GameScene.updateMap( pos );
-							
-							DarkGold gold = new DarkGold();
-							if (gold.doPickUp( Dungeon.hero )) {
-								GLog.i( Messages.capitalize(Messages.get(Dungeon.hero, "you_now_have", gold.name())) );
-							} else {
-								Dungeon.level.drop( gold, hero.pos ).sprite.drop();
-							}
-							
-							hero.onOperateComplete();
+					hero.spend(TIME_TO_MINE);
+					hero.busy();
+
+					hero.sprite.attack(pos, () -> {
+
+						CellEmitter.center(pos).burst(Speck.factory(Speck.STAR), 7);
+						Sample.INSTANCE.play(Assets.Sounds.EVOKE);
+
+						Level.set(pos, Terrain.WALL);
+						GameScene.updateMap(pos);
+
+						DarkGold gold = new DarkGold();
+						if (gold.doPickUp(Dungeon.hero)) {
+							GLog.i(Messages.capitalize(Messages.get(Dungeon.hero, "you_now_have", gold.name())));
+						} else {
+							Dungeon.level.drop(gold, hero.pos).sprite.drop();
 						}
-					} );
-					
+
+						hero.onOperateComplete();
+					});
+
 					return;
 				}
 			}
-			
-			GLog.w( Messages.get(this, "no_vein") );
-			
+
+			GLog.w(Messages.get(this, "no_vein"));
+
 		}
 	}
-	
+
 	@Override
-	public int proc( Char attacker, Char defender, int damage ) {
+	public int proc(Char attacker, Char defender, int damage) {
 		if (Blacksmith.Quest.oldBloodQuest() && !bloodStained && defender instanceof Bat) {
 			Actor.add(new Actor() {
 
@@ -158,7 +154,7 @@ public class Pickaxe extends MeleeWeapon {
 
 				@Override
 				protected boolean act() {
-					if (!defender.isAlive()){
+					if (!defender.isAlive()) {
 						bloodStained = true;
 						updateQuickslot();
 					}
@@ -168,7 +164,7 @@ public class Pickaxe extends MeleeWeapon {
 				}
 			});
 		}
-		return super.proc( attacker, defender, damage );
+		return super.proc(attacker, defender, damage);
 	}
 
 	@Override
@@ -179,7 +175,7 @@ public class Pickaxe extends MeleeWeapon {
 
 	@Override
 	public String defaultAction() {
-		if (Dungeon.hero.heroClass == HeroClass.DUELIST && isEquipped(Dungeon.hero)){
+		if (Dungeon.hero.heroClass == HeroClass.DUELIST && isEquipped(Dungeon.hero)) {
 			return AC_ABILITY;
 		} else if (Blacksmith.Quest.oldMiningQuest()) {
 			return AC_MINE;
@@ -206,58 +202,55 @@ public class Pickaxe extends MeleeWeapon {
 		}
 
 		hero.belongings.abilityWeapon = this;
-		if (!hero.canAttack(enemy)){
+		if (!hero.canAttack(enemy)) {
 			GLog.w(Messages.get(this, "ability_bad_position"));
 			hero.belongings.abilityWeapon = null;
 			return;
 		}
 		hero.belongings.abilityWeapon = null;
 
-		hero.sprite.attack(enemy.pos, new Callback() {
-			@Override
-			public void call() {
-				float damageMulti = 1f;
-				if (Char.hasProp(enemy, Char.Property.INORGANIC)
-						|| enemy instanceof Swarm
-						|| enemy instanceof Bee
-						|| enemy instanceof Crab
-						|| enemy instanceof Spinner
-						|| enemy instanceof Scorpio) {
-					damageMulti = 2f;
-				}
-				beforeAbilityUsed(hero, enemy);
-				AttackIndicator.target(enemy);
-				if (hero.attack(enemy, damageMulti, 0, Char.INFINITE_ACCURACY)) {
-					if (enemy.isAlive()) {
-						Buff.affect(enemy, Vulnerable.class, 3f);
-					} else {
-						onAbilityKill(hero, enemy);
-					}
-					Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
-				}
-				Invisibility.dispel();
-				hero.spendAndNext(hero.attackDelay());
-				afterAbilityUsed(hero);
+		hero.sprite.attack(enemy.pos, () -> {
+			float damageMulti = 1f;
+			if (Char.hasProp(enemy, Char.Property.INORGANIC)
+					|| enemy instanceof Swarm
+					|| enemy instanceof Bee
+					|| enemy instanceof Crab
+					|| enemy instanceof Spinner
+					|| enemy instanceof Scorpio) {
+				damageMulti = 2f;
 			}
+			beforeAbilityUsed(hero, enemy);
+			AttackIndicator.target(enemy);
+			if (hero.attack(enemy, damageMulti, 0, Char.INFINITE_ACCURACY)) {
+				if (enemy.isAlive()) {
+					Buff.affect(enemy, Vulnerable.class, 3f);
+				} else {
+					onAbilityKill(hero, enemy);
+				}
+				Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
+			}
+			Invisibility.dispel();
+			hero.spendAndNext(hero.attackDelay());
+			afterAbilityUsed(hero);
 		});
 	}
 
 	private static final String BLOODSTAINED = "bloodStained";
-	
+
 	@Override
-	public void storeInBundle( Bundle bundle ) {
-		super.storeInBundle( bundle );
-		
-		bundle.put( BLOODSTAINED, bloodStained );
+	public void storeInBundle(Bundle bundle) {
+		super.storeInBundle(bundle);
+
+		bundle.put(BLOODSTAINED, bloodStained);
 	}
-	
+
 	@Override
-	public void restoreFromBundle( Bundle bundle ) {
-		super.restoreFromBundle( bundle );
-		
-		bloodStained = bundle.getBoolean( BLOODSTAINED );
+	public void restoreFromBundle(Bundle bundle) {
+		super.restoreFromBundle(bundle);
+
+		bloodStained = bundle.getBoolean(BLOODSTAINED);
 	}
-	
+
 	@Override
 	public Glowing glowing() {
 		if (super.glowing() == null) {

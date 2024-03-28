@@ -75,39 +75,36 @@ public class Feint extends ArmorAbility {
 
 	@Override
 	protected void activate(ClassArmor armor, Hero hero, Integer target) {
-		if (target == null){
+		if (target == null) {
 			return;
 		}
 
-		if (!Dungeon.level.adjacent(hero.pos, target)){
+		if (!Dungeon.level.adjacent(hero.pos, target)) {
 			GLog.w(Messages.get(this, "too_far"));
 			return;
 		}
 
-		if (Dungeon.hero.rooted){
-			PixelScene.shake( 1, 1f );
+		if (Dungeon.hero.rooted) {
+			PixelScene.shake(1, 1f);
 			GLog.w(Messages.get(this, "bad_location"));
 			return;
 		}
 
-		if (Dungeon.level.solid[target] || Actor.findChar(target) != null){
+		if (Dungeon.level.solid[target] || Actor.findChar(target) != null) {
 			GLog.w(Messages.get(this, "bad_location"));
 			return;
 		}
 
 		hero.busy();
 		Sample.INSTANCE.play(Assets.Sounds.MISS);
-		hero.sprite.jump(hero.pos, target, 0, 0.1f, new Callback() {
-			@Override
-			public void call() {
-				if (Dungeon.level.map[hero.pos] == Terrain.OPEN_DOOR) {
-					Door.leave( hero.pos );
-				}
-				hero.pos = target;
-				Dungeon.level.occupyCell(hero);
-				Invisibility.dispel();
-				hero.spendAndNext(1f);
+		hero.sprite.jump(hero.pos, target, 0, 0.1f, () -> {
+			if (Dungeon.level.map[hero.pos] == Terrain.OPEN_DOOR) {
+				Door.leave(hero.pos);
 			}
+			hero.pos = target;
+			Dungeon.level.occupyCell(hero);
+			Invisibility.dispel();
+			hero.spendAndNext(1f);
 		});
 
 		AfterImage image = new AfterImage();
@@ -116,27 +113,24 @@ public class Feint extends ArmorAbility {
 
 		int imageAttackPos;
 		Char enemyTarget = TargetHealthIndicator.instance.target();
-		if (enemyTarget != null && enemyTarget.alignment == Char.Alignment.ENEMY){
+		if (enemyTarget != null && enemyTarget.alignment == Char.Alignment.ENEMY) {
 			imageAttackPos = enemyTarget.pos;
 		} else {
 			imageAttackPos = image.pos + (image.pos - target);
 		}
 		//do a purely visual attack
-		hero.sprite.parent.add(new Delayer(0f){
+		hero.sprite.parent.add(new Delayer(0f) {
 			@Override
 			protected void onComplete() {
-				image.sprite.attack(imageAttackPos, new Callback() {
-					@Override
-					public void call() {
-						//do nothing, attack is purely visual
-					}
+				image.sprite.attack(imageAttackPos, () -> {
+					//do nothing, attack is purely visual
 				});
 			}
 		});
 
-		for (Mob m : Dungeon.level.mobs.toArray( new Mob[0] )){
+		for (Mob m : Dungeon.level.mobs.toArray(new Mob[0])) {
 			if ((m.isTargeting(hero) && m.state == m.HUNTING) ||
-					(m.alignment == Char.Alignment.ENEMY && m.state != m.PASSIVE && Dungeon.level.distance(m.pos, image.pos) <= 2)){
+					(m.alignment == Char.Alignment.ENEMY && m.state != m.PASSIVE && Dungeon.level.distance(m.pos, image.pos) <= 2)) {
 				m.aggro(image);
 			}
 		}
@@ -164,7 +158,7 @@ public class Feint extends ArmorAbility {
 			HP = HT = 1;
 
 			//fades just before the hero's next action
-			actPriority = Actor.HERO_PRIO+1;
+			actPriority = Actor.HERO_PRIO + 1;
 		}
 
 		@Override
@@ -180,7 +174,7 @@ public class Feint extends ArmorAbility {
 		}
 
 		@Override
-		public void damage( int dmg, Object src ) {
+		public void damage(int dmg, Object src) {
 
 		}
 
@@ -206,7 +200,7 @@ public class Feint extends ArmorAbility {
 		}
 
 		@Override
-		public boolean add( Buff buff ) {
+		public boolean add(Buff buff) {
 			return false;
 		}
 
@@ -217,7 +211,7 @@ public class Feint extends ArmorAbility {
 		@Override
 		public CharSprite sprite() {
 			CharSprite s = super.sprite();
-			((AfterImageSprite)s).updateArmor();
+			((AfterImageSprite) s).updateArmor();
 			return s;
 		}
 
@@ -242,12 +236,12 @@ public class Feint extends ArmorAbility {
 				//don't interrupt current animation to start fading
 				//this ensures the fake attack animation plays
 				if (parent != null) {
-					parent.add( new AlphaTweener( this, 0, 3f ) {
+					parent.add(new AlphaTweener(this, 0, 3f) {
 						@Override
 						protected void onComplete() {
 							AfterImageSprite.this.killAndErase();
 						}
-					} );
+					});
 				}
 			}
 		}

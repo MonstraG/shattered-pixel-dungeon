@@ -40,35 +40,35 @@ public class RatKing extends NPC {
 
 	{
 		spriteClass = RatKingSprite.class;
-		
+
 		state = SLEEPING;
 	}
-	
+
 	@Override
-	public int defenseSkill( Char enemy ) {
+	public int defenseSkill(Char enemy) {
 		return INFINITE_EVASION;
 	}
-	
+
 	@Override
 	public float speed() {
 		return 2f;
 	}
-	
+
 	@Override
 	protected Char chooseEnemy() {
 		return null;
 	}
 
 	@Override
-	public void damage( int dmg, Object src ) {
+	public void damage(int dmg, Object src) {
 		//do nothing
 	}
 
 	@Override
-	public boolean add( Buff buff ) {
+	public boolean add(Buff buff) {
 		return false;
 	}
-	
+
 	@Override
 	public boolean reset() {
 		return true;
@@ -79,22 +79,22 @@ public class RatKing extends NPC {
 	@Override
 	protected void onAdd() {
 		super.onAdd();
-		if (firstAdded && Dungeon.depth != 5){
+		if (firstAdded && Dungeon.depth != 5) {
 			yell(Messages.get(this, "confused"));
 		}
 	}
 
 	@Override
 	protected boolean act() {
-		if (Dungeon.depth < 5){
-			if (pos == Dungeon.level.exit()){
+		if (Dungeon.depth < 5) {
+			if (pos == Dungeon.level.exit()) {
 				destroy();
 				sprite.killAndErase();
 			} else {
 				target = Dungeon.level.exit();
 			}
-		} else if (Dungeon.depth > 5){
-			if (pos == Dungeon.level.entrance()){
+		} else if (Dungeon.depth > 5) {
+			if (pos == Dungeon.level.entrance()) {
 				destroy();
 				sprite.killAndErase();
 			} else {
@@ -108,60 +108,55 @@ public class RatKing extends NPC {
 
 	@Override
 	public boolean interact(Char c) {
-		sprite.turnTo( pos, c.pos );
+		sprite.turnTo(pos, c.pos);
 
-		if (c != Dungeon.hero){
+		if (c != Dungeon.hero) {
 			return super.interact(c);
 		}
 
 		KingsCrown crown = Dungeon.hero.belongings.getItem(KingsCrown.class);
 		if (state == SLEEPING) {
 			notice();
-			yell( Messages.get(this, "not_sleeping") );
+			yell(Messages.get(this, "not_sleeping"));
 			state = WANDERING;
-		} else if (crown != null){
-			if (Dungeon.hero.belongings.armor() == null){
-				yell( Messages.get(RatKing.class, "crown_clothes") );
+		} else if (crown != null) {
+			if (Dungeon.hero.belongings.armor() == null) {
+				yell(Messages.get(RatKing.class, "crown_clothes"));
 			} else {
 				Badges.validateRatmogrify();
-				Game.runOnRenderThread(new Callback() {
+				Game.runOnRenderThread(() -> GameScene.show(new WndOptions(
+						sprite(),
+						Messages.titleCase(name()),
+						Messages.get(RatKing.class, "crown_desc"),
+						Messages.get(RatKing.class, "crown_yes"),
+						Messages.get(RatKing.class, "crown_info"),
+						Messages.get(RatKing.class, "crown_no")
+				) {
 					@Override
-					public void call() {
-						GameScene.show(new WndOptions(
-								sprite(),
-								Messages.titleCase(name()),
-								Messages.get(RatKing.class, "crown_desc"),
-								Messages.get(RatKing.class, "crown_yes"),
-								Messages.get(RatKing.class, "crown_info"),
-								Messages.get(RatKing.class, "crown_no")
-						){
-							@Override
-							protected void onSelect(int index) {
-								if (index == 0){
-									crown.upgradeArmor(Dungeon.hero, Dungeon.hero.belongings.armor(), new Ratmogrify());
-									((RatKingSprite)sprite).resetAnims();
-									yell(Messages.get(RatKing.class, "crown_thankyou"));
-								} else if (index == 1) {
-									GameScene.show(new WndInfoArmorAbility(Dungeon.hero.heroClass, new Ratmogrify()));
-								} else {
-									yell(Messages.get(RatKing.class, "crown_fine"));
-								}
-							}
-						});
+					protected void onSelect(int index) {
+						if (index == 0) {
+							crown.upgradeArmor(Dungeon.hero, Dungeon.hero.belongings.armor(), new Ratmogrify());
+							((RatKingSprite) sprite).resetAnims();
+							yell(Messages.get(RatKing.class, "crown_thankyou"));
+						} else if (index == 1) {
+							GameScene.show(new WndInfoArmorAbility(Dungeon.hero.heroClass, new Ratmogrify()));
+						} else {
+							yell(Messages.get(RatKing.class, "crown_fine"));
+						}
 					}
-				});
+				}));
 			}
 		} else if (Dungeon.hero.armorAbility instanceof Ratmogrify) {
-			yell( Messages.get(RatKing.class, "crown_after") );
+			yell(Messages.get(RatKing.class, "crown_after"));
 		} else {
-			yell( Messages.get(this, "what_is_it") );
+			yell(Messages.get(this, "what_is_it"));
 		}
 		return true;
 	}
-	
+
 	@Override
 	public String description() {
-		if (Holiday.getCurrentHoliday() == Holiday.WINTER_HOLIDAYS){
+		if (Holiday.getCurrentHoliday() == Holiday.WINTER_HOLIDAYS) {
 			return Messages.get(this, "desc_festive");
 		} else {
 			return super.description();

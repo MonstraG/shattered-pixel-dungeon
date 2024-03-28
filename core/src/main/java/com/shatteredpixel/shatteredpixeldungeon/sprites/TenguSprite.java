@@ -29,35 +29,35 @@ import com.watabou.noosa.TextureFilm;
 import com.watabou.utils.Callback;
 
 public class TenguSprite extends MobSprite {
-	
+
 	public TenguSprite() {
 		super();
-		
-		texture( Assets.Sprites.TENGU );
-		
-		TextureFilm frames = new TextureFilm( texture, 14, 16 );
-		
-		idle = new Animation( 2, true );
-		idle.frames( frames, 0, 0, 0, 1 );
-		
-		run = new Animation( 15, false );
-		run.frames( frames, 2, 3, 4, 5, 0 );
-		
-		attack = new Animation( 15, false );
-		attack.frames( frames, 6, 7, 7, 0 );
-		
+
+		texture(Assets.Sprites.TENGU);
+
+		TextureFilm frames = new TextureFilm(texture, 14, 16);
+
+		idle = new Animation(2, true);
+		idle.frames(frames, 0, 0, 0, 1);
+
+		run = new Animation(15, false);
+		run.frames(frames, 2, 3, 4, 5, 0);
+
+		attack = new Animation(15, false);
+		attack.frames(frames, 6, 7, 7, 0);
+
 		zap = attack.clone();
-		
-		die = new Animation( 8, false );
-		die.frames( frames, 8, 9, 10, 10, 10, 10, 10, 10 );
-		
-		play( run.clone() );
+
+		die = new Animation(8, false);
+		die.frames(frames, 8, 9, 10, 10, 10, 10, 10, 10);
+
+		play(run.clone());
 	}
 
 	@Override
 	public void play(Animation anim) {
-		if (isMoving && anim != run){
-			synchronized (this){
+		if (isMoving && anim != run) {
+			synchronized (this) {
 				isMoving = false;
 				notifyAll();
 			}
@@ -66,17 +66,17 @@ public class TenguSprite extends MobSprite {
 	}
 
 	@Override
-	public void move( int from, int to ) {
-		
-		place( to );
-		
-		play( run );
-		turnTo( from , to );
+	public void move(int from, int to) {
+
+		place(to);
+
+		play(run);
+		turnTo(from, to);
 
 		isMoving = true;
 
 		if (Dungeon.level.water[to]) {
-			GameScene.ripple( to );
+			GameScene.ripple(to);
 		}
 
 	}
@@ -88,40 +88,35 @@ public class TenguSprite extends MobSprite {
 	}
 
 	@Override
-	public void attack( int cell ) {
-		if (!Dungeon.level.adjacent( cell, ch.pos )) {
+	public void attack(int cell) {
+		if (!Dungeon.level.adjacent(cell, ch.pos)) {
 
-			((MissileSprite)parent.recycle( MissileSprite.class )).
-				reset( this, cell, new TenguShuriken(), new Callback() {
-					@Override
-					public void call() {
-						ch.onAttackComplete();
-					}
-				} );
-			
-			zap( ch.pos );
-			
+			((MissileSprite) parent.recycle(MissileSprite.class)).
+					reset(this, cell, new TenguShuriken(), () -> ch.onAttackComplete());
+
+			zap(ch.pos);
+
 		} else {
-			
-			super.attack( cell );
-			
+
+			super.attack(cell);
+
 		}
 	}
-	
+
 	@Override
-	public void onComplete( Animation anim ) {
+	public void onComplete(Animation anim) {
 		if (anim == run) {
-			synchronized (this){
+			synchronized (this) {
 				isMoving = false;
 				idle();
 
 				notifyAll();
 			}
 		} else {
-			super.onComplete( anim );
+			super.onComplete(anim);
 		}
 	}
-	
+
 	public static class TenguShuriken extends Item {
 		{
 			image = ItemSpriteSheet.SHURIKEN;

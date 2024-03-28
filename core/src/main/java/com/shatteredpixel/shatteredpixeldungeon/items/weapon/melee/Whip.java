@@ -47,8 +47,8 @@ public class Whip extends MeleeWeapon {
 
 	@Override
 	public int max(int lvl) {
-		return  5*(tier) +      //15 base, down from 20
-				lvl*(tier);     //+3 per level, down from +4
+		return 5 * (tier) +      //15 base, down from 20
+				lvl * (tier);     //+3 per level, down from +4
 	}
 
 	@Override
@@ -58,13 +58,13 @@ public class Whip extends MeleeWeapon {
 		Char closest = null;
 
 		hero.belongings.abilityWeapon = this;
-		for (Char ch : Actor.chars()){
+		for (Char ch : Actor.chars()) {
 			if (ch.alignment == Char.Alignment.ENEMY
 					&& !hero.isCharmedBy(ch)
 					&& Dungeon.level.heroFOV[ch.pos]
-					&& hero.canAttack(ch)){
+					&& hero.canAttack(ch)) {
 				targets.add(ch);
-				if (closest == null || Dungeon.level.trueDistance(hero.pos, closest.pos) > Dungeon.level.trueDistance(hero.pos, ch.pos)){
+				if (closest == null || Dungeon.level.trueDistance(hero.pos, closest.pos) > Dungeon.level.trueDistance(hero.pos, ch.pos)) {
 					closest = ch;
 				}
 			}
@@ -78,20 +78,17 @@ public class Whip extends MeleeWeapon {
 
 		throwSound();
 		Char finalClosest = closest;
-		hero.sprite.attack(hero.pos, new Callback() {
-			@Override
-			public void call() {
-				beforeAbilityUsed(hero, finalClosest);
-				for (Char ch : targets) {
-					hero.attack(ch, 1, 0, ch == finalClosest ? Char.INFINITE_ACCURACY : 1);
-					if (!ch.isAlive()){
-						onAbilityKill(hero, ch);
-					}
+		hero.sprite.attack(hero.pos, () -> {
+			beforeAbilityUsed(hero, finalClosest);
+			for (Char ch : targets) {
+				hero.attack(ch, 1, 0, ch == finalClosest ? Char.INFINITE_ACCURACY : 1);
+				if (!ch.isAlive()) {
+					onAbilityKill(hero, ch);
 				}
-				Invisibility.dispel();
-				hero.spendAndNext(hero.attackDelay());
-				afterAbilityUsed(hero);
 			}
+			Invisibility.dispel();
+			hero.spendAndNext(hero.attackDelay());
+			afterAbilityUsed(hero);
 		});
 	}
 

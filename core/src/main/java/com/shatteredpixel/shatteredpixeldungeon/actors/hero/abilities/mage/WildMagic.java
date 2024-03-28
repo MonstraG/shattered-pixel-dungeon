@@ -58,11 +58,11 @@ public class WildMagic extends ArmorAbility {
 
 	@Override
 	protected void activate(ClassArmor armor, Hero hero, Integer target) {
-		if (target == null){
+		if (target == null) {
 			return;
 		}
 
-		if (target == hero.pos){
+		if (target == hero.pos) {
 			GLog.w(Messages.get(this, "self_target"));
 			return;
 		}
@@ -70,10 +70,10 @@ public class WildMagic extends ArmorAbility {
 		ArrayList<Wand> wands = hero.belongings.getAllItems(Wand.class);
 		Random.shuffle(wands);
 
-		float chargeUsePerShot = 0.5f * (float)Math.pow(0.67f, hero.pointsInTalent(Talent.CONSERVED_MAGIC));
+		float chargeUsePerShot = 0.5f * (float) Math.pow(0.67f, hero.pointsInTalent(Talent.CONSERVED_MAGIC));
 
-		for (Wand w : wands.toArray(new Wand[0])){
-			if (w.curCharges < 1 && w.partialCharge < chargeUsePerShot){
+		for (Wand w : wands.toArray(new Wand[0])) {
+			if (w.curCharges < 1 && w.partialCharge < chargeUsePerShot) {
 				wands.remove(w);
 			}
 		}
@@ -81,33 +81,33 @@ public class WildMagic extends ArmorAbility {
 		int maxWands = 4 + Dungeon.hero.pointsInTalent(Talent.FIRE_EVERYTHING);
 
 		//second and third shots
-		if (wands.size() < maxWands){
+		if (wands.size() < maxWands) {
 			ArrayList<Wand> seconds = new ArrayList<>(wands);
 			ArrayList<Wand> thirds = new ArrayList<>(wands);
 
-			for (Wand w : wands){
+			for (Wand w : wands) {
 				float totalCharge = w.curCharges + w.partialCharge;
-				if (totalCharge < 2*chargeUsePerShot){
+				if (totalCharge < 2 * chargeUsePerShot) {
 					seconds.remove(w);
 				}
-				if (totalCharge < 3*chargeUsePerShot
-					|| Random.Int(4) >= Dungeon.hero.pointsInTalent(Talent.FIRE_EVERYTHING)){
+				if (totalCharge < 3 * chargeUsePerShot
+						|| Random.Int(4) >= Dungeon.hero.pointsInTalent(Talent.FIRE_EVERYTHING)) {
 					thirds.remove(w);
 				}
 			}
 
 			Random.shuffle(seconds);
-			while (!seconds.isEmpty() && wands.size() < maxWands){
+			while (!seconds.isEmpty() && wands.size() < maxWands) {
 				wands.add(seconds.remove(0));
 			}
 
 			Random.shuffle(thirds);
-			while (!thirds.isEmpty() && wands.size() < maxWands){
+			while (!thirds.isEmpty() && wands.size() < maxWands) {
 				wands.add(thirds.remove(0));
 			}
 		}
 
-		if (wands.size() == 0){
+		if (wands.size() == 0) {
 			GLog.w(Messages.get(this, "no_wands"));
 			return;
 		}
@@ -125,11 +125,14 @@ public class WildMagic extends ArmorAbility {
 
 	}
 
-	public static class WildMagicTracker extends FlavourBuff{};
+	public static class WildMagicTracker extends FlavourBuff {
+	}
+
+	;
 
 	Actor wildMagicActor = null;
 
-	private void zapWand( ArrayList<Wand> wands, Hero hero, int cell){
+	private void zapWand(ArrayList<Wand> wands, Hero hero, int cell) {
 		Wand cur = wands.remove(0);
 
 		Ballistica aim = new Ballistica(hero.pos, cell, cur.collisionProperties(cell));
@@ -139,39 +142,33 @@ public class WildMagic extends ArmorAbility {
 		float startTime = Game.timeTotal;
 		if (cur.tryToZap(hero, cell)) {
 			if (!cur.cursed) {
-				cur.fx(aim, new Callback() {
-					@Override
-					public void call() {
-						cur.onZap(aim);
-						if (Game.timeTotal - startTime < 0.33f) {
-							hero.sprite.parent.add(new Delayer(0.33f - (Game.timeTotal - startTime)) {
-								@Override
-								protected void onComplete() {
-									afterZap(cur, wands, hero, cell);
-								}
-							});
-						} else {
-							afterZap(cur, wands, hero, cell);
-						}
+				cur.fx(aim, () -> {
+					cur.onZap(aim);
+					if (Game.timeTotal - startTime < 0.33f) {
+						hero.sprite.parent.add(new Delayer(0.33f - (Game.timeTotal - startTime)) {
+							@Override
+							protected void onComplete() {
+								afterZap(cur, wands, hero, cell);
+							}
+						});
+					} else {
+						afterZap(cur, wands, hero, cell);
 					}
 				});
 			} else {
 				CursedWand.cursedZap(cur,
 						hero,
 						new Ballistica(hero.pos, cell, Ballistica.MAGIC_BOLT),
-						new Callback() {
-							@Override
-							public void call() {
-								if (Game.timeTotal - startTime < 0.33f) {
-									hero.sprite.parent.add(new Delayer(0.33f - (Game.timeTotal - startTime)) {
-										@Override
-										protected void onComplete() {
-											afterZap(cur, wands, hero, cell);
-										}
-									});
-								} else {
-									afterZap(cur, wands, hero, cell);
-								}
+						() -> {
+							if (Game.timeTotal - startTime < 0.33f) {
+								hero.sprite.parent.add(new Delayer(0.33f - (Game.timeTotal - startTime)) {
+									@Override
+									protected void onComplete() {
+										afterZap(cur, wands, hero, cell);
+									}
+								});
+							} else {
+								afterZap(cur, wands, hero, cell);
 							}
 						});
 			}
@@ -180,13 +177,13 @@ public class WildMagic extends ArmorAbility {
 		}
 	}
 
-	private void afterZap( Wand cur, ArrayList<Wand> wands, Hero hero, int target){
-		cur.partialCharge -= 0.5f * (float)Math.pow(0.67f, hero.pointsInTalent(Talent.CONSERVED_MAGIC));
+	private void afterZap(Wand cur, ArrayList<Wand> wands, Hero hero, int target) {
+		cur.partialCharge -= 0.5f * (float) Math.pow(0.67f, hero.pointsInTalent(Talent.CONSERVED_MAGIC));
 		if (cur.partialCharge < 0) {
 			cur.partialCharge++;
 			cur.curCharges--;
 		}
-		if (wildMagicActor != null){
+		if (wildMagicActor != null) {
 			wildMagicActor.next();
 			wildMagicActor = null;
 		}
@@ -195,7 +192,7 @@ public class WildMagic extends ArmorAbility {
 		if (!wands.isEmpty() && hero.isAlive()) {
 			Actor.add(new Actor() {
 				{
-					actPriority = VFX_PRIO-1;
+					actPriority = VFX_PRIO - 1;
 				}
 
 				@Override

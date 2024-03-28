@@ -46,13 +46,13 @@ public class Greataxe extends MeleeWeapon {
 
 	@Override
 	public int max(int lvl) {
-		return  5*(tier+4) +    //45 base, up from 30
-				lvl*(tier+1);   //scaling unchanged
+		return 5 * (tier + 4) +    //45 base, up from 30
+				lvl * (tier + 1);   //scaling unchanged
 	}
 
 	@Override
 	public int STRReq(int lvl) {
-		return STRReq(tier+1, lvl); //20 base strength req, up from 18
+		return STRReq(tier + 1, lvl); //20 base strength req, up from 18
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class Greataxe extends MeleeWeapon {
 
 	@Override
 	protected void duelistAbility(Hero hero, Integer target) {
-		if (hero.HP / (float)hero.HT >= 0.5f){
+		if (hero.HP / (float) hero.HT >= 0.5f) {
 			GLog.w(Messages.get(this, "ability_cant_use"));
 			return;
 		}
@@ -78,28 +78,25 @@ public class Greataxe extends MeleeWeapon {
 		}
 
 		hero.belongings.abilityWeapon = this;
-		if (!hero.canAttack(enemy)){
+		if (!hero.canAttack(enemy)) {
 			GLog.w(Messages.get(this, "ability_bad_position"));
 			hero.belongings.abilityWeapon = null;
 			return;
 		}
 		hero.belongings.abilityWeapon = null;
 
-		hero.sprite.attack(enemy.pos, new Callback() {
-			@Override
-			public void call() {
-				beforeAbilityUsed(hero, enemy);
-				AttackIndicator.target(enemy);
-				if (hero.attack(enemy, 1.50f, 0, Char.INFINITE_ACCURACY)){
-					Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
-					if (!enemy.isAlive()){
-						onAbilityKill(hero, enemy);
-					}
+		hero.sprite.attack(enemy.pos, () -> {
+			beforeAbilityUsed(hero, enemy);
+			AttackIndicator.target(enemy);
+			if (hero.attack(enemy, 1.50f, 0, Char.INFINITE_ACCURACY)) {
+				Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
+				if (!enemy.isAlive()) {
+					onAbilityKill(hero, enemy);
 				}
-				Invisibility.dispel();
-				hero.spendAndNext(hero.attackDelay());
-				afterAbilityUsed(hero);
 			}
+			Invisibility.dispel();
+			hero.spendAndNext(hero.attackDelay());
+			afterAbilityUsed(hero);
 		});
 	}
 }

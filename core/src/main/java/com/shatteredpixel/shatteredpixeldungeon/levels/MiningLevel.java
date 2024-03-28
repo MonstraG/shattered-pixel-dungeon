@@ -71,7 +71,7 @@ public class MiningLevel extends CavesLevel {
 
 	@Override
 	public String tilesTex() {
-		switch (Blacksmith.Quest.Type()){
+		switch (Blacksmith.Quest.Type()) {
 			default:
 				return Assets.Environment.TILES_CAVES;
 			case Blacksmith.Quest.CRYSTAL:
@@ -90,7 +90,7 @@ public class MiningLevel extends CavesLevel {
 	@Override
 	protected ArrayList<Room> initRooms() {
 		ArrayList<Room> initRooms = new ArrayList<>();
-		initRooms.add ( roomEntrance = new MineEntrance());
+		initRooms.add(roomEntrance = new MineEntrance());
 
 		//spawns 1 giant, 3 large, 6-8 small, and 1-2 secret cave rooms
 		StandardRoom s;
@@ -99,21 +99,21 @@ public class MiningLevel extends CavesLevel {
 		initRooms.add(s);
 
 		int rooms = 3;
-		for (int i = 0; i < rooms; i++){
+		for (int i = 0; i < rooms; i++) {
 			s = new MineLargeRoom();
 			s.setSizeCat();
 			initRooms.add(s);
 		}
 
 		rooms = Random.NormalIntRange(6, 8);
-		for (int i = 0; i < rooms; i++){
+		for (int i = 0; i < rooms; i++) {
 			s = new MineSmallRoom();
 			s.setSizeCat();
 			initRooms.add(s);
 		}
 
 		rooms = Random.NormalIntRange(1, 2);
-		for (int i = 0; i < rooms; i++){
+		for (int i = 0; i < rooms; i++) {
 			initRooms.add(new MineSecretRoom());
 		}
 
@@ -127,7 +127,7 @@ public class MiningLevel extends CavesLevel {
 
 	@Override
 	protected boolean build() {
-		if (super.build()){
+		if (super.build()) {
 			CustomTilemap vis = new BorderTopDarken();
 			vis.setRect(0, 0, width, 1);
 			customTiles.add(vis);
@@ -152,12 +152,12 @@ public class MiningLevel extends CavesLevel {
 	@Override
 	public int mobLimit() {
 		//1 fewer than usual
-		return super.mobLimit()-1;
+		return super.mobLimit() - 1;
 	}
 
 	@Override
 	public Mob createMob() {
-		switch (Blacksmith.Quest.Type()){
+		switch (Blacksmith.Quest.Type()) {
 			default:
 				return new Bat();
 			case Blacksmith.Quest.CRYSTAL:
@@ -172,23 +172,23 @@ public class MiningLevel extends CavesLevel {
 	@Override
 	public float respawnCooldown() {
 		//normal enemies respawn much more slowly here
-		return 3*TIME_TO_RESPAWN;
+		return 3 * TIME_TO_RESPAWN;
 	}
 
 	@Override
 	protected void createItems() {
 		Random.pushGenerator(Random.Long());
-			ArrayList<Item> bonesItems = Bones.get();
-			if (bonesItems != null) {
-				int cell = randomDropCell();
-				if (map[cell] == Terrain.HIGH_GRASS || map[cell] == Terrain.FURROWED_GRASS) {
-					map[cell] = Terrain.GRASS;
-					losBlocking[cell] = false;
-				}
-				for (Item i : bonesItems) {
-					drop(i, cell).setHauntedIfCursed().type = Heap.Type.REMAINS;
-				}
+		ArrayList<Item> bonesItems = Bones.get();
+		if (bonesItems != null) {
+			int cell = randomDropCell();
+			if (map[cell] == Terrain.HIGH_GRASS || map[cell] == Terrain.FURROWED_GRASS) {
+				map[cell] = Terrain.GRASS;
+				losBlocking[cell] = false;
 			}
+			for (Item i : bonesItems) {
+				drop(i, cell).setHauntedIfCursed().type = Heap.Type.REMAINS;
+			}
+		}
 		Random.popGenerator();
 
 		int cell = randomDropCell();
@@ -196,24 +196,24 @@ public class MiningLevel extends CavesLevel {
 			map[cell] = Terrain.GRASS;
 			losBlocking[cell] = false;
 		}
-		drop( Generator.randomUsingDefaults(Generator.Category.FOOD), cell );
-		if (Blacksmith.Quest.Type() == Blacksmith.Quest.GNOLL){
+		drop(Generator.randomUsingDefaults(Generator.Category.FOOD), cell);
+		if (Blacksmith.Quest.Type() == Blacksmith.Quest.GNOLL) {
 			//drop a second ration for the gnoll quest type, more mining required!
 			cell = randomDropCell();
 			if (map[cell] == Terrain.HIGH_GRASS || map[cell] == Terrain.FURROWED_GRASS) {
 				map[cell] = Terrain.GRASS;
 				losBlocking[cell] = false;
 			}
-			drop( Generator.randomUsingDefaults(Generator.Category.FOOD), cell );
+			drop(Generator.randomUsingDefaults(Generator.Category.FOOD), cell);
 		}
 
-		if (Dungeon.isChallenged(Challenges.DARKNESS)){
+		if (Dungeon.isChallenged(Challenges.DARKNESS)) {
 			cell = randomDropCell();
 			if (map[cell] == Terrain.HIGH_GRASS || map[cell] == Terrain.FURROWED_GRASS) {
 				map[cell] = Terrain.GRASS;
 				losBlocking[cell] = false;
 			}
-			drop( new Torch(), cell );
+			drop(new Torch(), cell);
 		}
 	}
 
@@ -224,14 +224,14 @@ public class MiningLevel extends CavesLevel {
 	}
 
 	@Override
-	public String tileName( int tile ) {
+	public String tileName(int tile) {
 		switch (tile) {
 			case Terrain.MINE_CRYSTAL:
 				return Messages.get(MiningLevel.class, "crystal_name");
 			case Terrain.MINE_BOULDER:
 				return Messages.get(MiningLevel.class, "boulder_name");
 			default:
-				return super.tileName( tile );
+				return super.tileName(tile);
 		}
 	}
 
@@ -240,60 +240,56 @@ public class MiningLevel extends CavesLevel {
 		if (transition.type == LevelTransition.Type.BRANCH_ENTRANCE
 				&& !Blacksmith.Quest.completed() && Blacksmith.Quest.Type() != Blacksmith.Quest.OLD) {
 
-			if (hero.belongings.getItem(Pickaxe.class) == null){
-				Game.runOnRenderThread(new Callback() {
-					@Override
-					public void call() {
-						GameScene.show(new WndTitledMessage( new BlacksmithSprite(),
-								Messages.titleCase(Messages.get(Blacksmith.class, "name")),
-								Messages.get(Blacksmith.class, "lost_pick")));
-					}
-				});
+			if (hero.belongings.getItem(Pickaxe.class) == null) {
+				Game.runOnRenderThread(() -> GameScene.show(new WndTitledMessage(new BlacksmithSprite(),
+						Messages.titleCase(Messages.get(Blacksmith.class, "name")),
+						Messages.get(Blacksmith.class, "lost_pick"))));
 				return false;
 			}
 
 			String warnText;
 			DarkGold gold = hero.belongings.getItem(DarkGold.class);
 			int goldAmount = gold == null ? 0 : gold.quantity();
-			if (goldAmount < 10){
+			if (goldAmount < 10) {
 				warnText = Messages.get(Blacksmith.class, "exit_warn_none");
-			} else if (goldAmount < 20){
+			} else if (goldAmount < 20) {
 				warnText = Messages.get(Blacksmith.class, "exit_warn_low");
-			} else if (goldAmount < 30){
+			} else if (goldAmount < 30) {
 				warnText = Messages.get(Blacksmith.class, "exit_warn_med");
-			} else if (goldAmount < 40){
+			} else if (goldAmount < 40) {
 				warnText = Messages.get(Blacksmith.class, "exit_warn_high");
 			} else {
 				warnText = Messages.get(Blacksmith.class, "exit_warn_full");
 			}
 
-			if (!Blacksmith.Quest.bossBeaten()){
-				switch (Blacksmith.Quest.Type()){
-					case Blacksmith.Quest.CRYSTAL: warnText += "\n\n" + Messages.get(Blacksmith.class, "exit_warn_crystal"); break;
-					case Blacksmith.Quest.GNOLL: warnText += "\n\n" + Messages.get(Blacksmith.class, "exit_warn_gnoll"); break;
-					case Blacksmith.Quest.FUNGI: warnText += "\n\n" + Messages.get(Blacksmith.class, "exit_warn_fungi"); break;
+			if (!Blacksmith.Quest.bossBeaten()) {
+				switch (Blacksmith.Quest.Type()) {
+					case Blacksmith.Quest.CRYSTAL:
+						warnText += "\n\n" + Messages.get(Blacksmith.class, "exit_warn_crystal");
+						break;
+					case Blacksmith.Quest.GNOLL:
+						warnText += "\n\n" + Messages.get(Blacksmith.class, "exit_warn_gnoll");
+						break;
+					case Blacksmith.Quest.FUNGI:
+						warnText += "\n\n" + Messages.get(Blacksmith.class, "exit_warn_fungi");
+						break;
 				}
 			}
 
 			String finalWarnText = warnText;
-			Game.runOnRenderThread(new Callback() {
+			Game.runOnRenderThread(() -> GameScene.show(new WndOptions(new BlacksmithSprite(),
+					Messages.titleCase(Messages.get(Blacksmith.class, "name")),
+					finalWarnText,
+					Messages.get(Blacksmith.class, "exit_yes"),
+					Messages.get(Blacksmith.class, "exit_no")) {
 				@Override
-				public void call() {
-					GameScene.show(new WndOptions( new BlacksmithSprite(),
-							Messages.titleCase(Messages.get(Blacksmith.class, "name")),
-							finalWarnText,
-							Messages.get(Blacksmith.class, "exit_yes"),
-							Messages.get(Blacksmith.class, "exit_no")){
-						@Override
-						protected void onSelect(int index) {
-							if (index == 0){
-								Blacksmith.Quest.complete();
-								MiningLevel.super.activateTransition(hero, transition);
-							}
-						}
-					} );
+				protected void onSelect(int index) {
+					if (index == 0) {
+						Blacksmith.Quest.complete();
+						MiningLevel.super.activateTransition(hero, transition);
+					}
 				}
-			});
+			}));
 			return false;
 
 		} else {
@@ -302,12 +298,12 @@ public class MiningLevel extends CavesLevel {
 	}
 
 	@Override
-	public String tileDesc( int tile ) {
+	public String tileDesc(int tile) {
 		switch (tile) {
 			case Terrain.WALL:
 				return Messages.get(MiningLevel.class, "wall_desc");
 			case Terrain.WALL_DECO:
-				return super.tileDesc(tile) + "\n\n" +  Messages.get(MiningLevel.class, "gold_extra_desc");
+				return super.tileDesc(tile) + "\n\n" + Messages.get(MiningLevel.class, "gold_extra_desc");
 			case Terrain.MINE_CRYSTAL:
 				return Messages.get(MiningLevel.class, "crystal_desc");
 			case Terrain.MINE_BOULDER:
@@ -315,7 +311,7 @@ public class MiningLevel extends CavesLevel {
 			case Terrain.BARRICADE:
 				return Messages.get(MiningLevel.class, "barricade_desc");
 			default:
-				return super.tileDesc( tile );
+				return super.tileDesc(tile);
 		}
 	}
 
@@ -342,9 +338,9 @@ public class MiningLevel extends CavesLevel {
 		@Override
 		public Tilemap create() {
 			Tilemap v = super.create();
-			int[] data = new int[tileW*tileH];
+			int[] data = new int[tileW * tileH];
 			Arrays.fill(data, 1);
-			v.map( data, tileW );
+			v.map(data, tileW);
 			return v;
 		}
 
@@ -363,17 +359,17 @@ public class MiningLevel extends CavesLevel {
 		@Override
 		public Tilemap create() {
 			Tilemap v = super.create();
-			int[] data = new int[tileW*tileH];
-			for (int i = 0; i < data.length; i++){
-				if (i % tileW == 0 || i % tileW == tileW-1){
+			int[] data = new int[tileW * tileH];
+			for (int i = 0; i < data.length; i++) {
+				if (i % tileW == 0 || i % tileW == tileW - 1) {
 					data[i] = 1;
-				} else if (i + 2*tileW > data.length) {
+				} else if (i + 2 * tileW > data.length) {
 					data[i] = 2;
 				} else {
 					data[i] = -1;
 				}
 			}
-			v.map( data, tileW );
+			v.map(data, tileW);
 			return v;
 		}
 

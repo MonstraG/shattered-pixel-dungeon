@@ -50,8 +50,8 @@ public class Sai extends MeleeWeapon {
 
 	@Override
 	public int max(int lvl) {
-		return  Math.round(2.5f*(tier+1)) +     //10 base, down from 20
-				lvl*Math.round(0.5f*(tier+1));  //+2 per level, down from +4
+		return Math.round(2.5f * (tier + 1)) +     //10 base, down from 20
+				lvl * Math.round(0.5f * (tier + 1));  //+2 per level, down from +4
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class Sai extends MeleeWeapon {
 		Sai.comboStrikeAbility(hero, target, 0.40f, this);
 	}
 
-	public static void comboStrikeAbility(Hero hero, Integer target, float boostPerHit, MeleeWeapon wep){
+	public static void comboStrikeAbility(Hero hero, Integer target, float boostPerHit, MeleeWeapon wep) {
 		if (target == null) {
 			return;
 		}
@@ -76,39 +76,36 @@ public class Sai extends MeleeWeapon {
 		}
 
 		hero.belongings.abilityWeapon = wep;
-		if (!hero.canAttack(enemy)){
+		if (!hero.canAttack(enemy)) {
 			GLog.w(Messages.get(wep, "ability_bad_position"));
 			hero.belongings.abilityWeapon = null;
 			return;
 		}
 		hero.belongings.abilityWeapon = null;
 
-		hero.sprite.attack(enemy.pos, new Callback() {
-			@Override
-			public void call() {
-				wep.beforeAbilityUsed(hero, enemy);
-				AttackIndicator.target(enemy);
+		hero.sprite.attack(enemy.pos, () -> {
+			wep.beforeAbilityUsed(hero, enemy);
+			AttackIndicator.target(enemy);
 
-				int recentHits = 0;
-				ComboStrikeTracker buff = hero.buff(ComboStrikeTracker.class);
-				if (buff != null){
-					recentHits = buff.totalHits();
-					buff.detach();
-				}
-
-				boolean hit = hero.attack(enemy, 1f + boostPerHit*recentHits, 0, Char.INFINITE_ACCURACY);
-				if (hit && !enemy.isAlive()){
-					wep.onAbilityKill(hero, enemy);
-				}
-
-				Invisibility.dispel();
-				hero.spendAndNext(hero.attackDelay());
-				if (recentHits >= 2 && hit){
-					Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
-				}
-
-				wep.afterAbilityUsed(hero);
+			int recentHits = 0;
+			ComboStrikeTracker buff = hero.buff(ComboStrikeTracker.class);
+			if (buff != null) {
+				recentHits = buff.totalHits();
+				buff.detach();
 			}
+
+			boolean hit = hero.attack(enemy, 1f + boostPerHit * recentHits, 0, Char.INFINITE_ACCURACY);
+			if (hit && !enemy.isAlive()) {
+				wep.onAbilityKill(hero, enemy);
+			}
+
+			Invisibility.dispel();
+			hero.spendAndNext(hero.attackDelay());
+			if (recentHits >= 2 && hit) {
+				Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
+			}
+
+			wep.afterAbilityUsed(hero);
 		});
 	}
 
@@ -142,15 +139,15 @@ public class Sai extends MeleeWeapon {
 		public boolean act() {
 
 			//shuffle all hits down one turn
-			for (int i = 0; i < DURATION; i++){
-				if (i == DURATION-1){
+			for (int i = 0; i < DURATION; i++) {
+				if (i == DURATION - 1) {
 					hits[i] = 0;
 				} else {
-					hits[i] =  hits[i+1];
+					hits[i] = hits[i + 1];
 				}
 			}
 
-			if (totalHits() == 0){
+			if (totalHits() == 0) {
 				detach();
 			}
 
@@ -158,13 +155,13 @@ public class Sai extends MeleeWeapon {
 			return true;
 		}
 
-		public void addHit(){
-			hits[DURATION-1]++;
+		public void addHit() {
+			hits[DURATION - 1]++;
 		}
 
-		public int totalHits(){
+		public int totalHits() {
 			int sum = 0;
-			for (int i = 0; i < DURATION; i++){
+			for (int i = 0; i < DURATION; i++) {
 				sum += hits[i];
 			}
 			return sum;

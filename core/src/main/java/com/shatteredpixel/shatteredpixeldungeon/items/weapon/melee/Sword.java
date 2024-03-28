@@ -38,7 +38,7 @@ import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Callback;
 
 public class Sword extends MeleeWeapon {
-	
+
 	{
 		image = ItemSpriteSheet.SWORD;
 		hitSound = Assets.Sounds.HIT_SLASH;
@@ -48,8 +48,8 @@ public class Sword extends MeleeWeapon {
 	}
 
 	@Override
-	protected int baseChargeUse(Hero hero, Char target){
-		if (hero.buff(Sword.CleaveTracker.class) != null){
+	protected int baseChargeUse(Hero hero, Char target) {
+		if (hero.buff(Sword.CleaveTracker.class) != null) {
 			return 0;
 		} else {
 			return 1;
@@ -66,7 +66,7 @@ public class Sword extends MeleeWeapon {
 		Sword.cleaveAbility(hero, target, 1.27f, this);
 	}
 
-	public static void cleaveAbility(Hero hero, Integer target, float dmgMulti, MeleeWeapon wep){
+	public static void cleaveAbility(Hero hero, Integer target, float dmgMulti, MeleeWeapon wep) {
 		if (target == null) {
 			return;
 		}
@@ -78,34 +78,31 @@ public class Sword extends MeleeWeapon {
 		}
 
 		hero.belongings.abilityWeapon = wep;
-		if (!hero.canAttack(enemy)){
+		if (!hero.canAttack(enemy)) {
 			GLog.w(Messages.get(wep, "ability_bad_position"));
 			hero.belongings.abilityWeapon = null;
 			return;
 		}
 		hero.belongings.abilityWeapon = null;
 
-		hero.sprite.attack(enemy.pos, new Callback() {
-			@Override
-			public void call() {
-				wep.beforeAbilityUsed(hero, enemy);
-				AttackIndicator.target(enemy);
-				if (hero.attack(enemy, dmgMulti, 0, Char.INFINITE_ACCURACY)){
-					Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
-				}
-
-				Invisibility.dispel();
-				hero.spendAndNext(hero.attackDelay());
-				if (!enemy.isAlive()){
-					wep.onAbilityKill(hero, enemy);
-					Buff.prolong(hero, CleaveTracker.class, 5f);
-				} else {
-					if (hero.buff(CleaveTracker.class) != null) {
-						hero.buff(CleaveTracker.class).detach();
-					}
-				}
-				wep.afterAbilityUsed(hero);
+		hero.sprite.attack(enemy.pos, () -> {
+			wep.beforeAbilityUsed(hero, enemy);
+			AttackIndicator.target(enemy);
+			if (hero.attack(enemy, dmgMulti, 0, Char.INFINITE_ACCURACY)) {
+				Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
 			}
+
+			Invisibility.dispel();
+			hero.spendAndNext(hero.attackDelay());
+			if (!enemy.isAlive()) {
+				wep.onAbilityKill(hero, enemy);
+				Buff.prolong(hero, CleaveTracker.class, 5f);
+			} else {
+				if (hero.buff(CleaveTracker.class) != null) {
+					hero.buff(CleaveTracker.class).detach();
+				}
+			}
+			wep.afterAbilityUsed(hero);
 		});
 	}
 

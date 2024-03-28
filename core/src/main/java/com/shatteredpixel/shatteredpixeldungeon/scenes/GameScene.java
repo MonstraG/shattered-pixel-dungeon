@@ -156,21 +156,15 @@ public class GameScene extends PixelScene {
 	private DungeonWallsTilemap walls;
 	private WallBlockingTilemap wallBlocking;
 	private FogOfWar fog;
-	private HeroSprite hero;
 
 	private MenuPane menu;
 	private StatusPane status;
-
-	private BossHealthBar boss;
 
 	private GameLog log;
 
 	private static CellSelector cellSelector;
 
-	private Group terrain;
 	private Group customTiles;
-	private Group levelVisuals;
-	private Group levelWallVisuals;
 	private Group customWalls;
 	private Group ripples;
 	private Group plants;
@@ -236,7 +230,7 @@ public class GameScene extends PixelScene {
 
 		scene = this;
 
-		terrain = new Group();
+		Group terrain = new Group();
 		add(terrain);
 
 		water = new SkinnedBlock(
@@ -281,7 +275,7 @@ public class GameScene extends PixelScene {
 		terrainFeatures = new TerrainFeaturesTilemap(Dungeon.level.plants, Dungeon.level.traps);
 		terrain.add(terrainFeatures);
 
-		levelVisuals = Dungeon.level.addVisuals();
+		Group levelVisuals = Dungeon.level.addVisuals();
 		add(levelVisuals);
 
 		floorEmitters = new Group();
@@ -303,7 +297,7 @@ public class GameScene extends PixelScene {
 		mobs = new Group();
 		add(mobs);
 
-		hero = new HeroSprite();
+		HeroSprite hero = new HeroSprite();
 		hero.place(Dungeon.hero.pos);
 		hero.updateArmor();
 		mobs.add(hero);
@@ -325,7 +319,7 @@ public class GameScene extends PixelScene {
 			addCustomWall(visual);
 		}
 
-		levelWallVisuals = Dungeon.level.addWallVisuals();
+		Group levelWallVisuals = Dungeon.level.addWallVisuals();
 		add(levelWallVisuals);
 
 		wallBlocking = new WallBlockingTilemap();
@@ -374,7 +368,7 @@ public class GameScene extends PixelScene {
 		status.setRect(0, uiSize > 0 ? uiCamera.height - 39 : 0, uiCamera.width, 0);
 		add(status);
 
-		boss = new BossHealthBar();
+		BossHealthBar boss = new BossHealthBar();
 		boss.camera = uiCamera;
 		boss.setPos(6 + (uiCamera.width - boss.width()) / 2, 20);
 		add(boss);

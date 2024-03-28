@@ -39,7 +39,6 @@ import java.util.ArrayList;
 public class RightClickMenu extends Component {
 
 	private NinePatch bg;
-	private PointerArea blocker;
 
 	private Image icon;
 	private RenderedTextBlock titleText;
@@ -49,7 +48,7 @@ public class RightClickMenu extends Component {
 
 	private Item item;
 
-	public RightClickMenu(Item item){
+	public RightClickMenu(Item item) {
 		ArrayList<String> actions = item.actions(Dungeon.hero);
 		if (actions.remove(item.defaultAction())) {
 			actions.add(0, item.defaultAction());
@@ -59,11 +58,11 @@ public class RightClickMenu extends Component {
 		setup(new ItemSprite(item), Messages.titleCase(item.name()), options);
 	}
 
-	public RightClickMenu(Image icon, String title, String... options){
+	public RightClickMenu(Image icon, String title, String... options) {
 		setup(icon, title, options);
 	}
 
-	private void setup(Image icon, String title, String... options){
+	private void setup(Image icon, String title, String... options) {
 		bg = Chrome.get(Chrome.Type.TOAST_TR);
 		add(bg);
 
@@ -78,14 +77,14 @@ public class RightClickMenu extends Component {
 		separator = new ColorBlock(1, 1, 0xFF000000);
 		add(separator);
 
-		blocker = new PointerArea(0, 0, 0, 0){
+		PointerArea blocker = new PointerArea(0, 0, 0, 0) {
 			@Override
 			public boolean onSignal(PointerEvent event) {
-				boolean hit = event != null && target.overlapsScreenPoint( (int)event.current.x, (int)event.current.y );
-				if (event != null && event.type == PointerEvent.Type.HOVER && !hit){
+				boolean hit = event != null && target.overlapsScreenPoint((int) event.current.x, (int) event.current.y);
+				if (event != null && event.type == PointerEvent.Type.HOVER && !hit) {
 					RightClickMenu.this.destroy();
 					RightClickMenu.this.killAndErase();
-				} else if (hit){
+				} else if (hit) {
 					return true;
 				}
 				return false;
@@ -95,16 +94,16 @@ public class RightClickMenu extends Component {
 		add(blocker);
 
 		buttons = new RedButton[options.length];
-		for (int i = 0; i < options.length; i++){
+		for (int i = 0; i < options.length; i++) {
 			int finalI = i;
-			buttons[i] = new RedButton(options[finalI], 6){
+			buttons[i] = new RedButton(options[finalI], 6) {
 				@Override
 				protected void onClick() {
 					super.onClick();
-					if (item != null){
+					if (item != null) {
 						item.execute(Dungeon.hero, options[finalI]);
 
-						if (options[finalI].equals(item.defaultAction()) && item.usesTargeting){
+						if (options[finalI].equals(item.defaultAction()) && item.usesTargeting) {
 							InventoryPane.useTargeting();
 						}
 					}
@@ -113,7 +112,7 @@ public class RightClickMenu extends Component {
 					RightClickMenu.this.killAndErase();
 				}
 			};
-			if (item != null){
+			if (item != null) {
 				if (options[i].equals(item.defaultAction())) {
 					buttons[i].textColor(Window.TITLE_COLOR);
 				}
@@ -124,7 +123,8 @@ public class RightClickMenu extends Component {
 
 	}
 
-	public void onSelect(int index){}
+	public void onSelect(int index) {
+	}
 
 	@Override
 	protected void layout() {
@@ -134,38 +134,38 @@ public class RightClickMenu extends Component {
 		height += bg.marginVer();
 		height += Math.max(icon.height(), titleText.height());
 		height += 2;
-		height += 13*buttons.length;
+		height += 13 * buttons.length;
 
-		width = icon.width + 2 + titleText.width()+bg.marginVer();
-		for (RedButton button : buttons){
-			if (width < button.reqWidth()+bg.marginHor()){
-				width = button.reqWidth()+bg.marginHor();
+		width = icon.width + 2 + titleText.width() + bg.marginVer();
+		for (RedButton button : buttons) {
+			if (width < button.reqWidth() + bg.marginHor()) {
+				width = button.reqWidth() + bg.marginHor();
 			}
 		}
 
-		if (x + width > (camera.width + camera.scroll.x)){
+		if (x + width > (camera.width + camera.scroll.x)) {
 			x -= (x + width - (camera.width + camera.scroll.x));
 		}
-		if (y + height > (camera.height + camera.scroll.y)){
+		if (y + height > (camera.height + camera.scroll.y)) {
 			y -= (y + height - (camera.height + camera.scroll.y));
 		}
 
 		bg.x = x;
 		bg.y = y;
 
-		icon.x = x+bg.marginLeft();
-		icon.y = y+bg.marginTop();
+		icon.x = x + bg.marginLeft();
+		icon.y = y + bg.marginTop();
 
-		titleText.setPos(icon.x+icon.width()+2, icon.y + (icon.height()- titleText.height())/2);
+		titleText.setPos(icon.x + icon.width() + 2, icon.y + (icon.height() - titleText.height()) / 2);
 
-		separator.x = x+bg.marginLeft();
+		separator.x = x + bg.marginLeft();
 		separator.y = Math.max(icon.y + icon.height(), titleText.bottom()) + 1;
 		separator.size(width - bg.marginHor(), 1);
 
 		float top = separator.y + 2;
-		for (RedButton button : buttons){
-			button.setRect(x + bg.marginLeft(), top, width-bg.marginHor(), 12);
-			top = button.bottom()+1;
+		for (RedButton button : buttons) {
+			button.setRect(x + bg.marginLeft(), top, width - bg.marginHor(), 12);
+			top = button.bottom() + 1;
 		}
 
 		bg.size(width, height);

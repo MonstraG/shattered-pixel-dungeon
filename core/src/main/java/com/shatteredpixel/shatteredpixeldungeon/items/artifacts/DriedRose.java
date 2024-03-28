@@ -865,9 +865,6 @@ public class DriedRose extends Artifact {
 		private static final float BTN_GAP = 12;
 		private static final int WIDTH = 116;
 
-		private ItemButton btnWeapon;
-		private ItemButton btnArmor;
-
 		WndGhostHero(final DriedRose rose) {
 
 			IconTitle titlebar = new IconTitle();
@@ -882,7 +879,8 @@ public class DriedRose extends Artifact {
 			message.setPos(0, titlebar.bottom() + GAP);
 			add(message);
 
-			btnWeapon = new ItemButton() {
+			//do nothing, should only happen when window is cancelled
+			ItemButton btnWeapon = new ItemButton() {
 				@Override
 				protected void onClick() {
 					if (rose.weapon != null) {
@@ -953,7 +951,8 @@ public class DriedRose extends Artifact {
 			btnWeapon.item(Objects.requireNonNullElseGet(rose.weapon, () -> new WndBag.Placeholder(ItemSpriteSheet.WEAPON_HOLDER)));
 			add(btnWeapon);
 
-			btnArmor = new ItemButton() {
+			//do nothing, should only happen when window is cancelled
+			ItemButton btnArmor = new ItemButton() {
 				@Override
 				protected void onClick() {
 					if (rose.armor != null) {

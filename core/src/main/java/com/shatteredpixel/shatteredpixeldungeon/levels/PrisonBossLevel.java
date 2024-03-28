@@ -711,7 +711,6 @@ public class PrisonBossLevel extends Level {
 		Rect area;
 
 		private float fadeDuration = 1f;
-		private float initialAlpha = .4f;
 		private float fadeDelay = 1f;
 
 		public void setCoveringArea(Rect area) {
@@ -772,6 +771,7 @@ public class PrisonBossLevel extends Level {
 				return;
 			}
 
+			float initialAlpha = .4f;
 			vis.alpha(initialAlpha);
 			Actor.addDelayed(new Actor() {
 

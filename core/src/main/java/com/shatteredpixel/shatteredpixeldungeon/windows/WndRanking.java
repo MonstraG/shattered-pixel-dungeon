@@ -61,47 +61,46 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 public class WndRanking extends WndTabbed {
-	
-	private static final int WIDTH			= 115;
-	private static final int HEIGHT			= 144;
-	
-	private static WndRanking INSTANCE;
-	
-	private String gameID;
-	private Rankings.Record record;
-	
-	public WndRanking( final Rankings.Record rec ) {
-		
-		super();
-		resize( WIDTH, HEIGHT );
 
-		if (INSTANCE != null){
+	private static final int WIDTH = 115;
+	private static final int HEIGHT = 144;
+
+	private static WndRanking INSTANCE;
+
+	private Rankings.Record record;
+
+	public WndRanking(final Rankings.Record rec) {
+
+		super();
+		resize(WIDTH, HEIGHT);
+
+		if (INSTANCE != null) {
 			INSTANCE.hide();
 		}
 		INSTANCE = this;
 
-		this.gameID = rec.gameID;
+		String gameID = rec.gameID;
 		this.record = rec;
 
 		try {
 			Badges.loadGlobal();
-			Rankings.INSTANCE.loadGameData( rec );
+			Rankings.INSTANCE.loadGameData(rec);
 			createControls();
-		} catch ( Exception e ) {
-			Game.reportException( new RuntimeException("Rankings Display Failed!",e));
+		} catch (Exception e) {
+			Game.reportException(new RuntimeException("Rankings Display Failed!", e));
 			Dungeon.hero = null;
 			createControls();
 		}
 	}
-	
+
 	@Override
 	public void destroy() {
 		super.destroy();
-		if (INSTANCE == this){
+		if (INSTANCE == this) {
 			INSTANCE = null;
 		}
 	}
-	
+
 	private void createControls() {
 
 		if (Dungeon.hero != null) {
@@ -135,46 +134,46 @@ public class WndRanking extends WndTabbed {
 	}
 
 	private class RankingTab extends IconTab {
-		
+
 		private Group page;
-		
-		public RankingTab( Icons icon, Group page ) {
-			super( Icons.get(icon) );
+
+		public RankingTab(Icons icon, Group page) {
+			super(Icons.get(icon));
 			this.page = page;
 		}
-		
+
 		@Override
-		protected void select( boolean value ) {
-			super.select( value );
+		protected void select(boolean value) {
+			super.select(value);
 			if (page != null) {
 				page.visible = page.active = selected;
 			}
 		}
 	}
-	
+
 	private class StatsTab extends Group {
 
-		private int GAP	= 4;
-		
+		private int GAP = 4;
+
 		public StatsTab() {
 			super();
-			
+
 			String heroClass = record.heroClass.name();
-			if (Dungeon.hero != null){
+			if (Dungeon.hero != null) {
 				heroClass = Dungeon.hero.className();
 			}
-			
-			IconTitle title = new IconTitle();
-			title.icon( HeroSprite.avatar( record.heroClass, record.armorTier ) );
-			title.label( Messages.get(this, "title", record.herolevel, heroClass ).toUpperCase( Locale.ENGLISH ) );
-			title.color(Window.TITLE_COLOR);
-			title.setRect( 0, 0, WIDTH, 0 );
-			add( title );
 
-			if (Dungeon.hero != null && Dungeon.seed != -1){
+			IconTitle title = new IconTitle();
+			title.icon(HeroSprite.avatar(record.heroClass, record.armorTier));
+			title.label(Messages.get(this, "title", record.herolevel, heroClass).toUpperCase(Locale.ENGLISH));
+			title.color(Window.TITLE_COLOR);
+			title.setRect(0, 0, WIDTH, 0);
+			add(title);
+
+			if (Dungeon.hero != null && Dungeon.seed != -1) {
 				GAP--;
 			}
-			
+
 			float pos = title.bottom() + 1;
 
 			RenderedTextBlock date = PixelScene.renderTextBlock(record.date, 7);
@@ -184,15 +183,15 @@ public class WndRanking extends WndTabbed {
 
 			RenderedTextBlock version = PixelScene.renderTextBlock(record.version, 7);
 			version.hardlight(0xCCCCCC);
-			version.setPos(WIDTH-version.width(), pos);
+			version.setPos(WIDTH - version.width(), pos);
 			add(version);
 
-			pos = date.bottom()+5;
+			pos = date.bottom() + 5;
 
 			NumberFormat num = NumberFormat.getInstance(Locale.US);
 
-			if (Dungeon.hero == null){
-				pos = statSlot( this, Messages.get(this, "score"), num.format( record.score ), pos );
+			if (Dungeon.hero == null) {
+				pos = statSlot(this, Messages.get(this, "score"), num.format(record.score), pos);
 				pos += GAP;
 
 				Image errorIcon = Icons.WARNING.get();
@@ -200,8 +199,8 @@ public class WndRanking extends WndTabbed {
 				add(errorIcon);
 
 				RenderedTextBlock errorText = PixelScene.renderTextBlock(Messages.get(WndRanking.class, "error"), 6);
-				errorText.maxWidth((int)(WIDTH-errorIcon.width()-GAP));
-				errorText.setPos(errorIcon.width()+GAP, pos + (errorIcon.height()-errorText.height())/2);
+				errorText.maxWidth((int) (WIDTH - errorIcon.width() - GAP));
+				errorText.setPos(errorIcon.width() + GAP, pos + (errorIcon.height() - errorText.height()) / 2);
 				add(errorText);
 
 			} else {
@@ -261,9 +260,9 @@ public class WndRanking extends WndTabbed {
 			int buttontop = HEIGHT - 16;
 
 			if (Dungeon.hero != null && Dungeon.seed != -1 && !Dungeon.daily &&
-					(DeviceCompat.isDebug() || Badges.isUnlocked(Badges.Badge.VICTORY))){
+					(DeviceCompat.isDebug() || Badges.isUnlocked(Badges.Badge.VICTORY))) {
 				final Image icon = Icons.get(Icons.SEED);
-				RedButton btnSeed = new RedButton(Messages.get(this, "copy_seed")){
+				RedButton btnSeed = new RedButton(Messages.get(this, "copy_seed")) {
 					@Override
 					protected void onClick() {
 						super.onClick();
@@ -271,11 +270,11 @@ public class WndRanking extends WndTabbed {
 								Messages.get(WndRanking.StatsTab.this, "copy_seed"),
 								Messages.get(WndRanking.StatsTab.this, "copy_seed_desc"),
 								Messages.get(WndRanking.StatsTab.this, "copy_seed_copy"),
-								Messages.get(WndRanking.StatsTab.this, "copy_seed_cancel")){
+								Messages.get(WndRanking.StatsTab.this, "copy_seed_cancel")) {
 							@Override
 							protected void onSelect(int index) {
 								super.onSelect(index);
-								if (index == 0){
+								if (index == 0) {
 									SPDSettings.customSeed(DungeonSeed.convertToCode(Dungeon.seed));
 									icon.hardlight(1f, 1.5f, 0.67f);
 								}
@@ -283,7 +282,7 @@ public class WndRanking extends WndTabbed {
 						});
 					}
 				};
-				if (DungeonSeed.convertFromText(SPDSettings.customSeed()) == Dungeon.seed){
+				if (DungeonSeed.convertFromText(SPDSettings.customSeed()) == Dungeon.seed) {
 					icon.hardlight(1f, 1.5f, 0.67f);
 				}
 				btnSeed.icon(icon);
@@ -292,25 +291,25 @@ public class WndRanking extends WndTabbed {
 			}
 
 		}
-		
-		private float statSlot( Group parent, String label, String value, float pos ) {
-			
-			RenderedTextBlock txt = PixelScene.renderTextBlock( label, 7 );
+
+		private float statSlot(Group parent, String label, String value, float pos) {
+
+			RenderedTextBlock txt = PixelScene.renderTextBlock(label, 7);
 			txt.setPos(0, pos);
-			parent.add( txt );
-			
-			txt = PixelScene.renderTextBlock( value, 7 );
+			parent.add(txt);
+
+			txt = PixelScene.renderTextBlock(value, 7);
 			txt.setPos(WIDTH * 0.6f, pos);
 			PixelScene.align(txt);
-			parent.add( txt );
-			
+			parent.add(txt);
+
 			return pos + GAP + txt.height();
 		}
 	}
 
-	private class TalentsTab extends Group{
+	private class TalentsTab extends Group {
 
-		public TalentsTab(){
+		public TalentsTab() {
 			super();
 
 			camera = WndRanking.this.camera;
@@ -319,8 +318,8 @@ public class WndRanking extends WndTabbed {
 			if (Dungeon.hero.lvl >= 6) tiers++;
 			if (Dungeon.hero.lvl >= 12 && Dungeon.hero.subClass != HeroSubClass.NONE) tiers++;
 			if (Dungeon.hero.lvl >= 20 && Dungeon.hero.armorAbility != null) tiers++;
-			while (Dungeon.hero.talents.size() > tiers){
-				Dungeon.hero.talents.remove(Dungeon.hero.talents.size()-1);
+			while (Dungeon.hero.talents.size() > tiers) {
+				Dungeon.hero.talents.remove(Dungeon.hero.talents.size() - 1);
 			}
 
 			TalentsPane p = new TalentsPane(TalentButton.Mode.INFO);
@@ -334,45 +333,45 @@ public class WndRanking extends WndTabbed {
 	}
 
 	private class ItemsTab extends Group {
-		
+
 		private float pos;
-		
+
 		public ItemsTab() {
 			super();
-			
+
 			Belongings stuff = Dungeon.hero.belongings;
 			if (stuff.weapon != null) {
-				addItem( stuff.weapon );
+				addItem(stuff.weapon);
 			}
 			if (stuff.armor != null) {
-				addItem( stuff.armor );
+				addItem(stuff.armor);
 			}
 			if (stuff.artifact != null) {
-				addItem( stuff.artifact );
+				addItem(stuff.artifact);
 			}
 			if (stuff.misc != null) {
-				addItem( stuff.misc );
+				addItem(stuff.misc);
 			}
 			if (stuff.ring != null) {
-				addItem( stuff.ring );
+				addItem(stuff.ring);
 			}
 
 			pos = 0;
 
 			int slotsActive = 0;
-			for (int i = 0; i < QuickSlot.SIZE; i++){
-				if (Dungeon.quickslot.isNonePlaceholder(i)){
+			for (int i = 0; i < QuickSlot.SIZE; i++) {
+				if (Dungeon.quickslot.isNonePlaceholder(i)) {
 					slotsActive++;
 				}
 			}
 
-			float slotWidth = Math.min(28, ((WIDTH - slotsActive + 1) / (float)slotsActive));
+			float slotWidth = Math.min(28, ((WIDTH - slotsActive + 1) / (float) slotsActive));
 
-			for (int i = 0; i < QuickSlot.SIZE; i++){
-				if (Dungeon.quickslot.isNonePlaceholder(i)){
+			for (int i = 0; i < QuickSlot.SIZE; i++) {
+				if (Dungeon.quickslot.isNonePlaceholder(i)) {
 					QuickSlotButton slot = new QuickSlotButton(Dungeon.quickslot.getItem(i));
 
-					slot.setRect( pos, 120, slotWidth, 23 );
+					slot.setRect(pos, 120, slotWidth, 23);
 					PixelScene.align(slot);
 
 					add(slot);
@@ -382,64 +381,64 @@ public class WndRanking extends WndTabbed {
 				}
 			}
 		}
-		
-		private void addItem( Item item ) {
+
+		private void addItem(Item item) {
 			ItemButton slot = new ItemButton(item);
-			slot.setRect( 0, pos, width, ItemButton.HEIGHT );
-			add( slot );
-			
+			slot.setRect(0, pos, width, ItemButton.HEIGHT);
+			add(slot);
+
 			pos += slot.height() + 1;
 		}
 	}
-	
+
 	private class BadgesTab extends Group {
-		
+
 		public BadgesTab() {
 			super();
-			
+
 			camera = WndRanking.this.camera;
 
 			Component badges;
-			if (Badges.filterReplacedBadges(false).size() <= 8){
+			if (Badges.filterReplacedBadges(false).size() <= 8) {
 				badges = new BadgesList(false);
 			} else {
 				badges = new BadgesGrid(false);
 			}
 			add(badges);
-			badges.setSize( WIDTH, HEIGHT );
+			badges.setSize(WIDTH, HEIGHT);
 		}
 	}
 
-	private class ChallengesTab extends Group{
+	private class ChallengesTab extends Group {
 
-		public ChallengesTab(){
+		public ChallengesTab() {
 			super();
 
 			camera = WndRanking.this.camera;
 
 			float pos = 0;
 
-			for (int i=0; i < Challenges.NAME_IDS.length; i++) {
+			for (int i = 0; i < Challenges.NAME_IDS.length; i++) {
 
 				final String challenge = Challenges.NAME_IDS[i];
 
-				CheckBox cb = new CheckBox( Messages.titleCase(Messages.get(Challenges.class, challenge)) );
-				cb.checked( (Dungeon.challenges & Challenges.MASKS[i]) != 0 );
+				CheckBox cb = new CheckBox(Messages.titleCase(Messages.get(Challenges.class, challenge)));
+				cb.checked((Dungeon.challenges & Challenges.MASKS[i]) != 0);
 				cb.active = false;
 
 				if (i > 0) {
 					pos += 1;
 				}
-				cb.setRect( 0, pos, WIDTH-16, 15 );
+				cb.setRect(0, pos, WIDTH - 16, 15);
 
-				add( cb );
+				add(cb);
 
-				IconButton info = new IconButton(Icons.get(Icons.INFO)){
+				IconButton info = new IconButton(Icons.get(Icons.INFO)) {
 					@Override
 					protected void onClick() {
 						super.onClick();
 						ShatteredPixelDungeon.scene().add(
-								new WndMessage(Messages.get(Challenges.class, challenge+"_desc"))
+								new WndMessage(Messages.get(Challenges.class, challenge + "_desc"))
 						);
 					}
 				};
@@ -453,22 +452,22 @@ public class WndRanking extends WndTabbed {
 	}
 
 	private static class ItemButton extends Button {
-		
-		public static final int HEIGHT	= 23;
-		
+
+		public static final int HEIGHT = 23;
+
 		private Item item;
-		
+
 		private ItemSlot slot;
 		private ColorBlock bg;
 		private RenderedTextBlock name;
-		
-		public ItemButton( Item item ) {
-			
+
+		public ItemButton(Item item) {
+
 			super();
 
 			this.item = item;
-			
-			slot.item( item );
+
+			slot.item(item);
 			if (item.cursed && item.cursedKnown) {
 				bg.ra = +0.2f;
 				bg.ga = -0.1f;
@@ -477,63 +476,63 @@ public class WndRanking extends WndTabbed {
 				bg.ba = 0.1f;
 			}
 		}
-		
+
 		@Override
 		protected void createChildren() {
-			
-			bg = new ColorBlock( 28, HEIGHT, 0x9953564D );
-			add( bg );
-			
+
+			bg = new ColorBlock(28, HEIGHT, 0x9953564D);
+			add(bg);
+
 			slot = new ItemSlot();
-			add( slot );
-			
-			name = PixelScene.renderTextBlock( 7 );
-			add( name );
-			
+			add(slot);
+
+			name = PixelScene.renderTextBlock(7);
+			add(name);
+
 			super.createChildren();
 		}
-		
+
 		@Override
 		protected void layout() {
 			bg.x = x;
 			bg.y = y;
-			
-			slot.setRect( x, y, 28, HEIGHT );
+
+			slot.setRect(x, y, 28, HEIGHT);
 			PixelScene.align(slot);
-			
-			name.maxWidth((int)(width - slot.width() - 2));
+
+			name.maxWidth((int) (width - slot.width() - 2));
 			name.text(Messages.titleCase(item.name()));
 			name.setPos(
-					slot.right()+2,
+					slot.right() + 2,
 					y + (height - name.height()) / 2
 			);
 			PixelScene.align(name);
-			
+
 			super.layout();
 		}
-		
+
 		@Override
 		protected void onPointerDown() {
-			bg.brightness( 1.5f );
-			Sample.INSTANCE.play( Assets.Sounds.CLICK, 0.7f, 0.7f, 1.2f );
+			bg.brightness(1.5f);
+			Sample.INSTANCE.play(Assets.Sounds.CLICK, 0.7f, 0.7f, 1.2f);
 		}
-		
+
 		protected void onPointerUp() {
-			bg.brightness( 1.0f );
+			bg.brightness(1.0f);
 		}
-		
+
 		@Override
 		protected void onClick() {
-			Game.scene().add( new WndInfoItem( item ) );
+			Game.scene().add(new WndInfoItem(item));
 		}
 	}
 
-	private static class QuickSlotButton extends ItemSlot{
+	private static class QuickSlotButton extends ItemSlot {
 
 		private Item item;
 		private ColorBlock bg;
 
-		QuickSlotButton(Item item){
+		QuickSlotButton(Item item) {
 			super(item);
 			this.item = item;
 
@@ -548,8 +547,8 @@ public class WndRanking extends WndTabbed {
 
 		@Override
 		protected void createChildren() {
-			bg = new ColorBlock( 1, 1, 0x9953564D );
-			add( bg );
+			bg = new ColorBlock(1, 1, 0x9953564D);
+			add(bg);
 
 			super.createChildren();
 		}
@@ -559,19 +558,19 @@ public class WndRanking extends WndTabbed {
 			bg.x = x;
 			bg.y = y;
 
-			bg.size( width(), height() );
+			bg.size(width(), height());
 
 			super.layout();
 		}
 
 		@Override
 		protected void onPointerDown() {
-			bg.brightness( 1.5f );
-			Sample.INSTANCE.play( Assets.Sounds.CLICK, 0.7f, 0.7f, 1.2f );
+			bg.brightness(1.5f);
+			Sample.INSTANCE.play(Assets.Sounds.CLICK, 0.7f, 0.7f, 1.2f);
 		}
 
 		protected void onPointerUp() {
-			bg.brightness( 1.0f );
+			bg.brightness(1.0f);
 		}
 
 		@Override

@@ -538,7 +538,7 @@ public abstract class Char extends Actor {
 	public static int INFINITE_ACCURACY = 1_000_000;
 	public static int INFINITE_EVASION = 1_000_000;
 
-	final public static boolean hit(Char attacker, Char defender, boolean magic) {
+	public static boolean hit(Char attacker, Char defender, boolean magic) {
 		return hit(attacker, defender, magic ? 2f : 1f, magic);
 	}
 
@@ -1181,8 +1181,8 @@ public abstract class Char extends Actor {
 		LARGE,
 		IMMOVABLE;
 
-		private HashSet<Class> resistances;
-		private HashSet<Class> immunities;
+		private final HashSet<Class> resistances;
+		private final HashSet<Class> immunities;
 
 		Property() {
 			this(new HashSet<>(), new HashSet<>());

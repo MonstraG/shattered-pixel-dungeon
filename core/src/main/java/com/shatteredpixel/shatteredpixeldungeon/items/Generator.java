@@ -241,9 +241,9 @@ public class Generator {
 		//game has two decks of 35 items for overall category probs
 		//one deck has a ring and extra armor, the other has an artifact and extra thrown weapon
 		//Note that pure random drops only happen as part of levelgen atm, so no seed is needed here
-		public float firstProb;
-		public float secondProb;
-		public Class<? extends Item> superClass;
+		public final float firstProb;
+		public final float secondProb;
+		public final Class<? extends Item> superClass;
 
 		private Category(float firstProb, float secondProb, Class<? extends Item> superClass) {
 			this.firstProb = firstProb;

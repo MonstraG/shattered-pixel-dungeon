@@ -77,7 +77,6 @@ public class AlchemyScene extends PixelScene {
 	private Emitter bubbleEmitter;
 	private Emitter sparkEmitter;
 
-	private Emitter lowerBubbles;
 	private SkinnedBlock water;
 
 	private Image energyIcon;
@@ -126,7 +125,7 @@ public class AlchemyScene extends PixelScene {
 		bubbleEmitter.autoKill = false;
 		add(bubbleEmitter);
 
-		lowerBubbles = new Emitter();
+		Emitter lowerBubbles = new Emitter();
 		add(lowerBubbles);
 
 		RenderedTextBlock title = PixelScene.renderTextBlock(Messages.get(this, "title"), 9);

@@ -214,7 +214,8 @@ public class Combo extends Buff implements ActionIndicator.Action {
 		CRUSH(8, 0xFFCC00),
 		FURY(10, 0xFF0000);
 
-		public int comboReq, tintColor;
+		public final int comboReq;
+		public final int tintColor;
 
 		ComboMove(int comboReq, int tintColor) {
 			this.comboReq = comboReq;

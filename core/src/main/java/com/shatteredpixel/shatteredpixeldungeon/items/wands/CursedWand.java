@@ -82,11 +82,6 @@ import java.util.ArrayList;
 //helper class to contain all the cursed wand zapping logic, so the main wand class doesn't get huge.
 public class CursedWand {
 
-	private static float COMMON_CHANCE = 0.6f;
-	private static float UNCOMMON_CHANCE = 0.3f;
-	private static float RARE_CHANCE = 0.09f;
-	private static float VERY_RARE_CHANCE = 0.01f;
-
 	public static void cursedZap(final Item origin, final Char user, final Ballistica bolt, final Callback afterZap) {
 
 		cursedFX(user, bolt, () -> {
@@ -107,6 +102,10 @@ public class CursedWand {
 	}
 
 	public static boolean cursedEffect(final Item origin, final Char user, final int targetPos) {
+		float VERY_RARE_CHANCE = 0.01f;
+		float RARE_CHANCE = 0.09f;
+		float UNCOMMON_CHANCE = 0.3f;
+		float COMMON_CHANCE = 0.6f;
 		return switch (Random.chances(new float[]{COMMON_CHANCE, UNCOMMON_CHANCE, RARE_CHANCE, VERY_RARE_CHANCE})) {
 			default -> commonEffect(origin, user, targetPos);
 			case 1 -> uncommonEffect(origin, user, targetPos);

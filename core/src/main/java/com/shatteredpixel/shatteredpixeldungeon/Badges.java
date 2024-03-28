@@ -184,9 +184,9 @@ public class Badges {
 		CHAMPION_2(123),
 		CHAMPION_3(124);
 
-		public boolean meta;
+		public final boolean meta;
 
-		public int image;
+		public final int image;
 
 		Badge(int image) {
 			this(image, false);

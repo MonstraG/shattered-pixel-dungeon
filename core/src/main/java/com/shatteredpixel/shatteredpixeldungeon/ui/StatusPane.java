@@ -53,7 +53,7 @@ public class StatusPane extends Component {
 	public static float talentBlink;
 	private float warning;
 
-	public static final float FLASH_RATE = (float)(Math.PI*1.5f); //1.5 blinks per second
+	public static final float FLASH_RATE = (float) (Math.PI * 1.5f); //1.5 blinks per second
 
 	private int lastTier = 0;
 
@@ -76,26 +76,25 @@ public class StatusPane extends Component {
 	private BusyIndicator busy;
 	private CircleArc counter;
 
-	private static String asset = Assets.Interfaces.STATUS;
-
 	private boolean large;
 
-	public StatusPane( boolean large ){
+	public StatusPane(boolean large) {
 		super();
 
 		this.large = large;
 
-		if (large)  bg = new NinePatch( asset, 0, 64, 41, 39, 33, 0, 4, 0 );
-		else        bg = new NinePatch( asset, 0, 0, 128, 36, 85, 0, 45, 0 );
-		add( bg );
+		String asset = Assets.Interfaces.STATUS;
+		if (large) bg = new NinePatch(asset, 0, 64, 41, 39, 33, 0, 4, 0);
+		else bg = new NinePatch(asset, 0, 0, 128, 36, 85, 0, 45, 0);
+		add(bg);
 
-		heroInfo = new Button(){
+		heroInfo = new Button() {
 			@Override
-			protected void onClick () {
-				Camera.main.panTo( Dungeon.hero.sprite.center(), 5f );
-				GameScene.show( new WndHero() );
+			protected void onClick() {
+				Camera.main.panTo(Dungeon.hero.sprite.center(), 5f);
+				GameScene.show(new WndHero());
 			}
-			
+
 			@Override
 			public GameAction keyAction() {
 				return SPDAction.HERO_INFO;
@@ -108,63 +107,63 @@ public class StatusPane extends Component {
 		};
 		add(heroInfo);
 
-		avatar = HeroSprite.avatar( Dungeon.hero.heroClass, lastTier );
-		add( avatar );
+		avatar = HeroSprite.avatar(Dungeon.hero.heroClass, lastTier);
+		add(avatar);
 
 		talentBlink = 0;
 
-		compass = new Compass( Statistics.amuletObtained ? Dungeon.level.entrance() : Dungeon.level.exit() );
-		add( compass );
+		compass = new Compass(Statistics.amuletObtained ? Dungeon.level.entrance() : Dungeon.level.exit());
+		add(compass);
 
-		if (large)  rawShielding = new Image(asset, 0, 112, 128, 9);
-		else        rawShielding = new Image(asset, 0, 40, 50, 4);
+		if (large) rawShielding = new Image(asset, 0, 112, 128, 9);
+		else rawShielding = new Image(asset, 0, 40, 50, 4);
 		rawShielding.alpha(0.5f);
 		add(rawShielding);
 
-		if (large)  shieldedHP = new Image(asset, 0, 112, 128, 9);
-		else        shieldedHP = new Image(asset, 0, 40, 50, 4);
+		if (large) shieldedHP = new Image(asset, 0, 112, 128, 9);
+		else shieldedHP = new Image(asset, 0, 40, 50, 4);
 		add(shieldedHP);
 
-		if (large)  hp = new Image(asset, 0, 103, 128, 9);
-		else        hp = new Image(asset, 0, 36, 50, 4);
-		add( hp );
+		if (large) hp = new Image(asset, 0, 103, 128, 9);
+		else hp = new Image(asset, 0, 36, 50, 4);
+		add(hp);
 
 		hpText = new BitmapText(PixelScene.pixelFont);
 		hpText.alpha(0.6f);
 		add(hpText);
 
-		heroInfoOnBar = new Button(){
+		heroInfoOnBar = new Button() {
 			@Override
-			protected void onClick () {
-				Camera.main.panTo( Dungeon.hero.sprite.center(), 5f );
-				GameScene.show( new WndHero() );
+			protected void onClick() {
+				Camera.main.panTo(Dungeon.hero.sprite.center(), 5f);
+				GameScene.show(new WndHero());
 			}
 		};
 		add(heroInfoOnBar);
 
-		if (large)  exp = new Image(asset, 0, 121, 128, 7);
-		else        exp = new Image(asset, 0, 44, 16, 1);
-		add( exp );
+		if (large) exp = new Image(asset, 0, 121, 128, 7);
+		else exp = new Image(asset, 0, 44, 16, 1);
+		add(exp);
 
-		if (large){
+		if (large) {
 			expText = new BitmapText(PixelScene.pixelFont);
-			expText.hardlight( 0xFFFFAA );
+			expText.hardlight(0xFFFFAA);
 			expText.alpha(0.6f);
 			add(expText);
 		}
 
-		level = new BitmapText( PixelScene.pixelFont);
-		level.hardlight( 0xFFFFAA );
-		add( level );
+		level = new BitmapText(PixelScene.pixelFont);
+		level.hardlight(0xFFFFAA);
+		add(level);
 
-		buffs = new BuffIndicator( Dungeon.hero, large );
-		add( buffs );
+		buffs = new BuffIndicator(Dungeon.hero, large);
+		add(buffs);
 
 		busy = new BusyIndicator();
-		add( busy );
+		add(busy);
 
 		counter = new CircleArc(18, 4.25f);
-		counter.color( 0x808080, true );
+		counter.color(0x808080, true);
 		counter.show(this, busy.center(), 0f);
 	}
 
@@ -175,14 +174,14 @@ public class StatusPane extends Component {
 
 		bg.x = x;
 		bg.y = y;
-		if (large)  bg.size( 160, bg.height ); //HP bars must be 128px wide atm
-		else        bg.size( width, bg.height );
+		if (large) bg.size(160, bg.height); //HP bars must be 128px wide atm
+		else bg.size(width, bg.height);
 
 		avatar.x = bg.x - avatar.width / 2f + 15;
 		avatar.y = bg.y - avatar.height / 2f + (large ? 15 : 16);
 		PixelScene.align(avatar);
 
-		heroInfo.setRect( x, y+(large ? 0 : 1), 30, large ? 40 : 30 );
+		heroInfo.setRect(x, y + (large ? 0 : 1), 30, large ? 40 : 30);
 
 		compass.x = avatar.x + avatar.width / 2f - compass.origin.x;
 		compass.y = avatar.y + avatar.height / 2f - compass.origin.y;
@@ -195,11 +194,11 @@ public class StatusPane extends Component {
 			hp.x = shieldedHP.x = rawShielding.x = x + 30;
 			hp.y = shieldedHP.y = rawShielding.y = y + 19;
 
-			hpText.x = hp.x + (128 - hpText.width())/2f;
+			hpText.x = hp.x + (128 - hpText.width()) / 2f;
 			hpText.y = hp.y + 1;
 			PixelScene.align(hpText);
 
-			expText.x = exp.x + (128 - expText.width())/2f;
+			expText.x = exp.x + (128 - expText.width()) / 2f;
 			expText.y = exp.y;
 			PixelScene.align(expText);
 
@@ -218,13 +217,13 @@ public class StatusPane extends Component {
 
 			hpText.scale.set(PixelScene.align(0.5f));
 			hpText.x = hp.x + 1;
-			hpText.y = hp.y + (hp.height - (hpText.baseLine()+hpText.scale.y))/2f;
+			hpText.y = hp.y + (hp.height - (hpText.baseLine() + hpText.scale.y)) / 2f;
 			hpText.y -= 0.001f; //prefer to be slightly higher
 			PixelScene.align(hpText);
 
 			heroInfoOnBar.setRect(heroInfo.right(), y, 50, 9);
 
-			buffs.setRect( x + 31, y + 9, 50, 8 );
+			buffs.setRect(x + 31, y + 9, 50, 8);
 
 			busy.x = x + 1;
 			busy.y = y + 33;
@@ -232,32 +231,32 @@ public class StatusPane extends Component {
 
 		counter.point(busy.center());
 	}
-	
+
 	private static final int[] warningColors = new int[]{0x660000, 0xCC0000, 0x660000};
 
 	@Override
 	public void update() {
 		super.update();
-		
+
 		int health = Dungeon.hero.HP;
 		int shield = Dungeon.hero.shielding();
 		int max = Dungeon.hero.HT;
 
 		if (!Dungeon.hero.isAlive()) {
 			avatar.tint(0x000000, 0.5f);
-		} else if ((health/(float)max) < 0.3f) {
-			warning += Game.elapsed * 5f *(0.4f - (health/(float)max));
+		} else if ((health / (float) max) < 0.3f) {
+			warning += Game.elapsed * 5f * (0.4f - (health / (float) max));
 			warning %= 1f;
-			avatar.tint(ColorMath.interpolate(warning, warningColors), 0.5f );
-		} else if (talentBlink > 0.33f){ //stops early so it doesn't end in the middle of a blink
+			avatar.tint(ColorMath.interpolate(warning, warningColors), 0.5f);
+		} else if (talentBlink > 0.33f) { //stops early so it doesn't end in the middle of a blink
 			talentBlink -= Game.elapsed;
-			avatar.tint(1, 1, 0, (float)Math.abs(Math.cos(talentBlink*FLASH_RATE))/2f);
+			avatar.tint(1, 1, 0, (float) Math.abs(Math.cos(talentBlink * FLASH_RATE)) / 2f);
 		} else {
 			avatar.resetColor();
 		}
 
-		hp.scale.x = Math.max( 0, (health-shield)/(float)max);
-		shieldedHP.scale.x = health/(float)max;
+		hp.scale.x = Math.max(0, (health - shield) / (float) max);
+		shieldedHP.scale.x = health / (float) max;
 
 		if (shield > health) {
 			rawShielding.scale.x = Math.min(1, shield / (float) max);
@@ -265,21 +264,21 @@ public class StatusPane extends Component {
 			rawShielding.scale.x = 0;
 		}
 
-		if (shield <= 0){
+		if (shield <= 0) {
 			hpText.text(health + "/" + max);
 		} else {
-			hpText.text(health + "+" + shield +  "/" + max);
+			hpText.text(health + "+" + shield + "/" + max);
 		}
 
 		if (large) {
 			exp.scale.x = (128 / exp.width) * Dungeon.hero.exp / Dungeon.hero.maxExp();
 
 			hpText.measure();
-			hpText.x = hp.x + (128 - hpText.width())/2f;
+			hpText.x = hp.x + (128 - hpText.width()) / 2f;
 
 			expText.text(Dungeon.hero.exp + "/" + Dungeon.hero.maxExp());
 			expText.measure();
-			expText.x = hp.x + (128 - expText.width())/2f;
+			expText.x = hp.x + (128 - expText.width()) / 2f;
 
 		} else {
 			exp.scale.x = (width / exp.width) * Dungeon.hero.exp / Dungeon.hero.maxExp();
@@ -293,13 +292,13 @@ public class StatusPane extends Component {
 
 			lastLvl = Dungeon.hero.lvl;
 
-			if (large){
-				level.text( "lv. " + lastLvl );
+			if (large) {
+				level.text("lv. " + lastLvl);
 				level.measure();
 				level.x = x + (30f - level.width()) / 2f;
 				level.y = y + 33f - level.baseLine() / 2f;
 			} else {
-				level.text( Integer.toString( lastLvl ) );
+				level.text(Integer.toString(lastLvl));
 				level.measure();
 				level.x = x + 27.5f - level.width() / 2f;
 				level.y = y + 28.0f - level.baseLine() / 2f;
@@ -310,33 +309,33 @@ public class StatusPane extends Component {
 		int tier = Dungeon.hero.tier();
 		if (tier != lastTier) {
 			lastTier = tier;
-			avatar.copy( HeroSprite.avatar( Dungeon.hero.heroClass, tier ) );
+			avatar.copy(HeroSprite.avatar(Dungeon.hero.heroClass, tier));
 		}
 
-		counter.setSweep((1f - Actor.now()%1f)%1f);
+		counter.setSweep((1f - Actor.now() % 1f) % 1f);
 	}
 
-	public void alpha( float value ){
+	public void alpha(float value) {
 		value = GameMath.gate(0, value, 1f);
 		bg.alpha(value);
 		avatar.alpha(value);
-		rawShielding.alpha(0.5f*value);
+		rawShielding.alpha(0.5f * value);
 		shieldedHP.alpha(value);
 		hp.alpha(value);
-		hpText.alpha(0.6f*value);
+		hpText.alpha(0.6f * value);
 		exp.alpha(value);
-		if (expText != null) expText.alpha(0.6f*value);
+		if (expText != null) expText.alpha(0.6f * value);
 		level.alpha(value);
 		compass.alpha(value);
 		busy.alpha(value);
 		counter.alpha(value);
 	}
 
-	public void showStarParticles(){
-		Emitter emitter = (Emitter)recycle( Emitter.class );
+	public void showStarParticles() {
+		Emitter emitter = (Emitter) recycle(Emitter.class);
 		emitter.revive();
-		emitter.pos( avatar.center() );
-		emitter.burst( Speck.factory( Speck.STAR ), 12 );
+		emitter.pos(avatar.center());
+		emitter.burst(Speck.factory(Speck.STAR), 12);
 	}
 
 }

@@ -204,7 +204,8 @@ public enum Talent {
 	public static class WandPreservationCounter extends CounterBuff {
 		{
 			revivePersists = true;
-		}}
+		}
+	}
 
 	;
 
@@ -276,7 +277,8 @@ public enum Talent {
 	public static class RejuvenatingStepsFurrow extends CounterBuff {
 		{
 			revivePersists = true;
-		}}
+		}
+	}
 
 	;
 
@@ -507,11 +509,11 @@ public enum Talent {
 
 	;
 
-	int icon;
-	int maxPoints;
+	final int icon;
+	final int maxPoints;
 
 	// tiers 1/2/3/4 start at levels 2/7/13/21
-	public static int[] tierLevelThresholds = new int[]{0, 2, 7, 13, 21, 31};
+	public static final int[] tierLevelThresholds = new int[]{0, 2, 7, 13, 21, 31};
 
 	Talent(int icon) {
 		this(icon, 2);
@@ -628,14 +630,16 @@ public enum Talent {
 	public static class CachedRationsDropped extends CounterBuff {
 		{
 			revivePersists = true;
-		}}
+		}
+	}
 
 	;
 
 	public static class NatureBerriesDropped extends CounterBuff {
 		{
 			revivePersists = true;
-		}}
+		}
+	}
 
 	;
 

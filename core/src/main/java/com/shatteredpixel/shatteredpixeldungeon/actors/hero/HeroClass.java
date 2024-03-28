@@ -82,7 +82,7 @@ public enum HeroClass {
 	HUNTRESS(HeroSubClass.SNIPER, HeroSubClass.WARDEN),
 	DUELIST(HeroSubClass.CHAMPION, HeroSubClass.MONK);
 
-	private HeroSubClass[] subClasses;
+	private final HeroSubClass[] subClasses;
 
 	HeroClass(HeroSubClass... subClasses) {
 		this.subClasses = subClasses;

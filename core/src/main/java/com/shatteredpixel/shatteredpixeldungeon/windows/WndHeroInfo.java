@@ -51,8 +51,6 @@ public class WndHeroInfo extends WndTabbed {
 	private SubclassInfoTab subclassInfo;
 	private ArmorAbilityInfoTab abilityInfo;
 
-	private static int WIDTH = 120;
-	private static int MIN_HEIGHT = 125;
 	private static int MARGIN = 2;
 
 	public WndHeroInfo(HeroClass cl) {
@@ -65,10 +63,12 @@ public class WndHeroInfo extends WndTabbed {
 			case DUELIST -> new ItemSprite(ItemSpriteSheet.RAPIER, null);
 		};
 
+		int MIN_HEIGHT = 125;
 		int finalHeight = MIN_HEIGHT;
 
 		heroInfo = new HeroInfoTab(cl);
 		add(heroInfo);
+		int WIDTH = 120;
 		heroInfo.setSize(WIDTH, MIN_HEIGHT);
 		finalHeight = (int) Math.max(finalHeight, heroInfo.height());
 

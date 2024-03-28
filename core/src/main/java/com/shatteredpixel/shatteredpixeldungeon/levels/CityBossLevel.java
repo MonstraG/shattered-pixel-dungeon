@@ -63,7 +63,6 @@ public class CityBossLevel extends Level {
 	}
 
 	private static int WIDTH = 15;
-	private static int HEIGHT = 48;
 
 	private static final Rect entry = new Rect(1, 37, 14, 48);
 	private static final Rect arena = new Rect(1, 25, 14, 38);
@@ -132,6 +131,7 @@ public class CityBossLevel extends Level {
 	@Override
 	protected boolean build() {
 
+		int HEIGHT = 48;
 		setSize(WIDTH, HEIGHT);
 
 		//entrance room

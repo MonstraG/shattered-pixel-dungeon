@@ -50,8 +50,6 @@ public class BossHealthBar extends Component {
 	private Image skull;
 	private Emitter blood;
 
-	private static String asset = Assets.Interfaces.BOSSHP;
-
 	private static BossHealthBar instance;
 	private static boolean bleeding;
 
@@ -70,6 +68,7 @@ public class BossHealthBar extends Component {
 
 	@Override
 	protected void createChildren() {
+		String asset = Assets.Interfaces.BOSSHP;
 		bar = new Image(asset, 0, 0, 64, 16);
 		add(bar);
 
@@ -90,18 +89,18 @@ public class BossHealthBar extends Component {
 		hpText.alpha(0.6f);
 		add(hpText);
 
-		bossInfo = new Button(){
+		bossInfo = new Button() {
 			@Override
 			protected void onClick() {
 				super.onClick();
-				if (boss != null){
+				if (boss != null) {
 					GameScene.show(new WndInfoMob(boss));
 				}
 			}
 
 			@Override
 			protected String hoverText() {
-				if (boss != null){
+				if (boss != null) {
 					return boss.name();
 				}
 				return super.hoverText();
@@ -123,7 +122,7 @@ public class BossHealthBar extends Component {
 		blood.pour(BloodParticle.FACTORY, 0.3f);
 		blood.autoKill = false;
 		blood.on = false;
-		add( blood );
+		add(blood);
 	}
 
 	@Override
@@ -131,12 +130,12 @@ public class BossHealthBar extends Component {
 		bar.x = x;
 		bar.y = y;
 
-		hp.x = shieldedHP.x = rawShielding.x = bar.x+15;
-		hp.y = shieldedHP.y = rawShielding.y = bar.y+3;
+		hp.x = shieldedHP.x = rawShielding.x = bar.x + 15;
+		hp.y = shieldedHP.y = rawShielding.y = bar.y + 3;
 
 		hpText.scale.set(PixelScene.align(0.5f));
 		hpText.x = hp.x + 1;
-		hpText.y = hp.y + (hp.height - (hpText.baseLine()+hpText.scale.y))/2f;
+		hpText.y = hp.y + (hp.height - (hpText.baseLine() + hpText.scale.y)) / 2f;
 		hpText.y -= 0.001f; //prefer to be slightly higher
 		PixelScene.align(hpText);
 
@@ -146,15 +145,15 @@ public class BossHealthBar extends Component {
 			buffs.setRect(hp.x, hp.y + 5, 47, 8);
 		}
 
-		skull.x = bar.x+5;
-		skull.y = bar.y+5;
+		skull.x = bar.x + 5;
+		skull.y = bar.y + 5;
 	}
 
 	@Override
 	public void update() {
 		super.update();
-		if (boss != null){
-			if (!boss.isAlive() || !Dungeon.level.mobs.contains(boss)){
+		if (boss != null) {
+			if (!boss.isAlive() || !Dungeon.level.mobs.contains(boss)) {
 				boss = null;
 				visible = active = false;
 				if (buffs != null) {
@@ -169,27 +168,27 @@ public class BossHealthBar extends Component {
 				int shield = boss.shielding();
 				int max = boss.HT;
 
-				hp.scale.x = Math.max( 0, (health-shield)/(float)max);
-				shieldedHP.scale.x = health/(float)max;
-				rawShielding.scale.x = shield/(float)max;
+				hp.scale.x = Math.max(0, (health - shield) / (float) max);
+				shieldedHP.scale.x = health / (float) max;
+				rawShielding.scale.x = shield / (float) max;
 
-				if (bleeding != blood.on){
-					if (bleeding)   skull.tint( 0xcc0000, 0.6f );
-					else            skull.resetColor();
+				if (bleeding != blood.on) {
+					if (bleeding) skull.tint(0xcc0000, 0.6f);
+					else skull.resetColor();
 					blood.on = bleeding;
 				}
 
-				if (shield <= 0){
+				if (shield <= 0) {
 					hpText.text(health + "/" + max);
 				} else {
-					hpText.text(health + "+" + shield +  "/" + max);
+					hpText.text(health + "+" + shield + "/" + max);
 				}
 
 			}
 		}
 	}
 
-	public static void assignBoss(Mob boss){
+	public static void assignBoss(Mob boss) {
 		if (BossHealthBar.boss == boss) {
 			return;
 		}
@@ -197,8 +196,8 @@ public class BossHealthBar extends Component {
 		bleed(false);
 		if (instance != null) {
 			instance.visible = instance.active = true;
-			if (boss != null){
-				if (instance.buffs != null){
+			if (boss != null) {
+				if (instance.buffs != null) {
 					instance.remove(instance.buffs);
 					instance.buffs.destroy();
 				}
@@ -209,16 +208,16 @@ public class BossHealthBar extends Component {
 			}
 		}
 	}
-	
-	public static boolean isAssigned(){
+
+	public static boolean isAssigned() {
 		return boss != null && boss.isAlive() && Dungeon.level.mobs.contains(boss);
 	}
 
-	public static void bleed(boolean value){
+	public static void bleed(boolean value) {
 		bleeding = value;
 	}
 
-	public static boolean isBleeding(){
+	public static boolean isBleeding() {
 		return isAssigned() && bleeding;
 	}
 

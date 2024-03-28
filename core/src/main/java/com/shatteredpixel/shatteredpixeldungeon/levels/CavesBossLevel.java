@@ -102,7 +102,6 @@ public class CavesBossLevel extends Level {
 	}
 
 	private static int WIDTH = 33;
-	private static int HEIGHT = 42;
 
 	public static Rect diggableArea = new Rect(2, 11, 31, 40);
 	public static Rect mainArena = new Rect(5, 14, 28, 37);
@@ -114,6 +113,7 @@ public class CavesBossLevel extends Level {
 	@Override
 	protected boolean build() {
 
+		int HEIGHT = 42;
 		setSize(WIDTH, HEIGHT);
 
 		Painter.fill(this, gate, Terrain.CUSTOM_DECO);

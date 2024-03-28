@@ -59,14 +59,13 @@ import com.watabou.noosa.ui.Component;
 import java.util.ArrayList;
 
 public class ChangesScene extends PixelScene {
-	
+
 	public static int changesSelected = 0;
 
-	private NinePatch rightPanel;
 	private ScrollPane rightScroll;
 	private IconTitle changeTitle;
 	private RenderedTextBlock changeBody;
-	
+
 	@Override
 	public void create() {
 		super.create();
@@ -79,7 +78,7 @@ public class ChangesScene extends PixelScene {
 		int w = Camera.main.width;
 		int h = Camera.main.height;
 
-		RenderedTextBlock title = PixelScene.renderTextBlock( Messages.get(this, "title"), 9 );
+		RenderedTextBlock title = PixelScene.renderTextBlock(Messages.get(this, "title"), 9);
 		title.hardlight(Window.TITLE_COLOR);
 		title.setPos(
 				(w - title.width()) / 2f,
@@ -89,8 +88,8 @@ public class ChangesScene extends PixelScene {
 		add(title);
 
 		ExitButton btnExit = new ExitButton();
-		btnExit.setPos( Camera.main.width - btnExit.width(), 0 );
-		add( btnExit );
+		btnExit.setPos(Camera.main.width - btnExit.width(), 0);
+		add(btnExit);
 
 		NinePatch panel = Chrome.get(Chrome.Type.TOAST);
 
@@ -98,13 +97,13 @@ public class ChangesScene extends PixelScene {
 		int ph = h - 36;
 
 		if (h >= PixelScene.MIN_HEIGHT_FULL && w >= PixelScene.MIN_WIDTH_FULL) {
-			panel.size( pw, ph );
-			panel.x = (w - pw) / 2f - pw/2 - 1;
+			panel.size(pw, ph);
+			panel.x = (w - pw) / 2f - pw / 2 - 1;
 			panel.y = title.bottom() + 5;
 
-			rightPanel = Chrome.get(Chrome.Type.TOAST);
-			rightPanel.size( pw, ph );
-			rightPanel.x = (w - pw) / 2f + pw/2 + 1;
+			NinePatch rightPanel = Chrome.get(Chrome.Type.TOAST);
+			rightPanel.size(pw, ph);
+			rightPanel.x = (w - pw) / 2f + pw / 2 + 1;
 			rightPanel.y = title.bottom() + 5;
 			add(rightPanel);
 
@@ -112,7 +111,7 @@ public class ChangesScene extends PixelScene {
 			add(rightScroll);
 			rightScroll.setRect(
 					rightPanel.x + rightPanel.marginLeft(),
-					rightPanel.y + rightPanel.marginTop()-1,
+					rightPanel.y + rightPanel.marginTop() - 1,
 					rightPanel.innerWidth() + 2,
 					rightPanel.innerHeight() + 2);
 			rightScroll.scrollTo(0, 0);
@@ -126,27 +125,28 @@ public class ChangesScene extends PixelScene {
 
 			changeBody = PixelScene.renderTextBlock(body, 6);
 			changeBody.maxWidth(pw - panel.marginHor());
-			changeBody.setPos(0, changeTitle.bottom()+2);
+			changeBody.setPos(0, changeTitle.bottom() + 2);
 			rightScroll.content().add(changeBody);
 
 		} else {
-			panel.size( pw, ph );
+			panel.size(pw, ph);
 			panel.x = (w - pw) / 2f;
 			panel.y = title.bottom() + 5;
 		}
-		align( panel );
-		add( panel );
-		
+		align(panel);
+		add(panel);
+
 		final ArrayList<ChangeInfo> changeInfos = new ArrayList<>();
 
-		if (Messages.lang() != Languages.ENGLISH){
+		if (Messages.lang() != Languages.ENGLISH) {
 			ChangeInfo langWarn = new ChangeInfo("", true, Messages.get(this, "lang_warn"));
 			langWarn.hardlight(CharSprite.WARNING);
 			changeInfos.add(langWarn);
 		}
-		
-		switch (changesSelected){
-			case 0: default:
+
+		switch (changesSelected) {
+			case 0:
+			default:
 				v2_X_Changes.addAllChanges(changeInfos);
 				break;
 			case 1:
@@ -173,19 +173,19 @@ public class ChangesScene extends PixelScene {
 				break;
 		}
 
-		ScrollPane list = new ScrollPane( new Component() ){
+		ScrollPane list = new ScrollPane(new Component()) {
 
 			@Override
 			public void onClick(float x, float y) {
-				for (ChangeInfo info : changeInfos){
-					if (info.onClick( x, y )){
+				for (ChangeInfo info : changeInfos) {
+					if (info.onClick(x, y)) {
 						return;
 					}
 				}
 			}
 
 		};
-		add( list );
+		add(list);
 
 		Component content = list.content();
 		content.clear();
@@ -193,7 +193,7 @@ public class ChangesScene extends PixelScene {
 		float posY = 0;
 		float nextPosY = 0;
 		boolean second = false;
-		for (ChangeInfo info : changeInfos){
+		for (ChangeInfo info : changeInfos) {
 			if (info.major) {
 				posY = nextPosY;
 				second = false;
@@ -201,14 +201,14 @@ public class ChangesScene extends PixelScene {
 				content.add(info);
 				posY = nextPosY = info.bottom();
 			} else {
-				if (!second){
+				if (!second) {
 					second = true;
-					info.setRect(0, posY, panel.innerWidth()/2f, 0);
+					info.setRect(0, posY, panel.innerWidth() / 2f, 0);
 					content.add(info);
 					nextPosY = info.bottom();
 				} else {
 					second = false;
-					info.setRect(panel.innerWidth()/2f, posY, panel.innerWidth()/2f, 0);
+					info.setRect(panel.innerWidth() / 2f, posY, panel.innerWidth() / 2f, 0);
 					content.add(info);
 					nextPosY = Math.max(info.bottom(), nextPosY);
 					posY = nextPosY;
@@ -216,7 +216,7 @@ public class ChangesScene extends PixelScene {
 			}
 		}
 
-		content.setSize( panel.innerWidth(), (int)Math.ceil(posY) );
+		content.setSize(panel.innerWidth(), (int) Math.ceil(posY));
 
 		list.setRect(
 				panel.x + panel.marginLeft(),
@@ -225,7 +225,7 @@ public class ChangesScene extends PixelScene {
 				panel.innerHeight() + 2);
 		list.scrollTo(0, 0);
 
-		StyledButton btn2_X = new StyledButton(Chrome.Type.GREY_BUTTON_TR, "2.X"){
+		StyledButton btn2_X = new StyledButton(Chrome.Type.GREY_BUTTON_TR, "2.X") {
 			@Override
 			protected void onClick() {
 				super.onClick();
@@ -235,11 +235,11 @@ public class ChangesScene extends PixelScene {
 				}
 			}
 		};
-		if (changesSelected != 0) btn2_X.textColor( 0xBBBBBB );
-		btn2_X.setRect(list.left()-4f, list.bottom(), 21, changesSelected == 0 ? 19 : 15);
+		if (changesSelected != 0) btn2_X.textColor(0xBBBBBB);
+		btn2_X.setRect(list.left() - 4f, list.bottom(), 21, changesSelected == 0 ? 19 : 15);
 		addToBack(btn2_X);
 
-		StyledButton btn1_X = new StyledButton(Chrome.Type.GREY_BUTTON_TR, "1.X"){
+		StyledButton btn1_X = new StyledButton(Chrome.Type.GREY_BUTTON_TR, "1.X") {
 			@Override
 			protected void onClick() {
 				super.onClick();
@@ -249,11 +249,11 @@ public class ChangesScene extends PixelScene {
 				}
 			}
 		};
-		if (changesSelected != 1) btn1_X.textColor( 0xBBBBBB );
-		btn1_X.setRect(btn2_X.right()-2, list.bottom(), 21, changesSelected == 1 ? 19 : 15);
+		if (changesSelected != 1) btn1_X.textColor(0xBBBBBB);
+		btn1_X.setRect(btn2_X.right() - 2, list.bottom(), 21, changesSelected == 1 ? 19 : 15);
 		addToBack(btn1_X);
 
-		StyledButton btn0_9 = new StyledButton(Chrome.Type.GREY_BUTTON_TR, "0.9"){
+		StyledButton btn0_9 = new StyledButton(Chrome.Type.GREY_BUTTON_TR, "0.9") {
 			@Override
 			protected void onClick() {
 				super.onClick();
@@ -263,11 +263,11 @@ public class ChangesScene extends PixelScene {
 				}
 			}
 		};
-		if (changesSelected != 2) btn0_9.textColor( 0xBBBBBB );
-		btn0_9.setRect(btn1_X.right()-2, list.bottom(), 21, changesSelected == 2 ? 19 : 15);
+		if (changesSelected != 2) btn0_9.textColor(0xBBBBBB);
+		btn0_9.setRect(btn1_X.right() - 2, list.bottom(), 21, changesSelected == 2 ? 19 : 15);
 		addToBack(btn0_9);
 
-		StyledButton btn0_8 = new StyledButton(Chrome.Type.GREY_BUTTON_TR, "0.8"){
+		StyledButton btn0_8 = new StyledButton(Chrome.Type.GREY_BUTTON_TR, "0.8") {
 			@Override
 			protected void onClick() {
 				super.onClick();
@@ -277,11 +277,11 @@ public class ChangesScene extends PixelScene {
 				}
 			}
 		};
-		if (changesSelected != 3) btn0_8.textColor( 0xBBBBBB );
-		btn0_8.setRect(btn0_9.right()-2, list.bottom(), 21, changesSelected == 3 ? 19 : 15);
+		if (changesSelected != 3) btn0_8.textColor(0xBBBBBB);
+		btn0_8.setRect(btn0_9.right() - 2, list.bottom(), 21, changesSelected == 3 ? 19 : 15);
 		addToBack(btn0_8);
-		
-		StyledButton btn0_7 = new StyledButton(Chrome.Type.GREY_BUTTON_TR, "0.7"){
+
+		StyledButton btn0_7 = new StyledButton(Chrome.Type.GREY_BUTTON_TR, "0.7") {
 			@Override
 			protected void onClick() {
 				super.onClick();
@@ -291,11 +291,11 @@ public class ChangesScene extends PixelScene {
 				}
 			}
 		};
-		if (changesSelected != 4) btn0_7.textColor( 0xBBBBBB );
-		btn0_7.setRect(btn0_8.right()-2, btn0_8.top(), 21, changesSelected == 4 ? 19 : 15);
+		if (changesSelected != 4) btn0_7.textColor(0xBBBBBB);
+		btn0_7.setRect(btn0_8.right() - 2, btn0_8.top(), 21, changesSelected == 4 ? 19 : 15);
 		addToBack(btn0_7);
-		
-		StyledButton btn0_6 = new StyledButton(Chrome.Type.GREY_BUTTON_TR, "0.6"){
+
+		StyledButton btn0_6 = new StyledButton(Chrome.Type.GREY_BUTTON_TR, "0.6") {
 			@Override
 			protected void onClick() {
 				super.onClick();
@@ -305,11 +305,11 @@ public class ChangesScene extends PixelScene {
 				}
 			}
 		};
-		if (changesSelected != 5) btn0_6.textColor( 0xBBBBBB );
-		btn0_6.setRect(btn0_7.right()-2, btn0_8.top(), 21, changesSelected == 5 ? 19 : 15);
+		if (changesSelected != 5) btn0_6.textColor(0xBBBBBB);
+		btn0_6.setRect(btn0_7.right() - 2, btn0_8.top(), 21, changesSelected == 5 ? 19 : 15);
 		addToBack(btn0_6);
-		
-		StyledButton btnOld = new StyledButton(Chrome.Type.GREY_BUTTON_TR, "0.5-1"){
+
+		StyledButton btnOld = new StyledButton(Chrome.Type.GREY_BUTTON_TR, "0.5-1") {
 			@Override
 			protected void onClick() {
 				super.onClick();
@@ -319,32 +319,32 @@ public class ChangesScene extends PixelScene {
 				}
 			}
 		};
-		if (changesSelected != 6) btnOld.textColor( 0xBBBBBB );
-		btnOld.setRect(btn0_6.right()-2, btn0_8.top(), 27, changesSelected == 6 ? 19 : 15);
+		if (changesSelected != 6) btnOld.textColor(0xBBBBBB);
+		btnOld.setRect(btn0_6.right() - 2, btn0_8.top(), 27, changesSelected == 6 ? 19 : 15);
 		addToBack(btnOld);
 
 		Archs archs = new Archs();
-		archs.setSize( Camera.main.width, Camera.main.height );
-		addToBack( archs );
+		archs.setSize(Camera.main.width, Camera.main.height);
+		addToBack(archs);
 
 		fadeIn();
 	}
 
-	private void updateChangesText(Image icon, String title, String... messages){
-		if (changeTitle != null){
+	private void updateChangesText(Image icon, String title, String... messages) {
+		if (changeTitle != null) {
 			changeTitle.icon(icon);
 			changeTitle.label(title);
 			changeTitle.setPos(changeTitle.left(), changeTitle.top());
 
 			String message = "";
-			for (int i = 0; i < messages.length; i++){
+			for (int i = 0; i < messages.length; i++) {
 				message += messages[i];
-				if (i != messages.length-1){
+				if (i != messages.length - 1) {
 					message += "\n\n";
 				}
 			}
 			changeBody.text(message);
-			rightScroll.content().setSize(rightScroll.width(), changeBody.bottom()+2);
+			rightScroll.content().setSize(rightScroll.width(), changeBody.bottom() + 2);
 			rightScroll.setSize(rightScroll.width(), rightScroll.height());
 			rightScroll.scrollTo(0, 0);
 
@@ -357,9 +357,9 @@ public class ChangesScene extends PixelScene {
 		}
 	}
 
-	public static void showChangeInfo(Image icon, String title, String... messages){
+	public static void showChangeInfo(Image icon, String title, String... messages) {
 		Scene s = ShatteredPixelDungeon.scene();
-		if (s instanceof ChangesScene){
+		if (s instanceof ChangesScene) {
 			((ChangesScene) s).updateChangesText(icon, title, messages);
 			return;
 		}
@@ -369,7 +369,7 @@ public class ChangesScene extends PixelScene {
 			s.addToFront(new WndChangesTabbed(icon, title, messages));
 		}
 	}
-	
+
 	@Override
 	protected void onBackPressed() {
 		ShatteredPixelDungeon.switchNoFade(TitleScene.class);

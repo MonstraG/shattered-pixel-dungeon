@@ -75,7 +75,7 @@ public enum Rankings {
 
 	public Record latestDaily;
 	public Record latestDailyReplay = null; //not stored, only meant to be temp
-	public LinkedHashMap<Long, Integer> dailyScoreHistory = new LinkedHashMap<>();
+	public final LinkedHashMap<Long, Integer> dailyScoreHistory = new LinkedHashMap<>();
 
 	public void submit(boolean win, Object cause) {
 

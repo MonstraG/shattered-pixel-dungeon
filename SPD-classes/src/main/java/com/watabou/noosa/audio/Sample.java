@@ -34,17 +34,17 @@ public enum Sample {
 
 	INSTANCE;
 
-	protected HashMap<Object, Sound> ids = new HashMap<>();
+	protected final HashMap<Object, Sound> ids = new HashMap<>();
 
 	private boolean enabled = true;
 	private float globalVolume = 1f;
 
 	public synchronized void reset() {
 
-		for (Sound sound : ids.values()){
+		for (Sound sound : ids.values()) {
 			sound.dispose();
 		}
-		
+
 		ids.clear();
 		delayedSFX.clear();
 
@@ -62,12 +62,12 @@ public enum Sample {
 		}
 	}
 
-	private static LinkedList<String> loadingQueue = new LinkedList<>();
+	private static final LinkedList<String> loadingQueue = new LinkedList<>();
 
-	public synchronized void load( final String... assets ) {
+	public synchronized void load(final String... assets) {
 
-		for (String asset : assets){
-			if (!ids.containsKey(asset) && !loadingQueue.contains(asset)){
+		for (String asset : assets) {
+			if (!ids.containsKey(asset) && !loadingQueue.contains(asset)) {
 				loadingQueue.add(asset);
 			}
 		}
@@ -78,10 +78,10 @@ public enum Sample {
 		//load one at a time on the UI thread to prevent this blocking the UI
 		//yes this may cause hitching, but only in the first couple seconds of game runtime
 		Game.runOnRenderThread(loadingCallback);
-		
+
 	}
 
-	private Callback loadingCallback = new Callback() {
+	private final Callback loadingCallback = new Callback() {
 		@Override
 		public void call() {
 			synchronized (INSTANCE) {
@@ -90,47 +90,47 @@ public enum Sample {
 					try {
 						Sound newSound = Gdx.audio.newSound(Gdx.files.internal(asset));
 						ids.put(asset, newSound);
-					} catch (Exception e){
+					} catch (Exception e) {
 						Game.reportException(e);
 					}
 				}
-				if (!loadingQueue.isEmpty()){
+				if (!loadingQueue.isEmpty()) {
 					Game.runOnRenderThread(this);
 				}
 			}
 		}
 	};
 
-	public synchronized void unload( Object src ) {
-		if (ids.containsKey( src )) {
-			ids.get( src ).dispose();
-			ids.remove( src );
+	public synchronized void unload(Object src) {
+		if (ids.containsKey(src)) {
+			ids.get(src).dispose();
+			ids.remove(src);
 		}
 	}
 
-	public long play( Object id ) {
-		return play( id, 1 );
+	public long play(Object id) {
+		return play(id, 1);
 	}
 
-	public long play( Object id, float volume ) {
-		return play( id, volume, volume, 1 );
+	public long play(Object id, float volume) {
+		return play(id, volume, volume, 1);
 	}
-	
-	public long play( Object id, float volume, float pitch ) {
-		return play( id, volume, volume, pitch );
+
+	public long play(Object id, float volume, float pitch) {
+		return play(id, volume, volume, pitch);
 	}
-	
-	public synchronized long play( Object id, float leftVolume, float rightVolume, float pitch ) {
+
+	public synchronized long play(Object id, float leftVolume, float rightVolume, float pitch) {
 		float volume = Math.max(leftVolume, rightVolume);
 		float pan = rightVolume - leftVolume;
-		if (enabled && ids.containsKey( id )) {
-			return ids.get(id).play( globalVolume*volume, pitch, pan );
+		if (enabled && ids.containsKey(id)) {
+			return ids.get(id).play(globalVolume * volume, pitch, pan);
 		} else {
 			return -1;
 		}
 	}
 
-	private static class DelayedSoundEffect{
+	private static class DelayedSoundEffect {
 		Object id;
 		float delay;
 
@@ -141,19 +141,19 @@ public enum Sample {
 
 	private static final HashSet<DelayedSoundEffect> delayedSFX = new HashSet<>();
 
-	public void playDelayed( Object id, float delay ){
-		playDelayed( id, delay, 1 );
+	public void playDelayed(Object id, float delay) {
+		playDelayed(id, delay, 1);
 	}
 
-	public void playDelayed( Object id, float delay, float volume ) {
-		playDelayed( id, delay, volume, volume, 1 );
+	public void playDelayed(Object id, float delay, float volume) {
+		playDelayed(id, delay, volume, volume, 1);
 	}
 
-	public void playDelayed( Object id, float delay, float volume, float pitch ) {
-		playDelayed( id, delay, volume, volume, pitch );
+	public void playDelayed(Object id, float delay, float volume, float pitch) {
+		playDelayed(id, delay, volume, volume, pitch);
 	}
 
-	public void playDelayed( Object id, float delay, float leftVolume, float rightVolume, float pitch ) {
+	public void playDelayed(Object id, float delay, float leftVolume, float rightVolume, float pitch) {
 		if (delay <= 0) {
 			play(id, leftVolume, rightVolume, pitch);
 			return;
@@ -169,7 +169,7 @@ public enum Sample {
 		}
 	}
 
-	public void update(){
+	public void update() {
 		synchronized (delayedSFX) {
 			if (delayedSFX.isEmpty()) return;
 			for (DelayedSoundEffect sfx : delayedSFX.toArray(new DelayedSoundEffect[0])) {
@@ -182,16 +182,16 @@ public enum Sample {
 		}
 	}
 
-	public void enable( boolean value ) {
+	public void enable(boolean value) {
 		enabled = value;
 	}
 
-	public void volume( float value ) {
+	public void volume(float value) {
 		globalVolume = value;
 	}
 
 	public boolean isEnabled() {
 		return enabled;
 	}
-	
+
 }

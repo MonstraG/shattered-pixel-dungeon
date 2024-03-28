@@ -228,11 +228,11 @@ public class RingOfWealth extends Ring {
 				yield i.quantity(i.quantity() * 2);
 			}
 			case 1 -> {
-				i = Generator.randomUsingDefaults(Generator.Category.POTION);
+				Item i = Generator.randomUsingDefaults(Generator.Category.POTION);
 				yield Reflection.newInstance(ExoticPotion.regToExo.get(i.getClass()));
 			}
 			case 2 -> {
-				i = Generator.randomUsingDefaults(Generator.Category.SCROLL);
+				Item i = Generator.randomUsingDefaults(Generator.Category.SCROLL);
 				yield Reflection.newInstance(ExoticScroll.regToExo.get(i.getClass()));
 			}
 			case 3 -> Random.Int(2) == 0 ? new ArcaneCatalyst() : new AlchemicalCatalyst();

@@ -122,7 +122,7 @@ public class WndHero extends WndTabbed {
 		buffs.layout();
 	}
 
-	private class StatsTab extends Group {
+	private static class StatsTab extends Group {
 		
 		private static final int GAP = 6;
 		
@@ -223,7 +223,7 @@ public class WndHero extends WndTabbed {
 		}
 	}
 
-	public class TalentsTab extends Component {
+	public static class TalentsTab extends Component {
 
 		TalentsPane pane;
 
@@ -290,7 +290,7 @@ public class WndHero extends WndTabbed {
 			buffList.setSize(buffList.width(), buffList.height());
 		}
 
-		private class BuffSlot extends Component {
+		private static class BuffSlot extends Component {
 
 			private Buff buff;
 

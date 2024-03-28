@@ -384,7 +384,7 @@ public class WndRanking extends WndTabbed {
 		}
 		
 		private void addItem( Item item ) {
-			ItemButton slot = new ItemButton( item );
+			ItemButton slot = new ItemButton(item);
 			slot.setRect( 0, pos, width, ItemButton.HEIGHT );
 			add( slot );
 			
@@ -452,7 +452,7 @@ public class WndRanking extends WndTabbed {
 
 	}
 
-	private class ItemButton extends Button {
+	private static class ItemButton extends Button {
 		
 		public static final int HEIGHT	= 23;
 		
@@ -528,7 +528,7 @@ public class WndRanking extends WndTabbed {
 		}
 	}
 
-	private class QuickSlotButton extends ItemSlot{
+	private static class QuickSlotButton extends ItemSlot{
 
 		private Item item;
 		private ColorBlock bg;

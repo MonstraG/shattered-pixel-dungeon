@@ -130,7 +130,7 @@ public enum Sample {
 		}
 	}
 
-	private class DelayedSoundEffect{
+	private static class DelayedSoundEffect{
 		Object id;
 		float delay;
 

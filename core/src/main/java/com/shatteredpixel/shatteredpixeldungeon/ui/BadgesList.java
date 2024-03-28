@@ -46,7 +46,7 @@ public class BadgesList extends ScrollPane {
 				continue;
 			}
 			
-			ListItem item = new ListItem( badge );
+			ListItem item = new ListItem(badge);
 			content.add( item );
 			items.add( item );
 		}
@@ -78,11 +78,11 @@ public class BadgesList extends ScrollPane {
 		}
 	}
 
-	private class ListItem extends Component {
+	private static class ListItem extends Component {
 		
 		private static final float HEIGHT	= 18;
 		
-		private Badges.Badge badge;
+		private final Badges.Badge badge;
 		
 		private Image icon;
 		private RenderedTextBlock label;

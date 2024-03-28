@@ -159,7 +159,6 @@ import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.tweeners.Delayer;
 import com.watabou.utils.Bundle;
-import com.watabou.utils.Callback;
 import com.watabou.utils.GameMath;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Point;
@@ -1735,12 +1734,8 @@ public class Hero extends Char {
 
 		} else {
 
-			if (!Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell]
-					&& Dungeon.level.traps.get(cell) != null && Dungeon.level.traps.get(cell).visible) {
-				walkingToVisibleTrapInFog = true;
-			} else {
-				walkingToVisibleTrapInFog = false;
-			}
+			walkingToVisibleTrapInFog = !Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell]
+					&& Dungeon.level.traps.get(cell) != null && Dungeon.level.traps.get(cell).visible;
 
 			curAction = new HeroAction.Move(cell);
 			lastAction = null;
@@ -2123,7 +2118,7 @@ public class Hero extends Char {
 
 		if (curAction instanceof HeroAction.Unlock) {
 
-			int doorCell = ((HeroAction.Unlock) curAction).dst;
+			int doorCell = curAction.dst;
 			int door = Dungeon.level.map[doorCell];
 
 			if (Dungeon.level.distance(pos, doorCell) <= 1) {
@@ -2152,7 +2147,7 @@ public class Hero extends Char {
 
 		} else if (curAction instanceof HeroAction.OpenChest) {
 
-			Heap heap = Dungeon.level.heaps.get(((HeroAction.OpenChest) curAction).dst);
+			Heap heap = Dungeon.level.heaps.get(curAction.dst);
 
 			if (Dungeon.level.distance(pos, heap.pos) <= 1) {
 				boolean hasKey = true;
@@ -2383,7 +2378,7 @@ public class Hero extends Char {
 			super.next();
 	}
 
-	public static interface Doom {
-		public void onDeath();
+	public interface Doom {
+		void onDeath();
 	}
 }

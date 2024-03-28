@@ -26,7 +26,6 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Shaman;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.watabou.noosa.TextureFilm;
 import com.watabou.noosa.audio.Sample;
-import com.watabou.utils.Callback;
 
 public abstract class ShamanSprite extends MobSprite {
 
@@ -44,13 +43,13 @@ public abstract class ShamanSprite extends MobSprite {
 		TextureFilm frames = new TextureFilm(texture, 12, 15);
 
 		idle = new Animation(2, true);
-		idle.frames(frames, c + 0, c + 0, c + 0, c + 1, c + 0, c + 0, c + 1, c + 1);
+		idle.frames(frames, c, c, c, c + 1, c, c, c + 1, c + 1);
 
 		run = new Animation(12, true);
 		run.frames(frames, c + 4, c + 5, c + 6, c + 7);
 
 		attack = new Animation(12, false);
-		attack.frames(frames, c + 2, c + 3, c + 0);
+		attack.frames(frames, c + 2, c + 3, c);
 
 		zap = attack.clone();
 

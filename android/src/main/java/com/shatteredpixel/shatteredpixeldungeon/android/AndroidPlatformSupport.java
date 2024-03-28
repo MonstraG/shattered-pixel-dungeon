@@ -253,9 +253,9 @@ public class AndroidPlatformSupport extends PlatformSupport {
 		packer = new PixmapPacker(pageSize, pageSize, Pixmap.Format.RGBA8888, 1, false);
 	}
 
-	private static Matcher KRMatcher = Pattern.compile("\\p{InHangul_Syllables}").matcher("");
-	private static Matcher SCMatcher = Pattern.compile("\\p{InCJK_Unified_Ideographs}|\\p{InCJK_Symbols_and_Punctuation}|\\p{InHalfwidth_and_Fullwidth_Forms}").matcher("");
-	private static Matcher JPMatcher = Pattern.compile("\\p{InHiragana}|\\p{InKatakana}").matcher("");
+	private static final Matcher KRMatcher = Pattern.compile("\\p{InHangul_Syllables}").matcher("");
+	private static final Matcher SCMatcher = Pattern.compile("\\p{InCJK_Unified_Ideographs}|\\p{InCJK_Symbols_and_Punctuation}|\\p{InHalfwidth_and_Fullwidth_Forms}").matcher("");
+	private static final Matcher JPMatcher = Pattern.compile("\\p{InHiragana}|\\p{InKatakana}").matcher("");
 
 	@Override
 	protected FreeTypeFontGenerator getGeneratorForString(String input) {
@@ -271,21 +271,21 @@ public class AndroidPlatformSupport extends PlatformSupport {
 	}
 
 	//splits on newlines, underscores, and chinese/japaneses characters
-	private Pattern regularsplitter = Pattern.compile(
+	private final Pattern regularsplitter = Pattern.compile(
 			"""
 					(?<=
 					)|(?=
 					)|(?<=_)|(?=_)|(?<=\\p{InHiragana})|(?=\\p{InHiragana})|(?<=\\p{InKatakana})|(?=\\p{InKatakana})|(?<=\\p{InCJK_Unified_Ideographs})|(?=\\p{InCJK_Unified_Ideographs})|(?<=\\p{InCJK_Symbols_and_Punctuation})|(?=\\p{InCJK_Symbols_and_Punctuation})|(?<=\\p{InHalfwidth_and_Fullwidth_Forms})|(?=\\p{InHalfwidth_and_Fullwidth_Forms})""");
 
 	//additionally splits on words, so that each word can be arranged individually
-	private Pattern regularsplitterMultiline = Pattern.compile(
+	private final Pattern regularsplitterMultiline = Pattern.compile(
 			"""
 					(?<= )|(?= )|(?<=
 					)|(?=
 					)|(?<=_)|(?=_)|(?<=\\p{InHiragana})|(?=\\p{InHiragana})|(?<=\\p{InKatakana})|(?=\\p{InKatakana})|(?<=\\p{InCJK_Unified_Ideographs})|(?=\\p{InCJK_Unified_Ideographs})|(?<=\\p{InCJK_Symbols_and_Punctuation})|(?=\\p{InCJK_Symbols_and_Punctuation})|(?<=\\p{InHalfwidth_and_Fullwidth_Forms})|(?=\\p{InHalfwidth_and_Fullwidth_Forms})""");
 
 	//splits on each non-hangul character. Needed for weird android 6.0 font files
-	private Pattern android6KRSplitter = Pattern.compile(
+	private final Pattern android6KRSplitter = Pattern.compile(
 			"""
 					(?<= )|(?= )|(?<=
 					)|(?=

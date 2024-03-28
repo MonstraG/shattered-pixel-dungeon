@@ -50,8 +50,8 @@ public class Flail extends MeleeWeapon {
 
 	@Override
 	public int max(int lvl) {
-		return  Math.round(7*(tier+1)) +        //35 base, up from 25
-				lvl*Math.round(1.6f*(tier+1));  //+8 per level, up from +5
+		return Math.round(7 * (tier + 1)) +        //35 base, up from 25
+				lvl * Math.round(1.6f * (tier + 1));  //+8 per level, up from +5
 	}
 
 	private static float spinBonus = 1f;
@@ -69,11 +69,14 @@ public class Flail extends MeleeWeapon {
 		SpinAbilityTracker spin = owner.buff(SpinAbilityTracker.class);
 		if (spin != null) {
 			Actor.add(new Actor() {
-				{ actPriority = VFX_PRIO; }
+				{
+					actPriority = VFX_PRIO;
+				}
+
 				@Override
 				protected boolean act() {
-					if (owner instanceof Hero && !target.isAlive()){
-						onAbilityKill((Hero)owner, target);
+					if (owner instanceof Hero && !target.isAlive()) {
+						onAbilityKill((Hero) owner, target);
 					}
 					Actor.remove(this);
 					return true;
@@ -81,7 +84,7 @@ public class Flail extends MeleeWeapon {
 			});
 			//we detach and calculate bonus here in case the attack misses (e.g. vs. monks)
 			spin.detach();
-			spinBonus = 1f + (spin.spins/3f);
+			spinBonus = 1f + (spin.spins / 3f);
 			return Float.POSITIVE_INFINITY;
 		} else {
 			spinBonus = 1f;
@@ -90,8 +93,8 @@ public class Flail extends MeleeWeapon {
 	}
 
 	@Override
-	protected int baseChargeUse(Hero hero, Char target){
-		if (Dungeon.hero.buff(SpinAbilityTracker.class) != null){
+	protected int baseChargeUse(Hero hero, Char target) {
+		if (Dungeon.hero.buff(SpinAbilityTracker.class) != null) {
 			return 0;
 		} else {
 			return 2;
@@ -102,19 +105,19 @@ public class Flail extends MeleeWeapon {
 	protected void duelistAbility(Hero hero, Integer target) {
 
 		SpinAbilityTracker spin = hero.buff(SpinAbilityTracker.class);
-		if (spin != null && spin.spins >= 3){
+		if (spin != null && spin.spins >= 3) {
 			GLog.w(Messages.get(this, "spin_warn"));
 			return;
 		}
 
 		beforeAbilityUsed(hero, null);
-		if (spin == null){
+		if (spin == null) {
 			spin = Buff.affect(hero, SpinAbilityTracker.class, 3f);
 		}
 
 		spin.spins++;
 		Buff.prolong(hero, SpinAbilityTracker.class, 3f);
-		Sample.INSTANCE.play(Assets.Sounds.CHAINS, 1, 1, 0.9f + 0.1f*spin.spins);
+		Sample.INSTANCE.play(Assets.Sounds.CHAINS, 1, 1, 0.9f + 0.1f * spin.spins);
 		hero.sprite.operate(hero.pos);
 		hero.spendAndNext(Actor.TICK);
 		BuffIndicator.refreshHero();
@@ -137,8 +140,9 @@ public class Flail extends MeleeWeapon {
 
 		@Override
 		public void tintIcon(Image icon) {
-			switch (spins){
-				case 1: default:
+			switch (spins) {
+				case 1:
+				default:
 					icon.hardlight(0, 1, 0);
 					break;
 				case 2:
@@ -157,7 +161,7 @@ public class Flail extends MeleeWeapon {
 
 		@Override
 		public String desc() {
-			return Messages.get(this, "desc", (int)Math.round((spins/3f)*100f), dispTurns());
+			return Messages.get(this, "desc", Math.round((spins / 3f) * 100f), dispTurns());
 		}
 
 		public static String SPINS = "spins";

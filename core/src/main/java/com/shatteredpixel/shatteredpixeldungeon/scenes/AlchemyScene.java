@@ -332,7 +332,7 @@ public class AlchemyScene extends PixelScene {
 		ArrayList<T> filtered = new ArrayList<>();
 		for (InputButton input : inputs) {
 			Item item = input.item();
-			if (item != null && itemClass.isInstance(item)) {
+			if (itemClass.isInstance(item)) {
 				filtered.add((T) item);
 			}
 		}

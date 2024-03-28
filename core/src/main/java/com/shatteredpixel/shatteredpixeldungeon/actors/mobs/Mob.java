@@ -459,11 +459,7 @@ public abstract class Mob extends Char {
 		if (Char.hasProp(this, Char.Property.LARGE) && !Dungeon.level.openSpace[cell]) {
 			return false;
 		}
-		if (Actor.findChar(cell) != null) {
-			return false;
-		}
-
-		return true;
+		return Actor.findChar(cell) == null;
 	}
 
 	protected boolean getCloser(int target) {
@@ -1231,7 +1227,7 @@ public abstract class Mob extends Char {
 	}
 
 
-	private static ArrayList<Mob> heldAllies = new ArrayList<>();
+	private static final ArrayList<Mob> heldAllies = new ArrayList<>();
 
 	public static void holdAllies(Level level) {
 		holdAllies(level, Dungeon.hero.pos);

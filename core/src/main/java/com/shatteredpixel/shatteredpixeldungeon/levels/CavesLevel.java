@@ -59,7 +59,6 @@ import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.audio.Music;
 import com.watabou.noosa.particles.PixelParticle;
-import com.watabou.utils.Callback;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 
@@ -232,9 +231,9 @@ public class CavesLevel extends RegularLevel {
 
 	private static class Vein extends Group {
 
-		private int pos;
+		private final int pos;
 
-		private boolean includeOverhang;
+		private final boolean includeOverhang;
 
 		private float delay;
 

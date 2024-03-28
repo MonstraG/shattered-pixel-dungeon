@@ -40,7 +40,6 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.tweeners.Delayer;
-import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
@@ -115,7 +114,7 @@ public class WildMagic extends ArmorAbility {
 		Buff.affect(hero, WildMagicTracker.class, 0f);
 
 		armor.charge -= chargeUse(hero);
-		armor.updateQuickslot();
+		Item.updateQuickslot();
 
 		zapWand(wands, hero, target);
 
@@ -123,8 +122,6 @@ public class WildMagic extends ArmorAbility {
 
 	public static class WildMagicTracker extends FlavourBuff {
 	}
-
-	;
 
 	Actor wildMagicActor = null;
 

@@ -35,8 +35,6 @@ import com.watabou.utils.Point;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 public class CrystalPathRoom extends SpecialRoom {
 
@@ -257,10 +255,7 @@ public class CrystalPathRoom extends SpecialRoom {
 		if (Math.abs(p.x - (right - (width() - 1) / 2f)) < 1f) {
 			return true;
 		}
-		if (Math.abs(p.y - (bottom - (height() - 1) / 2f)) < 1f) {
-			return true;
-		}
-		return false;
+		return Math.abs(p.y - (bottom - (height() - 1) / 2f)) < 1f;
 	}
 
 	@Override

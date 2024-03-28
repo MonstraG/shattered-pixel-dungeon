@@ -38,18 +38,18 @@ public class BadgesGrid extends Component {
 
 	ArrayList<BadgeButton> badgeButtons;
 
-	public BadgesGrid( boolean global ){
+	public BadgesGrid(boolean global) {
 		super();
 		badgeButtons = new ArrayList<>();
 
-		for (Badges.Badge badge : Badges.filterReplacedBadges( global )) {
+		for (Badges.Badge badge : Badges.filterReplacedBadges(global)) {
 
 			if (badge.image == -1) {
 				continue;
 			}
 
-			BadgeButton button = new BadgeButton( badge, true );
-			add( button );
+			BadgeButton button = new BadgeButton(badge, true);
+			add(button);
 			badgeButtons.add(button);
 		}
 
@@ -64,7 +64,7 @@ public class BadgesGrid extends Component {
 			Badges.filterBadgesWithoutPrerequisites(lockedBadges);
 
 			for (Badges.Badge badge : lockedBadges) {
-				BadgeButton button = new BadgeButton( badge, false );
+				BadgeButton button = new BadgeButton(badge, false);
 				add(button);
 				badgeButtons.add(button);
 			}
@@ -79,24 +79,24 @@ public class BadgesGrid extends Component {
 
 		//2-5 columns in portrait, 5-8 in landscape
 		int nCols;
-		if (width() > height()){
-			if (badgeButtons.size() > 35)       nCols = 8;
-			else if (badgeButtons.size() > 24)  nCols = 7;
-			else if (badgeButtons.size() > 15)  nCols = 6;
-			else                                nCols = 5;
+		if (width() > height()) {
+			if (badgeButtons.size() > 35) nCols = 8;
+			else if (badgeButtons.size() > 24) nCols = 7;
+			else if (badgeButtons.size() > 15) nCols = 6;
+			else nCols = 5;
 		} else {
-			if (badgeButtons.size() > 32)       nCols = 5;
-			else if (badgeButtons.size() > 21)  nCols = 4;
-			else if (badgeButtons.size() > 10)  nCols = 3;
-			else                                nCols = 2;
+			if (badgeButtons.size() > 32) nCols = 5;
+			else if (badgeButtons.size() > 21) nCols = 4;
+			else if (badgeButtons.size() > 10) nCols = 3;
+			else nCols = 2;
 		}
 
-		int nRows = (int) Math.ceil(badgeButtons.size()/(float)nCols);
+		int nRows = (int) Math.ceil(badgeButtons.size() / (float) nCols);
 
-		float badgeWidth = width()/nCols;
-		float badgeHeight = height()/nRows;
+		float badgeWidth = width() / nCols;
+		float badgeHeight = height() / nRows;
 
-		for (int i = 0; i < badgeButtons.size(); i++){
+		for (int i = 0; i < badgeButtons.size(); i++) {
 			int row = i / nCols;
 			int col = i % nCols;
 			BadgeButton button = badgeButtons.get(i);
@@ -109,12 +109,12 @@ public class BadgesGrid extends Component {
 
 	private static class BadgeButton extends Button {
 
-		private Badges.Badge badge;
-		private boolean unlocked;
+		private final Badges.Badge badge;
+		private final boolean unlocked;
 
-		private Image icon;
+		private final Image icon;
 
-		public BadgeButton( Badges.Badge badge, boolean unlocked ) {
+		public BadgeButton(Badges.Badge badge, boolean unlocked) {
 			super();
 
 			this.badge = badge;
@@ -126,7 +126,7 @@ public class BadgesGrid extends Component {
 			}
 			add(icon);
 
-			setSize( icon.width(), icon.height() );
+			setSize(icon.width(), icon.height());
 		}
 
 		@Override
@@ -142,14 +142,14 @@ public class BadgesGrid extends Component {
 			super.update();
 
 			if (unlocked && Random.Float() < Game.elapsed * 0.1) {
-				BadgeBanner.highlight( icon, badge.image );
+				BadgeBanner.highlight(icon, badge.image);
 			}
 		}
 
 		@Override
 		protected void onClick() {
-			Sample.INSTANCE.play( Assets.Sounds.CLICK, 0.7f, 0.7f, 1.2f );
-			Game.scene().add( new WndBadge( badge, unlocked ) );
+			Sample.INSTANCE.play(Assets.Sounds.CLICK, 0.7f, 0.7f, 1.2f);
+			Game.scene().add(new WndBadge(badge, unlocked));
 		}
 
 		@Override

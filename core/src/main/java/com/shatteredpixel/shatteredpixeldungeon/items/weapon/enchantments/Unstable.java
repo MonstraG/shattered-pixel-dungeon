@@ -29,9 +29,9 @@ import com.watabou.utils.Reflection;
 
 public class Unstable extends Weapon.Enchantment {
 
-	private static ItemSprite.Glowing GREY = new ItemSprite.Glowing( 0x999999 );
+	private static final ItemSprite.Glowing GREY = new ItemSprite.Glowing(0x999999);
 
-	private static Class<?extends Weapon.Enchantment>[] randomEnchants = new Class[]{
+	private static final Class<? extends Weapon.Enchantment>[] randomEnchants = new Class[]{
 			Blazing.class,
 			Blocking.class,
 			Blooming.class,
@@ -47,16 +47,16 @@ public class Unstable extends Weapon.Enchantment {
 	};
 
 	@Override
-	public int proc( Weapon weapon, Char attacker, Char defender, int damage ) {
-		
+	public int proc(Weapon weapon, Char attacker, Char defender, int damage) {
+
 		int conservedDamage = 0;
 		if (attacker.buff(Kinetic.ConservedDamage.class) != null) {
 			conservedDamage = attacker.buff(Kinetic.ConservedDamage.class).damageBonus();
 			attacker.buff(Kinetic.ConservedDamage.class).detach();
 		}
-		
-		damage = Reflection.newInstance(Random.oneOf(randomEnchants)).proc( weapon, attacker, defender, damage );
-		
+
+		damage = Reflection.newInstance(Random.oneOf(randomEnchants)).proc(weapon, attacker, defender, damage);
+
 		return damage + conservedDamage;
 	}
 

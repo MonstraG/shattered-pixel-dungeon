@@ -34,6 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.ArmorAbili
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress.SpiritHawk;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.DirectableAlly;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SmokeParticle;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClassArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.AntiMagic;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.Brimstone;
@@ -43,12 +44,12 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MobSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
-import com.watabou.utils.BArray;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.TextureFilm;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.noosa.tweeners.Tweener;
+import com.watabou.utils.BArray;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
@@ -67,7 +68,7 @@ public class ShadowClone extends ArmorAbility {
 	}
 
 	@Override
-	public boolean useTargeting(){
+	public boolean useTargeting() {
 		return false;
 	}
 
@@ -88,9 +89,8 @@ public class ShadowClone extends ArmorAbility {
 	protected void activate(ClassArmor armor, Hero hero, Integer target) {
 		ShadowAlly ally = getShadowAlly();
 
-		if (ally != null){
-			if (target == null){
-				return;
+		if (ally != null) {
+			if (target == null) {
 			} else {
 				ally.directTocell(target);
 			}
@@ -103,9 +103,9 @@ public class ShadowClone extends ArmorAbility {
 				}
 			}
 
-			if (!spawnPoints.isEmpty()){
+			if (!spawnPoints.isEmpty()) {
 				armor.charge -= chargeUse(hero);
-				armor.updateQuickslot();
+				Item.updateQuickslot();
 
 				ally = new ShadowAlly(hero.lvl);
 				ally.pos = Random.element(spawnPoints);
@@ -133,9 +133,9 @@ public class ShadowClone extends ArmorAbility {
 		return new Talent[]{Talent.SHADOW_BLADE, Talent.CLONED_ARMOR, Talent.PERFECT_COPY, Talent.HEROIC_ENERGY};
 	}
 
-	private static ShadowAlly getShadowAlly(){
-		for (Char ch : Actor.chars()){
-			if (ch instanceof ShadowAlly){
+	private static ShadowAlly getShadowAlly() {
+		for (Char ch : Actor.chars()) {
+			if (ch instanceof ShadowAlly) {
 				return (ShadowAlly) ch;
 			}
 		}
@@ -154,15 +154,15 @@ public class ShadowClone extends ArmorAbility {
 			properties.add(Property.INORGANIC);
 		}
 
-		public ShadowAlly(){
+		public ShadowAlly() {
 			super();
 		}
 
-		public ShadowAlly( int heroLevel ){
+		public ShadowAlly(int heroLevel) {
 			super();
-			int hpBonus = 15 + 5*heroLevel;
+			int hpBonus = 15 + 5 * heroLevel;
 			hpBonus = Math.round(0.1f * Dungeon.hero.pointsInTalent(Talent.PERFECT_COPY) * hpBonus);
-			if (hpBonus > 0){
+			if (hpBonus > 0) {
 				HT += hpBonus;
 				HP += hpBonus;
 			}
@@ -174,7 +174,7 @@ public class ShadowClone extends ArmorAbility {
 			int oldPos = pos;
 			boolean result = super.act();
 			//partially simulates how the hero switches to idle animation
-			if ((pos == target || oldPos == pos) && sprite.looping()){
+			if ((pos == target || oldPos == pos) && sprite.looping()) {
 				sprite.idle();
 			}
 			return result;
@@ -200,7 +200,7 @@ public class ShadowClone extends ArmorAbility {
 
 		@Override
 		public int attackSkill(Char target) {
-			return defenseSkill+5; //equal to base hero attack skill
+			return defenseSkill + 5; //equal to base hero attack skill
 		}
 
 		@Override
@@ -209,18 +209,18 @@ public class ShadowClone extends ArmorAbility {
 			int heroDamage = Dungeon.hero.damageRoll();
 			heroDamage /= Dungeon.hero.attackDelay(); //normalize hero damage based on atk speed
 			heroDamage = Math.round(0.08f * Dungeon.hero.pointsInTalent(Talent.SHADOW_BLADE) * heroDamage);
-			if (heroDamage > 0){
+			if (heroDamage > 0) {
 				damage += heroDamage;
 			}
 			return damage;
 		}
 
 		@Override
-		public int attackProc( Char enemy, int damage ) {
-			damage = super.attackProc( enemy, damage );
+		public int attackProc(Char enemy, int damage) {
+			damage = super.attackProc(enemy, damage);
 			if (Random.Int(4) < Dungeon.hero.pointsInTalent(Talent.SHADOW_BLADE)
-					&& Dungeon.hero.belongings.weapon() != null){
-				return Dungeon.hero.belongings.weapon().proc( this, enemy, damage );
+					&& Dungeon.hero.belongings.weapon() != null) {
+				return Dungeon.hero.belongings.weapon().proc(this, enemy, damage);
 			} else {
 				return damage;
 			}
@@ -231,7 +231,7 @@ public class ShadowClone extends ArmorAbility {
 			int dr = super.drRoll();
 			int heroRoll = Dungeon.hero.drRoll();
 			heroRoll = Math.round(0.12f * Dungeon.hero.pointsInTalent(Talent.CLONED_ARMOR) * heroRoll);
-			if (heroRoll > 0){
+			if (heroRoll > 0) {
 				dr += heroRoll;
 			}
 			return dr;
@@ -242,7 +242,7 @@ public class ShadowClone extends ArmorAbility {
 			if (effect == Burning.class
 					&& Random.Int(4) < Dungeon.hero.pointsInTalent(Talent.CLONED_ARMOR)
 					&& Dungeon.hero.belongings.armor() != null
-					&& Dungeon.hero.belongings.armor().hasGlyph(Brimstone.class, this)){
+					&& Dungeon.hero.belongings.armor().hasGlyph(Brimstone.class, this)) {
 				return true;
 			}
 			return super.isImmune(effect);
@@ -252,8 +252,8 @@ public class ShadowClone extends ArmorAbility {
 		public int defenseProc(Char enemy, int damage) {
 			damage = super.defenseProc(enemy, damage);
 			if (Random.Int(4) < Dungeon.hero.pointsInTalent(Talent.CLONED_ARMOR)
-					&& Dungeon.hero.belongings.armor() != null){
-				return Dungeon.hero.belongings.armor().proc( enemy, this, damage );
+					&& Dungeon.hero.belongings.armor() != null) {
+				return Dungeon.hero.belongings.armor().proc(enemy, this, damage);
 			} else {
 				return damage;
 			}
@@ -266,7 +266,7 @@ public class ShadowClone extends ArmorAbility {
 			if (Random.Int(4) < Dungeon.hero.pointsInTalent(Talent.CLONED_ARMOR)
 					&& Dungeon.hero.belongings.armor() != null
 					&& Dungeon.hero.belongings.armor().hasGlyph(AntiMagic.class, this)
-					&& AntiMagic.RESISTS.contains(src.getClass())){
+					&& AntiMagic.RESISTS.contains(src.getClass())) {
 				dmg -= AntiMagic.drRoll(Dungeon.hero, Dungeon.hero.belongings.armor().buffedLvl());
 				dmg = Math.max(dmg, 0);
 			}
@@ -281,7 +281,7 @@ public class ShadowClone extends ArmorAbility {
 			//moves 2 tiles at a time when returning to the hero
 			if (state == WANDERING
 					&& defendingPos == -1
-					&& Dungeon.level.distance(pos, Dungeon.hero.pos) > 1){
+					&& Dungeon.level.distance(pos, Dungeon.hero.pos) > 1) {
 				speed *= 2;
 			}
 
@@ -290,28 +290,25 @@ public class ShadowClone extends ArmorAbility {
 
 		@Override
 		public boolean canInteract(Char c) {
-			if (super.canInteract(c)){
+			if (super.canInteract(c)) {
 				return true;
-			} else if (Dungeon.level.distance(pos, c.pos) <= Dungeon.hero.pointsInTalent(Talent.PERFECT_COPY)) {
-				return true;
-			} else {
-				return false;
-			}
+			} else
+				return Dungeon.level.distance(pos, c.pos) <= Dungeon.hero.pointsInTalent(Talent.PERFECT_COPY);
 		}
 
 		@Override
 		public boolean interact(Char c) {
-			if (!Dungeon.hero.hasTalent(Talent.PERFECT_COPY)){
+			if (!Dungeon.hero.hasTalent(Talent.PERFECT_COPY)) {
 				return super.interact(c);
 			}
 
 			//some checks from super.interact
-			if (!Dungeon.level.passable[pos] && !c.flying){
+			if (!Dungeon.level.passable[pos] && !c.flying) {
 				return true;
 			}
 
 			if (properties().contains(Property.LARGE) && !Dungeon.level.openSpace[c.pos]
-					|| c.properties().contains(Property.LARGE) && !Dungeon.level.openSpace[pos]){
+					|| c.properties().contains(Property.LARGE) && !Dungeon.level.openSpace[pos]) {
 				return true;
 			}
 
@@ -319,7 +316,7 @@ public class ShadowClone extends ArmorAbility {
 
 			//warp instantly with the clone
 			PathFinder.buildDistanceMap(c.pos, BArray.or(Dungeon.level.passable, Dungeon.level.avoid, null));
-			if (PathFinder.distance[pos] == Integer.MAX_VALUE){
+			if (PathFinder.distance[pos] == Integer.MAX_VALUE) {
 				return true;
 			}
 			appear(this, Dungeon.hero.pos);
@@ -329,18 +326,18 @@ public class ShadowClone extends ArmorAbility {
 			return true;
 		}
 
-		private static void appear( Char ch, int pos ) {
+		private static void appear(Char ch, int pos) {
 
 			ch.sprite.interruptMotion();
 
-			if (Dungeon.level.heroFOV[pos] || Dungeon.level.heroFOV[ch.pos]){
+			if (Dungeon.level.heroFOV[pos] || Dungeon.level.heroFOV[ch.pos]) {
 				Sample.INSTANCE.play(Assets.Sounds.PUFF);
 			}
 
-			ch.move( pos );
-			if (ch.pos == pos) ch.sprite.place( pos );
+			ch.move(pos);
+			if (ch.pos == pos) ch.sprite.place(pos);
 
-			if (Dungeon.level.heroFOV[pos] || ch == Dungeon.hero ) {
+			if (Dungeon.level.heroFOV[pos] || ch == Dungeon.hero) {
 				ch.sprite.emitter().burst(SmokeParticle.FACTORY, 10);
 			}
 		}
@@ -367,21 +364,21 @@ public class ShadowClone extends ArmorAbility {
 		public ShadowSprite() {
 			super();
 
-			texture( Dungeon.hero.heroClass.spritesheet() );
+			texture(Dungeon.hero.heroClass.spritesheet());
 
-			TextureFilm film = new TextureFilm( HeroSprite.tiers(), 6, 12, 15 );
+			TextureFilm film = new TextureFilm(HeroSprite.tiers(), 6, 12, 15);
 
-			idle = new Animation( 1, true );
-			idle.frames( film, 0, 0, 0, 1, 0, 0, 1, 1 );
+			idle = new Animation(1, true);
+			idle.frames(film, 0, 0, 0, 1, 0, 0, 1, 1);
 
-			run = new Animation( 20, true );
-			run.frames( film, 2, 3, 4, 5, 6, 7 );
+			run = new Animation(20, true);
+			run.frames(film, 2, 3, 4, 5, 6, 7);
 
-			die = new Animation( 20, false );
-			die.frames( film, 0 );
+			die = new Animation(20, false);
+			die.frames(film, 0);
 
-			attack = new Animation( 15, false );
-			attack.frames( film, 13, 14, 15, 0 );
+			attack = new Animation(15, false);
+			attack.frames(film, 13, 14, 15, 0);
 
 			idle();
 			resetColor();
@@ -400,13 +397,13 @@ public class ShadowClone extends ArmorAbility {
 		}
 
 		@Override
-		public void link( Char ch ) {
-			super.link( ch );
+		public void link(Char ch) {
+			super.link(ch);
 			renderShadow = false;
 
 			if (smoke == null) {
 				smoke = emitter();
-				smoke.pour( CityLevel.Smoke.factory, 0.2f );
+				smoke.pour(CityLevel.Smoke.factory, 0.2f);
 			}
 		}
 

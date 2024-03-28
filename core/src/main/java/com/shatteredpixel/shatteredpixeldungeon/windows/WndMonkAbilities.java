@@ -36,9 +36,9 @@ public class WndMonkAbilities extends Window {
 	private static final int WIDTH_P = 120;
 	private static final int WIDTH_L = 160;
 
-	private static final int MARGIN  = 2;
+	private static final int MARGIN = 2;
 
-	public WndMonkAbilities( MonkEnergy energyBuff ){
+	public WndMonkAbilities(MonkEnergy energyBuff) {
 		super();
 
 		int width = PixelScene.landscape() ? WIDTH_L : WIDTH_P;
@@ -46,15 +46,15 @@ public class WndMonkAbilities extends Window {
 		float pos = MARGIN;
 		RenderedTextBlock title = PixelScene.renderTextBlock(Messages.titleCase(Messages.get(this, "title")), 9);
 		title.hardlight(TITLE_COLOR);
-		title.setPos((width-title.width())/2, pos);
+		title.setPos((width - title.width()) / 2, pos);
 		title.maxWidth(width - MARGIN * 2);
 		add(title);
 
-		pos = title.bottom() + 3*MARGIN;
+		pos = title.bottom() + 3 * MARGIN;
 
 		for (MonkEnergy.MonkAbility abil : MonkEnergy.MonkAbility.abilities) {
 			String text = "_" + Messages.titleCase(abil.name()) + " " + Messages.get(this, "energycost", abil.energyCost()) + ":_ " + abil.desc();
-			RedButton moveBtn = new RedButton(text, 6){
+			RedButton moveBtn = new RedButton(text, 6) {
 				@Override
 				protected void onClick() {
 					super.onClick();
@@ -76,13 +76,13 @@ public class WndMonkAbilities extends Window {
 			pos = moveBtn.bottom() + MARGIN;
 		}
 
-		resize(width, (int)pos);
+		resize(width, (int) pos);
 
 	}
 
 	MonkEnergy.MonkAbility abilityBeingUsed;
 
-	private CellSelector.Listener listener = new CellSelector.Listener() {
+	private final CellSelector.Listener listener = new CellSelector.Listener() {
 
 		@Override
 		public void onSelect(Integer cell) {

@@ -37,7 +37,7 @@ public class ScrollArea extends PointerArea {
 		ScrollEvent.addScrollListener(scrollListener);
 	}
 
-	private Signal.Listener<ScrollEvent> scrollListener = event -> {
+	private final Signal.Listener<ScrollEvent> scrollListener = event -> {
 
 		boolean hit = event != null && target.overlapsScreenPoint((int) event.pos.x, (int) event.pos.y);
 

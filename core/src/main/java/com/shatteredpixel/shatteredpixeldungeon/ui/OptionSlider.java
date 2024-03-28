@@ -40,22 +40,22 @@ public abstract class OptionSlider extends Component {
 	private RenderedTextBlock maxTxt;
 
 	//values are expressed internally as ints, but they can easily be interpreted as something else externally.
-	private int minVal;
-	private int maxVal;
+	private final int minVal;
+	private final int maxVal;
 	private int selectedVal;
 
 	private NinePatch sliderNode;
 	private NinePatch BG;
 	private ColorBlock sliderBG;
-	private ColorBlock[] sliderTicks;
+	private final ColorBlock[] sliderTicks;
 	private float tickDist;
 
 
-	public OptionSlider(String title, String minTxt, String maxTxt, int minVal, int maxVal){
+	public OptionSlider(String title, String minTxt, String maxTxt, int minVal, int maxVal) {
 		super();
 
 		//shouldn't function if this happens.
-		if (minVal > maxVal){
+		if (minVal > maxVal) {
 			minVal = maxVal;
 			active = false;
 		}
@@ -68,7 +68,7 @@ public abstract class OptionSlider extends Component {
 		this.maxVal = maxVal;
 
 		sliderTicks = new ColorBlock[(maxVal - minVal) + 1];
-		for (int i = 0; i < sliderTicks.length; i++){
+		for (int i = 0; i < sliderTicks.length; i++) {
 			add(sliderTicks[i] = new ColorBlock(1, 9, 0xFF222222));
 		}
 		add(sliderNode);
@@ -76,14 +76,14 @@ public abstract class OptionSlider extends Component {
 
 	protected abstract void onChange();
 
-	public int getSelectedValue(){
+	public int getSelectedValue() {
 		return selectedVal;
 	}
 
 	public void setSelectedValue(int val) {
 		this.selectedVal = val;
-		sliderNode.x = (int)(x + tickDist*(selectedVal-minVal)) + 0.5f;
-		sliderNode.y = sliderBG.y-4;
+		sliderNode.x = (int) (x + tickDist * (selectedVal - minVal)) + 0.5f;
+		sliderNode.y = sliderBG.y - 4;
 		PixelScene.align(sliderNode);
 	}
 
@@ -91,7 +91,7 @@ public abstract class OptionSlider extends Component {
 	protected void createChildren() {
 		super.createChildren();
 
-		add( BG = Chrome.get(Chrome.Type.RED_BUTTON));
+		add(BG = Chrome.get(Chrome.Type.RED_BUTTON));
 		BG.alpha(0.5f);
 
 		add(title = PixelScene.renderTextBlock(9));
@@ -102,24 +102,24 @@ public abstract class OptionSlider extends Component {
 		sliderNode = Chrome.get(Chrome.Type.RED_BUTTON);
 		sliderNode.size(4, 7);
 
-		pointerArea = new PointerArea(0, 0, 0, 0){
+		pointerArea = new PointerArea(0, 0, 0, 0) {
 			boolean pressed = false;
 
 			@Override
-			protected void onPointerDown( PointerEvent event ) {
+			protected void onPointerDown(PointerEvent event) {
 				pressed = true;
 				PointF p = camera().screenToCamera((int) event.current.x, (int) event.current.y);
-				sliderNode.x = GameMath.gate(sliderBG.x-2, p.x - sliderNode.width()/2, sliderBG.x+sliderBG.width()-2);
+				sliderNode.x = GameMath.gate(sliderBG.x - 2, p.x - sliderNode.width() / 2, sliderBG.x + sliderBG.width() - 2);
 				sliderNode.brightness(1.5f);
 			}
 
 			@Override
-			protected void onPointerUp( PointerEvent event ) {
+			protected void onPointerUp(PointerEvent event) {
 				if (pressed) {
 					PointF p = camera().screenToCamera((int) event.current.x, (int) event.current.y);
-					sliderNode.x = GameMath.gate(sliderBG.x - 2, p.x - sliderNode.width()/2, sliderBG.x + sliderBG.width() - 2);
+					sliderNode.x = GameMath.gate(sliderBG.x - 2, p.x - sliderNode.width() / 2, sliderBG.x + sliderBG.width() - 2);
 					sliderNode.resetColor();
-					
+
 					//sets the selected value
 					selectedVal = minVal + Math.round((sliderNode.x - x) / tickDist);
 					sliderNode.x = x + tickDist * (selectedVal - minVal) + 0.5f;
@@ -130,10 +130,10 @@ public abstract class OptionSlider extends Component {
 			}
 
 			@Override
-			protected void onDrag( PointerEvent event ) {
+			protected void onDrag(PointerEvent event) {
 				if (pressed) {
 					PointF p = camera().screenToCamera((int) event.current.x, (int) event.current.y);
-					sliderNode.x = GameMath.gate(sliderBG.x - 2, p.x - sliderNode.width()/2, sliderBG.x + sliderBG.width() - 2);
+					sliderNode.x = GameMath.gate(sliderBG.x - 2, p.x - sliderNode.width() / 2, sliderBG.x + sliderBG.width() - 2);
 				}
 			}
 		};
@@ -144,7 +144,7 @@ public abstract class OptionSlider extends Component {
 	@Override
 	protected void layout() {
 
-		if (title.width() > 0.7f*width){
+		if (title.width() > 0.7f * width) {
 			String titleText = title.text;
 			remove(title);
 			title = PixelScene.renderTextBlock(6);
@@ -153,31 +153,31 @@ public abstract class OptionSlider extends Component {
 		}
 
 		title.setPos(
-				x + (width-title.width())/2,
-				y+2
+				x + (width - title.width()) / 2,
+				y + 2
 		);
 		PixelScene.align(title);
 		sliderBG.y = y + height() - 7;
-		sliderBG.x = x+2;
-		sliderBG.size(width-5, 1);
-		tickDist = sliderBG.width()/(maxVal - minVal);
-		for (int i = 0; i < sliderTicks.length; i++){
-			sliderTicks[i].y = sliderBG.y-4;
-			sliderTicks[i].x = x + 2 + (tickDist*i);
+		sliderBG.x = x + 2;
+		sliderBG.size(width - 5, 1);
+		tickDist = sliderBG.width() / (maxVal - minVal);
+		for (int i = 0; i < sliderTicks.length; i++) {
+			sliderTicks[i].y = sliderBG.y - 4;
+			sliderTicks[i].x = x + 2 + (tickDist * i);
 			PixelScene.align(sliderTicks[i]);
 		}
 
 		minTxt.setPos(
-				x+1,
-				sliderBG.y-5-minTxt.height()
+				x + 1,
+				sliderBG.y - 5 - minTxt.height()
 		);
 		maxTxt.setPos(
-				x+width()-maxTxt.width()-1,
-				sliderBG.y-5-minTxt.height()
+				x + width() - maxTxt.width() - 1,
+				sliderBG.y - 5 - minTxt.height()
 		);
 
-		sliderNode.x = x + tickDist*(selectedVal-minVal) + 0.5f;
-		sliderNode.y = sliderBG.y-3;
+		sliderNode.x = x + tickDist * (selectedVal - minVal) + 0.5f;
+		sliderNode.y = sliderBG.y - 3;
 		PixelScene.align(sliderNode);
 
 		pointerArea.x = x;

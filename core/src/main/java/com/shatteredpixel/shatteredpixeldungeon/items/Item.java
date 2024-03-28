@@ -48,11 +48,9 @@ import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
-import com.watabou.utils.Callback;
 import com.watabou.utils.Reflection;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 
 public class Item implements Bundlable {
@@ -221,7 +219,7 @@ public class Item implements Bundlable {
 			for (Item item : items) {
 				if (isSimilar(item)) {
 					item.merge(this);
-					item.updateQuickslot();
+					updateQuickslot();
 					if (Dungeon.hero != null && Dungeon.hero.isAlive()) {
 						Badges.validateItemLevelAquired(this);
 						Talent.onItemCollected(Dungeon.hero, item);

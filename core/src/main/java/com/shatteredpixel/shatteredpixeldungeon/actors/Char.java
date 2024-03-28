@@ -136,6 +136,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 
 public abstract class Char extends Actor {
 
@@ -167,7 +168,7 @@ public abstract class Char extends Actor {
 
 	public boolean[] fieldOfView = null;
 
-	private LinkedHashSet<Buff> buffs = new LinkedHashSet<>();
+	private final LinkedHashSet<Buff> buffs = new LinkedHashSet<>();
 
 	@Override
 	protected boolean act() {
@@ -207,14 +208,10 @@ public abstract class Char extends Actor {
 	public boolean canInteract(Char c) {
 		if (Dungeon.level.adjacent(pos, c.pos)) {
 			return true;
-		} else if (c instanceof Hero
+		} else return c instanceof Hero
 				&& alignment == Alignment.ALLY
 				&& !hasProp(this, Property.IMMOVABLE)
-				&& Dungeon.level.distance(pos, c.pos) <= 2 * Dungeon.hero.pointsInTalent(Talent.ALLY_WARP)) {
-			return true;
-		} else {
-			return false;
-		}
+				&& Dungeon.level.distance(pos, c.pos) <= 2 * Dungeon.hero.pointsInTalent(Talent.ALLY_WARP);
 	}
 
 	//swaps places by default
@@ -846,7 +843,7 @@ public abstract class Char extends Actor {
 	}
 
 	//these are misc. sources of physical damage which do not apply armor, they get a different icon
-	private static HashSet<Class> NO_ARMOR_PHYSICAL_SOURCES = new HashSet<>();
+	private static final HashSet<Class> NO_ARMOR_PHYSICAL_SOURCES = new HashSet<>();
 
 	{
 		NO_ARMOR_PHYSICAL_SOURCES.add(CrystalSpire.SpireSpike.class);
@@ -1174,8 +1171,8 @@ public abstract class Char extends Actor {
 				new HashSet<>(Arrays.asList(Burning.class, Blazing.class))),
 		ICY(new HashSet<>(Arrays.asList(WandOfFrost.class, Elemental.FrostElemental.class)),
 				new HashSet<>(Arrays.asList(Frost.class, Chill.class))),
-		ACIDIC(new HashSet<>(Arrays.asList(Corrosion.class)),
-				new HashSet<>(Arrays.asList(Ooze.class))),
+		ACIDIC(new HashSet<>(List.of(Corrosion.class)),
+				new HashSet<>(List.of(Ooze.class))),
 		ELECTRIC(new HashSet<>(Arrays.asList(WandOfLightning.class, Shocking.class, Potential.class, Electricity.class, ShockingDart.class, Elemental.ShockElemental.class)),
 				new HashSet<>()),
 		LARGE,

@@ -33,13 +33,14 @@ public class Chains extends Group {
 	private static final double A = 180 / Math.PI;
 
 	private float spent = 0f;
-	private float duration;
+	private final float duration;
 
-	private Callback callback;
+	private final Callback callback;
 
-	private Image[] chains;
+	private final Image[] chains;
 
-	private PointF from, to;
+	private final PointF from;
+	private final PointF to;
 
 	public Chains(int from, int to, Effects.Type type, Callback callback) {
 		this(DungeonTilemap.tileCenterToWorld(from),

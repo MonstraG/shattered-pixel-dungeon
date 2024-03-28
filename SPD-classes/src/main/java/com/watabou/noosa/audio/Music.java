@@ -202,8 +202,6 @@ public enum Music {
 		play(trackQueue.remove(0), trackLooper);
 	}
 
-	;
-
 	private synchronized void play(String track, com.badlogic.gdx.audio.Music.OnCompletionListener listener) {
 		try {
 			fadeTime = fadeTotal = -1;

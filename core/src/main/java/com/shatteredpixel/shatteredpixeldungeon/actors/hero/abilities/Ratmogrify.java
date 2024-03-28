@@ -37,6 +37,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Rat;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClassArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -75,7 +76,7 @@ public class Ratmogrify extends ArmorAbility {
 	@Override
 	protected void activate(ClassArmor armor, Hero hero, Integer target) {
 
-		if (target == null){
+		if (target == null) {
 			return;
 		}
 
@@ -84,8 +85,8 @@ public class Ratmogrify extends ArmorAbility {
 		if (ch == null || !Dungeon.level.heroFOV[target]) {
 			GLog.w(Messages.get(this, "no_target"));
 			return;
-		} else if (ch == hero){
-			if (!hero.hasTalent(Talent.RATFORCEMENTS)){
+		} else if (ch == hero) {
+			if (!hero.hasTalent(Talent.RATFORCEMENTS)) {
 				GLog.w(Messages.get(this, "self_target"));
 				return;
 			} else {
@@ -93,64 +94,64 @@ public class Ratmogrify extends ArmorAbility {
 
 				for (int i = 0; i < PathFinder.NEIGHBOURS8.length; i++) {
 					int p = hero.pos + PathFinder.NEIGHBOURS8[i];
-					if (Actor.findChar( p ) == null && Dungeon.level.passable[p]) {
-						spawnPoints.add( p );
+					if (Actor.findChar(p) == null && Dungeon.level.passable[p]) {
+						spawnPoints.add(p);
 					}
 				}
 
 				int ratsToSpawn = hero.pointsInTalent(Talent.RATFORCEMENTS);
 
 				while (ratsToSpawn > 0 && spawnPoints.size() > 0) {
-					int index = Random.index( spawnPoints );
+					int index = Random.index(spawnPoints);
 
 					Rat rat = new Rat();
 					rat.alignment = Char.Alignment.ALLY;
 					rat.state = rat.HUNTING;
 					Buff.affect(rat, AscensionChallenge.AscensionBuffBlocker.class);
-					GameScene.add( rat );
-					ScrollOfTeleportation.appear( rat, spawnPoints.get( index ) );
+					GameScene.add(rat);
+					ScrollOfTeleportation.appear(rat, spawnPoints.get(index));
 
-					spawnPoints.remove( index );
+					spawnPoints.remove(index);
 					ratsToSpawn--;
 				}
 
 			}
-		} else if (ch.alignment != Char.Alignment.ENEMY || !(ch instanceof Mob) || ch instanceof Rat){
+		} else if (ch.alignment != Char.Alignment.ENEMY || !(ch instanceof Mob) || ch instanceof Rat) {
 			GLog.w(Messages.get(this, "cant_transform"));
 			return;
-		} else if (ch instanceof TransmogRat){
-			if (((TransmogRat) ch).allied || !hero.hasTalent(Talent.RATLOMACY)){
+		} else if (ch instanceof TransmogRat) {
+			if (((TransmogRat) ch).allied || !hero.hasTalent(Talent.RATLOMACY)) {
 				GLog.w(Messages.get(this, "cant_transform"));
 				return;
 			} else {
 				((TransmogRat) ch).makeAlly();
 				ch.sprite.emitter().start(Speck.factory(Speck.HEART), 0.2f, 5);
 				Sample.INSTANCE.play(Assets.Sounds.TELEPORT);
-				if (hero.pointsInTalent(Talent.RATLOMACY) > 1){
-					Buff.affect(ch, Adrenaline.class, 2*(hero.pointsInTalent(Talent.RATLOMACY)-1));
+				if (hero.pointsInTalent(Talent.RATLOMACY) > 1) {
+					Buff.affect(ch, Adrenaline.class, 2 * (hero.pointsInTalent(Talent.RATLOMACY) - 1));
 				}
 			}
-		} else if (Char.hasProp(ch, Char.Property.MINIBOSS) || Char.hasProp(ch, Char.Property.BOSS)){
+		} else if (Char.hasProp(ch, Char.Property.MINIBOSS) || Char.hasProp(ch, Char.Property.BOSS)) {
 			GLog.w(Messages.get(this, "too_strong"));
 			return;
 		} else {
 			TransmogRat rat = new TransmogRat();
-			rat.setup((Mob)ch);
+			rat.setup((Mob) ch);
 			rat.pos = ch.pos;
 
 			//preserve champion enemy buffs
 			HashSet<ChampionEnemy> champBuffs = ch.buffs(ChampionEnemy.class);
-			for (ChampionEnemy champ : champBuffs){
+			for (ChampionEnemy champ : champBuffs) {
 				if (ch.remove(champ)) {
 					ch.sprite.clearAura();
 				}
 			}
 
-			Actor.remove( ch );
+			Actor.remove(ch);
 			ch.sprite.killAndErase();
 			Dungeon.level.mobs.remove(ch);
 
-			for (ChampionEnemy champ : champBuffs){
+			for (ChampionEnemy champ : champBuffs) {
 				ch.add(champ);
 			}
 
@@ -163,13 +164,13 @@ public class Ratmogrify extends ArmorAbility {
 			Dungeon.level.occupyCell(rat);
 
 			//for rare cases where a buff was keeping a mob alive (e.g. gnoll brutes)
-			if (!rat.isAlive()){
+			if (!rat.isAlive()) {
 				rat.die(this);
 			}
 		}
 
 		armor.charge -= chargeUse(hero);
-		armor.updateQuickslot();
+		Item.updateQuickslot();
 		Invisibility.dispel();
 		hero.spendAndNext(Actor.TICK);
 
@@ -182,7 +183,7 @@ public class Ratmogrify extends ArmorAbility {
 
 	@Override
 	public Talent[] talents() {
-		return new Talent[]{ Talent.RATSISTANCE, Talent.RATLOMACY, Talent.RATFORCEMENTS, Talent.HEROIC_ENERGY};
+		return new Talent[]{Talent.RATSISTANCE, Talent.RATLOMACY, Talent.RATFORCEMENTS, Talent.HEROIC_ENERGY};
 	}
 
 	public static class TransmogRat extends Mob {
@@ -218,7 +219,7 @@ public class Ratmogrify extends ArmorAbility {
 
 		}
 
-		public Mob getOriginal(){
+		public Mob getOriginal() {
 			if (original != null) {
 				original.HP = HP;
 				original.pos = pos;
@@ -230,7 +231,7 @@ public class Ratmogrify extends ArmorAbility {
 
 		@Override
 		protected boolean act() {
-			if (timeLeft <= 0){
+			if (timeLeft <= 0) {
 				Mob original = getOriginal();
 				this.original = null;
 				original.clearTime();
@@ -270,7 +271,7 @@ public class Ratmogrify extends ArmorAbility {
 		@Override
 		public int damageRoll() {
 			int damage = original.damageRoll();
-			if (!allied && Dungeon.hero.hasTalent(Talent.RATSISTANCE)){
+			if (!allied && Dungeon.hero.hasTalent(Talent.RATSISTANCE)) {
 				damage *= Math.pow(0.9f, Dungeon.hero.pointsInTalent(Talent.RATSISTANCE));
 			}
 			return damage;

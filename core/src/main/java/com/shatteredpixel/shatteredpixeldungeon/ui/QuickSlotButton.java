@@ -35,17 +35,17 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
-import com.watabou.utils.BArray;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndBag;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndKeyBindings;
 import com.watabou.input.GameAction;
 import com.watabou.noosa.Image;
+import com.watabou.utils.BArray;
 import com.watabou.utils.PathFinder;
 
 public class QuickSlotButton extends Button {
 
 	private static QuickSlotButton[] instance = new QuickSlotButton[QuickSlot.SIZE];
-	private int slotNum;
+	private final int slotNum;
 
 	private ItemSlot slot;
 
@@ -235,7 +235,7 @@ public class QuickSlotButton extends Button {
 		return true;
 	}
 
-	private WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
+	private final WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
 
 		@Override
 		public String textPrompt() {

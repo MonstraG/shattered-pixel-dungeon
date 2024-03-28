@@ -28,37 +28,37 @@ import com.watabou.utils.GameMath;
 
 public class Stone extends Armor.Glyph {
 
-	private static ItemSprite.Glowing GREY = new ItemSprite.Glowing( 0x222222 );
+	private static final ItemSprite.Glowing GREY = new ItemSprite.Glowing(0x222222);
 
 	@Override
 	public int proc(Armor armor, Char attacker, Char defender, int damage) {
-		
+
 		testing = true;
 		float evasion = defender.defenseSkill(attacker);
 		float accuracy = attacker.attackSkill(defender);
 		testing = false;
 
 		evasion *= genericProcChanceMultiplier(defender);
-		
+
 		float hitChance;
-		if (evasion >= accuracy){
-			hitChance = (accuracy/evasion)/2f;
+		if (evasion >= accuracy) {
+			hitChance = (accuracy / evasion) / 2f;
 		} else {
-			hitChance = 1f - (evasion/accuracy)/2f;
+			hitChance = 1f - (evasion / accuracy) / 2f;
 		}
-		
+
 		//75% of dodge chance is applied as damage reduction
 		// we clamp in case accuracy or evasion were negative
-		hitChance = GameMath.gate(0.25f, (1f + 3f*hitChance)/4f, 1f);
-		
-		damage = (int)Math.ceil(damage * hitChance);
-		
+		hitChance = GameMath.gate(0.25f, (1f + 3f * hitChance) / 4f, 1f);
+
+		damage = (int) Math.ceil(damage * hitChance);
+
 		return damage;
 	}
-	
+
 	private boolean testing = false;
-	
-	public boolean testingEvasion(){
+
+	public boolean testingEvasion() {
 		return testing;
 	}
 

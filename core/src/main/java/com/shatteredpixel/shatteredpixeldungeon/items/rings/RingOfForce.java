@@ -45,18 +45,18 @@ public class RingOfForce extends Ring {
 	}
 
 	@Override
-	protected RingBuff buff( ) {
+	protected RingBuff buff() {
 		return new Force();
 	}
-	
-	public static int armedDamageBonus( Char ch ){
-		return getBuffedBonus( ch, Force.class);
+
+	public static int armedDamageBonus(Char ch) {
+		return getBuffedBonus(ch, Force.class);
 	}
 
 	@Override
 	public boolean doUnequip(Hero hero, boolean collect, boolean single) {
-		if (super.doUnequip(hero, collect, single)){
-			if (hero.buff(BrawlersStance.class) != null && hero.buff(Force.class) == null){
+		if (super.doUnequip(hero, collect, single)) {
+			if (hero.buff(BrawlersStance.class) != null && hero.buff(Force.class) == null) {
 				//clear brawler's stance if no ring of force is equipped
 				hero.buff(BrawlersStance.class).detach();
 			}
@@ -65,19 +65,19 @@ public class RingOfForce extends Ring {
 			return false;
 		}
 	}
-	
+
 	// *** Weapon-like properties ***
 
-	private static float tier(int str){
-		float tier = Math.max(1, (str - 8)/2f);
+	private static float tier(int str) {
+		float tier = Math.max(1, (str - 8) / 2f);
 		//each str point after 18 is half as effective
-		if (tier > 5){
+		if (tier > 5) {
 			tier = 5 + (tier - 5) / 2f;
 		}
 		return tier;
 	}
 
-	public static int damageRoll( Hero hero ){
+	public static int damageRoll(Hero hero) {
 		if (hero.buff(Force.class) != null
 				&& hero.buff(MonkEnergy.MonkAbility.UnarmedAbilityTracker.class) == null) {
 			int level = getBuffedBonus(hero, Force.class);
@@ -85,27 +85,27 @@ public class RingOfForce extends Ring {
 			return Random.NormalIntRange(min(level, tier), max(level, tier));
 		} else {
 			//attack without any ring of force influence
-			return Random.NormalIntRange(1, Math.max(hero.STR()-8, 1));
+			return Random.NormalIntRange(1, Math.max(hero.STR() - 8, 1));
 		}
 	}
 
 	//same as equivalent tier weapon
-	private static int min(int lvl, float tier){
+	private static int min(int lvl, float tier) {
 		if (lvl <= 0) tier = 1; //tier is forced to 1 if cursed
 
-		return Math.max( 0, Math.round(
+		return Math.max(0, Math.round(
 				tier +  //base
-				lvl     //level scaling
+						lvl     //level scaling
 		));
 	}
 
 	//same as equivalent tier weapon
-	private static int max(int lvl, float tier){
+	private static int max(int lvl, float tier) {
 		if (lvl <= 0) tier = 1; //tier is forced to 1 if cursed
 
-		return Math.max( 0, Math.round(
-				5*(tier+1) +    //base
-				lvl*(tier+1)    //level scaling
+		return Math.max(0, Math.round(
+				5 * (tier + 1) +    //base
+						lvl * (tier + 1)    //level scaling
 		));
 	}
 
@@ -115,7 +115,7 @@ public class RingOfForce extends Ring {
 		if (isIdentified()) {
 			int level = soloBuffedBonus();
 			String info = Messages.get(this, "stats", min(level, tier), max(level, tier), level);
-			if (isEquipped(Dungeon.hero) && soloBuffedBonus() != combinedBuffedBonus(Dungeon.hero)){
+			if (isEquipped(Dungeon.hero) && soloBuffedBonus() != combinedBuffedBonus(Dungeon.hero)) {
 				level = combinedBuffedBonus(Dungeon.hero);
 				info += "\n\n" + Messages.get(this, "combined_stats", min(level, tier), max(level, tier), level);
 			}
@@ -135,14 +135,14 @@ public class RingOfForce extends Ring {
 	@Override
 	public void activate(Char ch) {
 		super.activate(ch);
-		if (ch instanceof Hero && ((Hero) ch).heroClass == HeroClass.DUELIST){
+		if (ch instanceof Hero && ((Hero) ch).heroClass == HeroClass.DUELIST) {
 			Buff.affect(ch, MeleeWeapon.Charger.class);
 		}
 	}
 
 	@Override
 	public String defaultAction() {
-		if (Dungeon.hero != null && Dungeon.hero.heroClass == HeroClass.DUELIST){
+		if (Dungeon.hero != null && Dungeon.hero.heroClass == HeroClass.DUELIST) {
 			return AC_ABILITY;
 		} else {
 			return super.defaultAction();
@@ -152,7 +152,7 @@ public class RingOfForce extends Ring {
 	@Override
 	public ArrayList<String> actions(Hero hero) {
 		ArrayList<String> actions = super.actions(hero);
-		if (isEquipped(hero) && hero.heroClass == HeroClass.DUELIST){
+		if (isEquipped(hero) && hero.heroClass == HeroClass.DUELIST) {
 			actions.add(AC_ABILITY);
 		}
 		return actions;
@@ -160,7 +160,7 @@ public class RingOfForce extends Ring {
 
 	@Override
 	public String actionName(String action, Hero hero) {
-		if (action.equals(AC_ABILITY)){
+		if (action.equals(AC_ABILITY)) {
 			return Messages.upperCase(Messages.get(this, "ability_name"));
 		} else {
 			return super.actionName(action, hero);
@@ -169,15 +169,15 @@ public class RingOfForce extends Ring {
 
 	@Override
 	public void execute(Hero hero, String action) {
-		if (action.equals(AC_ABILITY)){
-			if (hero.buff(BrawlersStance.class) != null){
+		if (action.equals(AC_ABILITY)) {
+			if (hero.buff(BrawlersStance.class) != null) {
 				hero.buff(BrawlersStance.class).detach();
 				AttackIndicator.updateState();
 			} else if (!isEquipped(hero)) {
 				GLog.w(Messages.get(MeleeWeapon.class, "ability_need_equip"));
 
 			} else if ((Buff.affect(hero, MeleeWeapon.Charger.class).charges + Buff.affect(hero, MeleeWeapon.Charger.class).partialCharge)
-					< BrawlersStance.HIT_CHARGE_USE){
+					< BrawlersStance.HIT_CHARGE_USE) {
 				GLog.w(Messages.get(MeleeWeapon.class, "ability_no_charge"));
 
 			} else {
@@ -194,25 +194,25 @@ public class RingOfForce extends Ring {
 		String info = super.info();
 
 		if (Dungeon.hero.heroClass == HeroClass.DUELIST
-			&& (anonymous || isIdentified() || isEquipped(Dungeon.hero))){
+				&& (anonymous || isIdentified() || isEquipped(Dungeon.hero))) {
 			info += "\n\n" + Messages.get(this, "ability_desc");
 		}
 
 		return info;
 	}
 
-	public static boolean fightingUnarmed( Hero hero ){
+	public static boolean fightingUnarmed(Hero hero) {
 		if (hero.belongings.attackingWeapon() == null
-			|| hero.buff(MonkEnergy.MonkAbility.UnarmedAbilityTracker.class) != null){
+				|| hero.buff(MonkEnergy.MonkAbility.UnarmedAbilityTracker.class) != null) {
 			return true;
 		}
-		if (hero.belongings.thrownWeapon != null || hero.belongings.abilityWeapon != null){
+		if (hero.belongings.thrownWeapon != null || hero.belongings.abilityWeapon != null) {
 			return false;
 		}
 		BrawlersStance stance = hero.buff(BrawlersStance.class);
-		if (stance != null && stance.hitsLeft() > 0){
+		if (stance != null && stance.hitsLeft() > 0) {
 			//clear the buff if no ring of force is equipped
-			if (hero.buff(RingOfForce.Force.class) == null){
+			if (hero.buff(RingOfForce.Force.class) == null) {
 				stance.detach();
 				AttackIndicator.updateState();
 				return false;
@@ -223,47 +223,41 @@ public class RingOfForce extends Ring {
 		return false;
 	}
 
-	public static boolean unarmedGetsWeaponEnchantment( Hero hero ){
-		if (hero.belongings.attackingWeapon() == null){
+	public static boolean unarmedGetsWeaponEnchantment(Hero hero) {
+		if (hero.belongings.attackingWeapon() == null) {
 			return false;
 		}
-		if (hero.buff(MonkEnergy.MonkAbility.UnarmedAbilityTracker.class) != null){
+		if (hero.buff(MonkEnergy.MonkAbility.UnarmedAbilityTracker.class) != null) {
 			return hero.buff(MonkEnergy.MonkAbility.FlurryEmpowerTracker.class) != null;
 		}
 		BrawlersStance stance = hero.buff(BrawlersStance.class);
-		if (stance != null && stance.hitsLeft() > 0){
-			return true;
-		}
-		return false;
+		return stance != null && stance.hitsLeft() > 0;
 	}
 
-	public static boolean unarmedGetsWeaponAugment(Hero hero ){
+	public static boolean unarmedGetsWeaponAugment(Hero hero) {
 		if (hero.belongings.attackingWeapon() == null
-			|| hero.buff(MonkEnergy.MonkAbility.UnarmedAbilityTracker.class) != null){
+				|| hero.buff(MonkEnergy.MonkAbility.UnarmedAbilityTracker.class) != null) {
 			return false;
 		}
 		BrawlersStance stance = hero.buff(BrawlersStance.class);
-		if (stance != null && stance.hitsLeft() > 0){
-			return true;
-		}
-		return false;
+		return stance != null && stance.hitsLeft() > 0;
 	}
 
 	public static class BrawlersStance extends Buff {
 
-		public static float HIT_CHARGE_USE = 1/6f;
+		public static float HIT_CHARGE_USE = 1 / 6f;
 
 		{
 			announced = true;
 			type = buffType.POSITIVE;
 		}
 
-		public int hitsLeft(){
+		public int hitsLeft() {
 			MeleeWeapon.Charger charger = Buff.affect(target, MeleeWeapon.Charger.class);
 			float charges = charger.charges;
 			charges += charger.partialCharge;
 
-			return (int)(charges/HIT_CHARGE_USE);
+			return (int) (charges / HIT_CHARGE_USE);
 		}
 
 		@Override
@@ -273,7 +267,7 @@ public class RingOfForce extends Ring {
 
 		@Override
 		public void tintIcon(Image icon) {
-			if (hitsLeft() == 0){
+			if (hitsLeft() == 0) {
 				icon.brightness(0.25f);
 			} else {
 				icon.resetColor();
@@ -282,9 +276,9 @@ public class RingOfForce extends Ring {
 
 		@Override
 		public float iconFadePercent() {
-			float usableCharges = hitsLeft()*HIT_CHARGE_USE;
+			float usableCharges = hitsLeft() * HIT_CHARGE_USE;
 
-			return 1f - (usableCharges /  Buff.affect(target, MeleeWeapon.Charger.class).chargeCap());
+			return 1f - (usableCharges / Buff.affect(target, MeleeWeapon.Charger.class).chargeCap());
 		}
 
 		@Override

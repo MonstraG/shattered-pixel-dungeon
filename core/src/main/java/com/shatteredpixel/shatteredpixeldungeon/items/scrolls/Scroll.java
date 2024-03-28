@@ -288,7 +288,7 @@ public abstract class Scroll extends Item {
 
 	public static class ScrollToStone extends Recipe {
 
-		private static HashMap<Class<? extends Scroll>, Class<? extends Runestone>> stones = new HashMap<>();
+		private static final HashMap<Class<? extends Scroll>, Class<? extends Runestone>> stones = new HashMap<>();
 
 		static {
 			stones.put(ScrollOfIdentify.class, StoneOfIntuition.class);
@@ -307,13 +307,9 @@ public abstract class Scroll extends Item {
 
 		@Override
 		public boolean testIngredients(ArrayList<Item> ingredients) {
-			if (ingredients.size() != 1
-					|| !(ingredients.get(0) instanceof Scroll)
-					|| !stones.containsKey(ingredients.get(0).getClass())) {
-				return false;
-			}
-
-			return true;
+			return ingredients.size() == 1
+					&& ingredients.get(0) instanceof Scroll
+					&& stones.containsKey(ingredients.get(0).getClass());
 		}
 
 		@Override

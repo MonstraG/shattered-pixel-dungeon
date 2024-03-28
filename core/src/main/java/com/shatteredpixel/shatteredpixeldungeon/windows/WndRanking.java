@@ -67,7 +67,7 @@ public class WndRanking extends WndTabbed {
 
 	private static WndRanking INSTANCE;
 
-	private Rankings.Record record;
+	private final Rankings.Record record;
 
 	public WndRanking(final Rankings.Record rec) {
 
@@ -135,7 +135,7 @@ public class WndRanking extends WndTabbed {
 
 	private class RankingTab extends IconTab {
 
-		private Group page;
+		private final Group page;
 
 		public RankingTab(Icons icon, Group page) {
 			super(Icons.get(icon));
@@ -455,7 +455,7 @@ public class WndRanking extends WndTabbed {
 
 		public static final int HEIGHT = 23;
 
-		private Item item;
+		private final Item item;
 
 		private ItemSlot slot;
 		private ColorBlock bg;
@@ -529,7 +529,7 @@ public class WndRanking extends WndTabbed {
 
 	private static class QuickSlotButton extends ItemSlot {
 
-		private Item item;
+		private final Item item;
 		private ColorBlock bg;
 
 		QuickSlotButton(Item item) {

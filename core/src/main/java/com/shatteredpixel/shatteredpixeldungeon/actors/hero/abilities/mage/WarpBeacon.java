@@ -33,6 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.ArmorAbili
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClassArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
@@ -41,13 +42,13 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.AttackIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
-import com.watabou.utils.BArray;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
+import com.watabou.utils.BArray;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
@@ -63,7 +64,7 @@ public class WarpBeacon extends ArmorAbility {
 	@Override
 	public String targetingPrompt() {
 		if (Dungeon.hero.buff(WarpBeaconTracker.class) == null
-				&& Dungeon.hero.hasTalent(Talent.REMOTE_BEACON)){
+				&& Dungeon.hero.hasTalent(Talent.REMOTE_BEACON)) {
 			return Messages.get(this, "prompt");
 		}
 		return super.targetingPrompt();
@@ -76,54 +77,54 @@ public class WarpBeacon extends ArmorAbility {
 
 	@Override
 	protected void activate(ClassArmor armor, Hero hero, Integer target) {
-		if (target == null){
+		if (target == null) {
 			return;
 		}
 
-		if (hero.buff(WarpBeaconTracker.class) != null){
+		if (hero.buff(WarpBeaconTracker.class) != null) {
 			final WarpBeaconTracker tracker = hero.buff(WarpBeaconTracker.class);
 
-			GameScene.show( new WndOptions(
+			GameScene.show(new WndOptions(
 					new Image(hero.sprite),
 					Messages.titleCase(name()),
 					Messages.get(WarpBeacon.class, "window_desc", tracker.depth),
 					Messages.get(WarpBeacon.class, "window_tele"),
 					Messages.get(WarpBeacon.class, "window_clear"),
-					Messages.get(WarpBeacon.class, "window_cancel")){
+					Messages.get(WarpBeacon.class, "window_cancel")) {
 
 				@Override
 				protected void onSelect(int index) {
-					if (index == 0){
+					if (index == 0) {
 
-						if (tracker.depth != Dungeon.depth && !hero.hasTalent(Talent.LONGRANGE_WARP)){
-							GLog.w( Messages.get(WarpBeacon.class, "depths") );
+						if (tracker.depth != Dungeon.depth && !hero.hasTalent(Talent.LONGRANGE_WARP)) {
+							GLog.w(Messages.get(WarpBeacon.class, "depths"));
 							return;
 						}
 
 						float chargeNeeded = chargeUse(hero);
 
-						if (tracker.depth != Dungeon.depth){
-							chargeNeeded *= 1.833f - 0.333f*Dungeon.hero.pointsInTalent(Talent.LONGRANGE_WARP);
+						if (tracker.depth != Dungeon.depth) {
+							chargeNeeded *= 1.833f - 0.333f * Dungeon.hero.pointsInTalent(Talent.LONGRANGE_WARP);
 						}
 
-						if (armor.charge < chargeNeeded){
-							GLog.w( Messages.get(ClassArmor.class, "low_charge") );
+						if (armor.charge < chargeNeeded) {
+							GLog.w(Messages.get(ClassArmor.class, "low_charge"));
 							return;
 						}
 
 						armor.charge -= chargeNeeded;
-						armor.updateQuickslot();
+						Item.updateQuickslot();
 
-						if (tracker.depth == Dungeon.depth && tracker.branch == Dungeon.branch){
+						if (tracker.depth == Dungeon.depth && tracker.branch == Dungeon.branch) {
 							Char existing = Actor.findChar(tracker.pos);
 
-							if (existing != null && existing != hero){
-								if (hero.hasTalent(Talent.TELEFRAG)){
+							if (existing != null && existing != hero) {
+								if (hero.hasTalent(Talent.TELEFRAG)) {
 									int heroHP = hero.HP + hero.shielding();
 									int heroDmg = 5 * hero.pointsInTalent(Talent.TELEFRAG);
-									hero.damage(Math.min(heroDmg, heroHP-1), WarpBeacon.this);
+									hero.damage(Math.min(heroDmg, heroHP - 1), WarpBeacon.this);
 
-									int damage = Random.NormalIntRange(10*hero.pointsInTalent(Talent.TELEFRAG), 15*hero.pointsInTalent(Talent.TELEFRAG));
+									int damage = Random.NormalIntRange(10 * hero.pointsInTalent(Talent.TELEFRAG), 15 * hero.pointsInTalent(Talent.TELEFRAG));
 									existing.sprite.flash();
 									existing.sprite.bloodBurstA(existing.sprite.center(), damage);
 									existing.damage(damage, WarpBeacon.this);
@@ -132,28 +133,28 @@ public class WarpBeacon extends ArmorAbility {
 									Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
 								}
 
-								if (existing.isAlive()){
+								if (existing.isAlive()) {
 									Char toPush = Char.hasProp(existing, Char.Property.IMMOVABLE) ? hero : existing;
 
 									ArrayList<Integer> candidates = new ArrayList<>();
 									for (int n : PathFinder.NEIGHBOURS8) {
 										int cell = tracker.pos + n;
-										if (!Dungeon.level.solid[cell] && Actor.findChar( cell ) == null
+										if (!Dungeon.level.solid[cell] && Actor.findChar(cell) == null
 												&& (!Char.hasProp(toPush, Char.Property.LARGE) || Dungeon.level.openSpace[cell])) {
-											candidates.add( cell );
+											candidates.add(cell);
 										}
 									}
 									Random.shuffle(candidates);
 
-									if (!candidates.isEmpty()){
+									if (!candidates.isEmpty()) {
 										ScrollOfTeleportation.appear(hero, tracker.pos);
-										Actor.add( new Pushing( toPush, toPush.pos, candidates.get(0) ));
+										Actor.add(new Pushing(toPush, toPush.pos, candidates.get(0)));
 
 										toPush.pos = candidates.get(0);
 										Dungeon.level.occupyCell(toPush);
 										hero.next();
 									} else {
-										GLog.w( Messages.get(ScrollOfTeleportation.class, "no_tele") );
+										GLog.w(Messages.get(ScrollOfTeleportation.class, "no_tele"));
 									}
 								} else {
 									ScrollOfTeleportation.appear(hero, tracker.pos);
@@ -170,8 +171,8 @@ public class WarpBeacon extends ArmorAbility {
 
 						} else {
 
-							if (!Dungeon.interfloorTeleportAllowed()){
-								GLog.w( Messages.get(ScrollOfTeleportation.class, "no_tele") );
+							if (!Dungeon.interfloorTeleportAllowed()) {
+								GLog.w(Messages.get(ScrollOfTeleportation.class, "no_tele"));
 								return;
 							}
 
@@ -182,22 +183,22 @@ public class WarpBeacon extends ArmorAbility {
 							InterlevelScene.returnDepth = tracker.depth;
 							InterlevelScene.returnBranch = tracker.branch;
 							InterlevelScene.returnPos = tracker.pos;
-							Game.switchScene( InterlevelScene.class );
+							Game.switchScene(InterlevelScene.class);
 						}
 
-					} else if (index == 1){
+					} else if (index == 1) {
 						hero.buff(WarpBeaconTracker.class).detach();
 					}
 				}
-			} );
+			});
 
 		} else {
-			if (!Dungeon.level.mapped[target] && !Dungeon.level.visited[target]){
+			if (!Dungeon.level.mapped[target] && !Dungeon.level.visited[target]) {
 				return;
 			}
 
-			if (Dungeon.level.distance(hero.pos, target) > 4*hero.pointsInTalent(Talent.REMOTE_BEACON)){
-				GLog.w( Messages.get(WarpBeacon.class, "too_far") );
+			if (Dungeon.level.distance(hero.pos, target) > 4 * hero.pointsInTalent(Talent.REMOTE_BEACON)) {
+				GLog.w(Messages.get(WarpBeacon.class, "too_far"));
 				return;
 			}
 
@@ -205,8 +206,8 @@ public class WarpBeacon extends ArmorAbility {
 			if (Dungeon.level.pit[target] ||
 					(Dungeon.level.solid[target] && !Dungeon.level.passable[target]) ||
 					!(Dungeon.level.passable[target] || Dungeon.level.avoid[target]) ||
-					PathFinder.distance[hero.pos] == Integer.MAX_VALUE){
-				GLog.w( Messages.get(WarpBeacon.class, "invalid_beacon") );
+					PathFinder.distance[hero.pos] == Integer.MAX_VALUE) {
+				GLog.w(Messages.get(WarpBeacon.class, "invalid_beacon"));
 				return;
 			}
 
@@ -240,8 +241,7 @@ public class WarpBeacon extends ArmorAbility {
 			if (on && depth == Dungeon.depth) {
 				e = CellEmitter.center(pos);
 				e.pour(MagicMissile.WardParticle.UP, 0.05f);
-			}
-			else if (e != null) e.on = false;
+			} else if (e != null) e.on = false;
 		}
 
 		public static final String POS = "pos";

@@ -46,7 +46,6 @@ import com.watabou.noosa.Tilemap;
 import com.watabou.noosa.audio.Music;
 import com.watabou.noosa.tweeners.AlphaTweener;
 import com.watabou.utils.Bundle;
-import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Point;
 import com.watabou.utils.Random;
@@ -62,7 +61,7 @@ public class CityBossLevel extends Level {
 		color2 = 0xf2f2f2;
 	}
 
-	private static int WIDTH = 15;
+	private static final int WIDTH = 15;
 
 	private static final Rect entry = new Rect(1, 37, 14, 48);
 	private static final Rect arena = new Rect(1, 25, 14, 38);
@@ -439,7 +438,7 @@ public class CityBossLevel extends Level {
 
 					//final ground stiching with city tiles
 					if (i / tileW == 21) {
-						data[i] = 11 * 8 + 0;
+						data[i] = 11 * 8;
 						data[++i] = 11 * 8 + 1;
 						data[++i] = 11 * 8 + 2;
 						data[++i] = 11 * 8 + 3;
@@ -507,11 +506,11 @@ public class CityBossLevel extends Level {
 
 						//otherwise entrance carpet
 					} else if (map[i - tileW] != Terrain.EMPTY_SP) {
-						data[i] = 13 * 8 + 0;
+						data[i] = 13 * 8;
 					} else if (map[i + tileW] != Terrain.EMPTY_SP) {
-						data[i] = 15 * 8 + 0;
+						data[i] = 15 * 8;
 					} else {
-						data[i] = 14 * 8 + 0;
+						data[i] = 14 * 8;
 					}
 
 					//otherwise no tile here
@@ -617,7 +616,7 @@ public class CityBossLevel extends Level {
 			//custom shadow  for stairs
 			for (int i = 0; i < 8; i++) {
 				if (i < 4) {
-					data[shadowTop] = i * 8 + 0;
+					data[shadowTop] = i * 8;
 					data[shadowTop + 1] = data[shadowTop + 2] = data[shadowTop + 3] = data[shadowTop + 4] =
 							data[shadowTop + 5] = data[shadowTop + 6] = i * 8 + 1;
 					data[shadowTop + 7] = i * 8 + 2;

@@ -47,13 +47,9 @@ public class IOSPlatformSupport extends PlatformSupport {
 	@Override
 	public void updateDisplaySize() {
 		//non-zero safe insets on left/top/right means device has a notch, show status bar
-		if (Gdx.graphics.getSafeInsetTop() != 0
-				|| Gdx.graphics.getSafeInsetLeft() != 0
-				|| Gdx.graphics.getSafeInsetRight() != 0) {
-			UIApplication.getSharedApplication().setStatusBarHidden(false);
-		} else {
-			UIApplication.getSharedApplication().setStatusBarHidden(true);
-		}
+		UIApplication.getSharedApplication().setStatusBarHidden(Gdx.graphics.getSafeInsetTop() == 0
+				&& Gdx.graphics.getSafeInsetLeft() == 0
+				&& Gdx.graphics.getSafeInsetRight() == 0);
 
 		if (!SPDSettings.fullscreen()) {
 			int insetChange = Gdx.graphics.getSafeInsetBottom() - Game.bottomInset;
@@ -89,7 +85,6 @@ public class IOSPlatformSupport extends PlatformSupport {
 		if (Gdx.input.isPeripheralAvailable(Input.Peripheral.HapticFeedback)) {
 			return true;
 		}
-		;
 
 		//...or with a supported controller connected
 		if (ControllerHandler.vibrationSupported()) {
@@ -171,14 +166,14 @@ public class IOSPlatformSupport extends PlatformSupport {
 	}
 
 	//splits on newlines, underscores, and chinese/japaneses characters
-	private Pattern regularsplitter = Pattern.compile(
+	private final Pattern regularsplitter = Pattern.compile(
 			"""
 					(?<=
 					)|(?=
 					)|(?<=_)|(?=_)|(?<=\\p{InHiragana})|(?=\\p{InHiragana})|(?<=\\p{InKatakana})|(?=\\p{InKatakana})|(?<=\\p{InCJK_Unified_Ideographs})|(?=\\p{InCJK_Unified_Ideographs})|(?<=\\p{InCJK_Symbols_and_Punctuation})|(?=\\p{InCJK_Symbols_and_Punctuation})""");
 
 	//additionally splits on words, so that each word can be arranged individually
-	private Pattern regularsplitterMultiline = Pattern.compile(
+	private final Pattern regularsplitterMultiline = Pattern.compile(
 			"""
 					(?<= )|(?= )|(?<=
 					)|(?=

@@ -36,10 +36,10 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
 
 public class WndEnergizeItem extends WndInfoItem {
 
-	private static final float GAP		= 2;
-	private static final int BTN_HEIGHT	= 18;
+	private static final float GAP = 2;
+	private static final int BTN_HEIGHT = 18;
 
-	private WndBag owner;
+	private final WndBag owner;
 
 	public WndEnergizeItem(Item item, WndBag owner) {
 		super(item);
@@ -50,48 +50,48 @@ public class WndEnergizeItem extends WndInfoItem {
 
 		if (item.quantity() == 1) {
 
-			RedButton btnEnergize = new RedButton( Messages.get(this, "energize", item.energyVal()) ) {
+			RedButton btnEnergize = new RedButton(Messages.get(this, "energize", item.energyVal())) {
 				@Override
 				protected void onClick() {
-					energize( item );
+					energize(item);
 					hide();
 				}
 			};
-			btnEnergize.setRect( 0, pos + GAP, width, BTN_HEIGHT );
+			btnEnergize.setRect(0, pos + GAP, width, BTN_HEIGHT);
 			btnEnergize.icon(new ItemSprite(ItemSpriteSheet.ENERGY));
-			add( btnEnergize );
+			add(btnEnergize);
 
 			pos = btnEnergize.bottom();
 
 		} else {
 
 			int energyAll = item.energyVal();
-			RedButton btnEnergize1 = new RedButton( Messages.get(this, "energize_1", energyAll / item.quantity()) ) {
+			RedButton btnEnergize1 = new RedButton(Messages.get(this, "energize_1", energyAll / item.quantity())) {
 				@Override
 				protected void onClick() {
-					energizeOne( item );
+					energizeOne(item);
 					hide();
 				}
 			};
-			btnEnergize1.setRect( 0, pos + GAP, width, BTN_HEIGHT );
+			btnEnergize1.setRect(0, pos + GAP, width, BTN_HEIGHT);
 			btnEnergize1.icon(new ItemSprite(ItemSpriteSheet.ENERGY));
-			add( btnEnergize1 );
-			RedButton btnEnergizeAll = new RedButton( Messages.get(this, "energize_all", energyAll ) ) {
+			add(btnEnergize1);
+			RedButton btnEnergizeAll = new RedButton(Messages.get(this, "energize_all", energyAll)) {
 				@Override
 				protected void onClick() {
-					energize( item );
+					energize(item);
 					hide();
 				}
 			};
-			btnEnergizeAll.setRect( 0, btnEnergize1.bottom() + 1, width, BTN_HEIGHT );
+			btnEnergizeAll.setRect(0, btnEnergize1.bottom() + 1, width, BTN_HEIGHT);
 			btnEnergizeAll.icon(new ItemSprite(ItemSpriteSheet.ENERGY));
-			add( btnEnergizeAll );
+			add(btnEnergizeAll);
 
 			pos = btnEnergizeAll.bottom();
 
 		}
 
-		resize( width, (int)pos );
+		resize(width, (int) pos);
 
 	}
 
@@ -106,16 +106,16 @@ public class WndEnergizeItem extends WndInfoItem {
 		}
 	}
 
-	public static void energize( Item item ) {
+	public static void energize(Item item) {
 
 		Hero hero = Dungeon.hero;
 
-		if (item.isEquipped( hero ) && !((EquipableItem)item).doUnequip( hero, false )) {
+		if (item.isEquipped(hero) && !((EquipableItem) item).doUnequip(hero, false)) {
 			return;
 		}
-		item.detachAll( hero.belongings.backpack );
+		item.detachAll(hero.belongings.backpack);
 
-		if (ShatteredPixelDungeon.scene() instanceof AlchemyScene){
+		if (ShatteredPixelDungeon.scene() instanceof AlchemyScene) {
 
 			Dungeon.energy += item.energyVal();
 			((AlchemyScene) ShatteredPixelDungeon.scene()).createEnergy();
@@ -130,17 +130,17 @@ public class WndEnergizeItem extends WndInfoItem {
 		}
 	}
 
-	public static void energizeOne( Item item ) {
+	public static void energizeOne(Item item) {
 
 		if (item.quantity() <= 1) {
-			energize( item );
+			energize(item);
 		} else {
 
 			Hero hero = Dungeon.hero;
 
-			item = item.detach( hero.belongings.backpack );
+			item = item.detach(hero.belongings.backpack);
 
-			if (ShatteredPixelDungeon.scene() instanceof AlchemyScene){
+			if (ShatteredPixelDungeon.scene() instanceof AlchemyScene) {
 
 				Dungeon.energy += item.energyVal();
 				((AlchemyScene) ShatteredPixelDungeon.scene()).createEnergy();
@@ -155,11 +155,11 @@ public class WndEnergizeItem extends WndInfoItem {
 		}
 	}
 
-	public static WndBag openItemSelector(){
+	public static WndBag openItemSelector() {
 		if (ShatteredPixelDungeon.scene() instanceof GameScene) {
-			return GameScene.selectItem( selector );
+			return GameScene.selectItem(selector);
 		} else {
-			WndBag window = WndBag.getBag( selector );
+			WndBag window = WndBag.getBag(selector);
 			ShatteredPixelDungeon.scene().addToFront(window);
 			return window;
 		}

@@ -36,19 +36,19 @@ import com.watabou.noosa.Image;
 import com.watabou.utils.Random;
 
 public class Blocking extends Weapon.Enchantment {
-	
-	private static ItemSprite.Glowing BLUE = new ItemSprite.Glowing( 0x0000FF );
-	
+
+	private static final ItemSprite.Glowing BLUE = new ItemSprite.Glowing(0x0000FF);
+
 	@Override
 	public int proc(Weapon weapon, Char attacker, Char defender, int damage) {
-		
-		int level = Math.max( 0, weapon.buffedLvl() );
+
+		int level = Math.max(0, weapon.buffedLvl());
 
 		// lvl 0 - 10%
 		// lvl 1 ~ 12%
 		// lvl 2 ~ 14%
-		float procChance = (level+4f)/(level+40f) * procChanceMultiplier(attacker);
-		if (Random.Float() < procChance){
+		float procChance = (level + 4f) / (level + 40f) * procChanceMultiplier(attacker);
+		if (Random.Float() < procChance) {
 			float powerMulti = Math.max(1f, procChance);
 
 			BlockBuff b = Buff.affect(attacker, BlockBuff.class);
@@ -57,15 +57,15 @@ public class Blocking extends Weapon.Enchantment {
 			attacker.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shield), FloatingText.SHIELDING);
 			attacker.sprite.emitter().burst(Speck.factory(Speck.LIGHT), 5);
 		}
-		
+
 		return damage;
 	}
-	
+
 	@Override
 	public ItemSprite.Glowing glowing() {
 		return BLUE;
 	}
-	
+
 	public static class BlockBuff extends ShieldBuff {
 
 		{
@@ -97,7 +97,7 @@ public class Blocking extends Weapon.Enchantment {
 		public int icon() {
 			return BuffIndicator.ARMOR;
 		}
-		
+
 		@Override
 		public void tintIcon(Image icon) {
 			icon.hardlight(0.5f, 1f, 2f);
@@ -110,13 +110,13 @@ public class Blocking extends Weapon.Enchantment {
 
 		@Override
 		public String iconTextDisplay() {
-			return Integer.toString((int)visualcooldown());
+			return Integer.toString((int) visualcooldown());
 		}
 
 		@Override
 		public String desc() {
 			return Messages.get(this, "desc", shielding(), dispTurns(visualcooldown()));
 		}
-	
+
 	}
 }

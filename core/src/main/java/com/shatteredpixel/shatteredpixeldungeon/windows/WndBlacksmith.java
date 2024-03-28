@@ -55,51 +55,51 @@ public class WndBlacksmith extends Window {
 	private static final int WIDTH_P = 120;
 	private static final int WIDTH_L = 160;
 
-	private static final int GAP  = 2;
+	private static final int GAP = 2;
 
-	public WndBlacksmith( Blacksmith troll, Hero hero ) {
+	public WndBlacksmith(Blacksmith troll, Hero hero) {
 		super();
 
 		int width = PixelScene.landscape() ? WIDTH_L : WIDTH_P;
 
 		IconTitle titlebar = new IconTitle();
-		titlebar.icon( troll.sprite() );
-		titlebar.label( Messages.titleCase( troll.name() ) );
-		titlebar.setRect( 0, 0, width, 0 );
-		add( titlebar );
+		titlebar.icon(troll.sprite());
+		titlebar.label(Messages.titleCase(troll.name()));
+		titlebar.setRect(0, 0, width, 0);
+		add(titlebar);
 
-		RenderedTextBlock message = PixelScene.renderTextBlock( Messages.get(this, "prompt", Blacksmith.Quest.favor), 6 );
-		message.maxWidth( width );
+		RenderedTextBlock message = PixelScene.renderTextBlock(Messages.get(this, "prompt", Blacksmith.Quest.favor), 6);
+		message.maxWidth(width);
 		message.setPos(0, titlebar.bottom() + GAP);
-		add( message );
+		add(message);
 
 		ArrayList<RedButton> buttons = new ArrayList<>();
 
 		int pickaxeCost = Statistics.questScores[2] >= 2500 ? 0 : 250;
-		RedButton pickaxe = new RedButton(Messages.get(this, "pickaxe", pickaxeCost), 6){
+		RedButton pickaxe = new RedButton(Messages.get(this, "pickaxe", pickaxeCost), 6) {
 			@Override
 			protected void onClick() {
 				GameScene.show(new WndOptions(
 						troll.sprite(),
-						Messages.titleCase( troll.name() ),
+						Messages.titleCase(troll.name()),
 						Messages.get(WndBlacksmith.class, "pickaxe_verify") + (pickaxeCost == 0 ? "\n\n" + Messages.get(WndBlacksmith.class, "pickaxe_free") : ""),
 						Messages.get(WndBlacksmith.class, "pickaxe_yes"),
 						Messages.get(WndBlacksmith.class, "pickaxe_no")
-				){
+				) {
 					@Override
 					protected void onSelect(int index) {
-						if (index == 0){
-							if (Blacksmith.Quest.pickaxe.doPickUp( Dungeon.hero )) {
-								GLog.i( Messages.capitalize(Messages.get(Dungeon.hero, "you_now_have", Blacksmith.Quest.pickaxe.name()) ));
+						if (index == 0) {
+							if (Blacksmith.Quest.pickaxe.doPickUp(Dungeon.hero)) {
+								GLog.i(Messages.capitalize(Messages.get(Dungeon.hero, "you_now_have", Blacksmith.Quest.pickaxe.name())));
 							} else {
-								Dungeon.level.drop( Blacksmith.Quest.pickaxe, Dungeon.hero.pos ).sprite.drop();
+								Dungeon.level.drop(Blacksmith.Quest.pickaxe, Dungeon.hero.pos).sprite.drop();
 							}
 							Blacksmith.Quest.favor -= pickaxeCost;
 							Blacksmith.Quest.pickaxe = null;
 							WndBlacksmith.this.hide();
 
-							if (!Blacksmith.Quest.rewardsAvailable()){
-								Notes.remove( Notes.Landmark.TROLL );
+							if (!Blacksmith.Quest.rewardsAvailable()) {
+								Notes.remove(Notes.Landmark.TROLL);
 							}
 						}
 					}
@@ -109,8 +109,8 @@ public class WndBlacksmith extends Window {
 		pickaxe.enable(Blacksmith.Quest.pickaxe != null && Blacksmith.Quest.favor >= pickaxeCost);
 		buttons.add(pickaxe);
 
-		int reforgecost = 500 + 1000*Blacksmith.Quest.reforges;
-		RedButton reforge = new RedButton(Messages.get(this, "reforge", reforgecost), 6){
+		int reforgecost = 500 + 1000 * Blacksmith.Quest.reforges;
+		RedButton reforge = new RedButton(Messages.get(this, "reforge", reforgecost), 6) {
 			@Override
 			protected void onClick() {
 				GameScene.show(new WndReforge(troll, WndBlacksmith.this));
@@ -119,8 +119,8 @@ public class WndBlacksmith extends Window {
 		reforge.enable(Blacksmith.Quest.favor >= reforgecost);
 		buttons.add(reforge);
 
-		int hardenCost = 500 + 1000*Blacksmith.Quest.hardens;
-		RedButton harden = new RedButton(Messages.get(this, "harden", hardenCost), 6){
+		int hardenCost = 500 + 1000 * Blacksmith.Quest.hardens;
+		RedButton harden = new RedButton(Messages.get(this, "harden", hardenCost), 6) {
 			@Override
 			protected void onClick() {
 				GameScene.selectItem(new HardenSelector());
@@ -129,8 +129,8 @@ public class WndBlacksmith extends Window {
 		harden.enable(Blacksmith.Quest.favor >= hardenCost);
 		buttons.add(harden);
 
-		int upgradeCost = 1000 + 1000*Blacksmith.Quest.upgrades;
-		RedButton upgrade = new RedButton(Messages.get(this, "upgrade", upgradeCost), 6){
+		int upgradeCost = 1000 + 1000 * Blacksmith.Quest.upgrades;
+		RedButton upgrade = new RedButton(Messages.get(this, "upgrade", upgradeCost), 6) {
 			@Override
 			protected void onClick() {
 				GameScene.selectItem(new UpgradeSelector());
@@ -139,19 +139,19 @@ public class WndBlacksmith extends Window {
 		upgrade.enable(Blacksmith.Quest.favor >= upgradeCost);
 		buttons.add(upgrade);
 
-		RedButton smith = new RedButton(Messages.get(this, "smith", 2000), 6){
+		RedButton smith = new RedButton(Messages.get(this, "smith", 2000), 6) {
 			@Override
 			protected void onClick() {
 				GameScene.show(new WndOptions(
 						troll.sprite(),
-						Messages.titleCase( troll.name() ),
+						Messages.titleCase(troll.name()),
 						Messages.get(WndBlacksmith.class, "smith_verify"),
 						Messages.get(WndBlacksmith.class, "smith_yes"),
 						Messages.get(WndBlacksmith.class, "smith_no")
-				){
+				) {
 					@Override
 					protected void onSelect(int index) {
-						if (index == 0){
+						if (index == 0) {
 							Blacksmith.Quest.favor -= 2000;
 							Blacksmith.Quest.smiths++;
 							WndBlacksmith.this.hide();
@@ -164,19 +164,19 @@ public class WndBlacksmith extends Window {
 		smith.enable(Blacksmith.Quest.favor >= 2000);
 		buttons.add(smith);
 
-		RedButton cashOut = new RedButton(Messages.get(this, "cashout"), 6){
+		RedButton cashOut = new RedButton(Messages.get(this, "cashout"), 6) {
 			@Override
 			protected void onClick() {
 				GameScene.show(new WndOptions(
 						troll.sprite(),
-						Messages.titleCase( troll.name() ),
+						Messages.titleCase(troll.name()),
 						Messages.get(WndBlacksmith.class, "cashout_verify", Blacksmith.Quest.favor),
 						Messages.get(WndBlacksmith.class, "cashout_yes"),
 						Messages.get(WndBlacksmith.class, "cashout_no")
-				){
+				) {
 					@Override
 					protected void onSelect(int index) {
-						if (index == 0){
+						if (index == 0) {
 							new Gold(Blacksmith.Quest.favor).doPickUp(Dungeon.hero, Dungeon.hero.pos);
 							Blacksmith.Quest.favor = 0;
 							WndBlacksmith.this.hide();
@@ -188,8 +188,8 @@ public class WndBlacksmith extends Window {
 		cashOut.enable(Blacksmith.Quest.favor > 0);
 		buttons.add(cashOut);
 
-		float pos = message.bottom() + 3*GAP;
-		for (RedButton b : buttons){
+		float pos = message.bottom() + 3 * GAP;
+		for (RedButton b : buttons) {
 			b.leftJustify = true;
 			b.multiline = true;
 			b.setSize(width, b.reqHeight());
@@ -199,60 +199,60 @@ public class WndBlacksmith extends Window {
 			pos = b.bottom() + GAP;
 		}
 
-		resize(width, (int)pos);
+		resize(width, (int) pos);
 
 	}
 
 	//public so that it can be directly called for pre-v2.2.0 quest completions
 	public static class WndReforge extends Window {
 
-		private static final int WIDTH		= 120;
+		private static final int WIDTH = 120;
 
-		private static final int BTN_SIZE	= 32;
-		private static final float GAP		= 2;
-		private static final float BTN_GAP	= 5;
+		private static final int BTN_SIZE = 32;
+		private static final float GAP = 2;
+		private static final float BTN_GAP = 5;
 
 		private ItemButton btnPressed;
 
-		private ItemButton btnItem1;
-		private ItemButton btnItem2;
-		private RedButton btnReforge;
+		private final ItemButton btnItem1;
+		private final ItemButton btnItem2;
+		private final RedButton btnReforge;
 
-		public WndReforge( Blacksmith troll, Window wndParent ) {
+		public WndReforge(Blacksmith troll, Window wndParent) {
 			super();
 
 			IconTitle titlebar = new IconTitle();
-			titlebar.icon( troll.sprite() );
-			titlebar.label( Messages.titleCase( troll.name() ) );
-			titlebar.setRect( 0, 0, WIDTH, 0 );
-			add( titlebar );
+			titlebar.icon(troll.sprite());
+			titlebar.label(Messages.titleCase(troll.name()));
+			titlebar.setRect(0, 0, WIDTH, 0);
+			add(titlebar);
 
-			RenderedTextBlock message = PixelScene.renderTextBlock( Messages.get(this, "message"), 6 );
-			message.maxWidth( WIDTH);
+			RenderedTextBlock message = PixelScene.renderTextBlock(Messages.get(this, "message"), 6);
+			message.maxWidth(WIDTH);
 			message.setPos(0, titlebar.bottom() + GAP);
-			add( message );
+			add(message);
 
 			btnItem1 = new ItemButton() {
 				@Override
 				protected void onClick() {
 					btnPressed = btnItem1;
-					GameScene.selectItem( itemSelector );
+					GameScene.selectItem(itemSelector);
 				}
 			};
-			btnItem1.setRect( (WIDTH - BTN_GAP) / 2 - BTN_SIZE, message.top() + message.height() + BTN_GAP, BTN_SIZE, BTN_SIZE );
-			add( btnItem1 );
+			btnItem1.setRect((WIDTH - BTN_GAP) / 2 - BTN_SIZE, message.top() + message.height() + BTN_GAP, BTN_SIZE, BTN_SIZE);
+			add(btnItem1);
 
 			btnItem2 = new ItemButton() {
 				@Override
 				protected void onClick() {
 					btnPressed = btnItem2;
-					GameScene.selectItem( itemSelector );
+					GameScene.selectItem(itemSelector);
 				}
 			};
-			btnItem2.setRect( btnItem1.right() + BTN_GAP, btnItem1.top(), BTN_SIZE, BTN_SIZE );
-			add( btnItem2 );
+			btnItem2.setRect(btnItem1.right() + BTN_GAP, btnItem1.top(), BTN_SIZE, BTN_SIZE);
+			add(btnItem2);
 
-			btnReforge = new RedButton( Messages.get(this, "reforge") ) {
+			btnReforge = new RedButton(Messages.get(this, "reforge")) {
 				@Override
 				protected void onClick() {
 
@@ -265,52 +265,52 @@ public class WndBlacksmith extends Window {
 						second = btnItem1.item();
 					}
 
-					Sample.INSTANCE.play( Assets.Sounds.EVOKE );
-					ScrollOfUpgrade.upgrade( Dungeon.hero );
-					Item.evoke( Dungeon.hero );
+					Sample.INSTANCE.play(Assets.Sounds.EVOKE);
+					ScrollOfUpgrade.upgrade(Dungeon.hero);
+					Item.evoke(Dungeon.hero);
 
-					if (second.isEquipped( Dungeon.hero )) {
-						((EquipableItem)second).doUnequip( Dungeon.hero, false );
+					if (second.isEquipped(Dungeon.hero)) {
+						((EquipableItem) second).doUnequip(Dungeon.hero, false);
 					}
-					second.detach( Dungeon.hero.belongings.backpack );
+					second.detach(Dungeon.hero.belongings.backpack);
 
-					if (second instanceof Armor){
+					if (second instanceof Armor) {
 						BrokenSeal seal = ((Armor) second).checkSeal();
-						if (seal != null){
-							Dungeon.level.drop( seal, Dungeon.hero.pos );
+						if (seal != null) {
+							Dungeon.level.drop(seal, Dungeon.hero.pos);
 						}
 					}
 
 					//preserves enchant/glyphs if present
-					if (first instanceof Weapon && ((Weapon) first).hasGoodEnchant()){
+					if (first instanceof Weapon && ((Weapon) first).hasGoodEnchant()) {
 						((Weapon) first).upgrade(true);
-					} else if (first instanceof Armor && ((Armor) first).hasGoodGlyph()){
+					} else if (first instanceof Armor && ((Armor) first).hasGoodGlyph()) {
 						((Armor) first).upgrade(true);
 					} else {
 						first.upgrade();
 					}
-					Badges.validateItemLevelAquired( first );
+					Badges.validateItemLevelAquired(first);
 					Item.updateQuickslot();
 
-					Blacksmith.Quest.favor -= 500 + 1000*Blacksmith.Quest.reforges;
+					Blacksmith.Quest.favor -= 500 + 1000 * Blacksmith.Quest.reforges;
 					Blacksmith.Quest.reforges++;
 
-					if (!Blacksmith.Quest.rewardsAvailable()){
-						Notes.remove( Notes.Landmark.TROLL );
+					if (!Blacksmith.Quest.rewardsAvailable()) {
+						Notes.remove(Notes.Landmark.TROLL);
 					}
 
 					hide();
-					if (wndParent != null){
+					if (wndParent != null) {
 						wndParent.hide();
 					}
 				}
 			};
-			btnReforge.enable( false );
-			btnReforge.setRect( 0, btnItem1.bottom() + BTN_GAP, WIDTH, 20 );
-			add( btnReforge );
+			btnReforge.enable(false);
+			btnReforge.setRect(0, btnItem1.bottom() + BTN_GAP, WIDTH, 20);
+			add(btnReforge);
 
 
-			resize( WIDTH, (int)btnReforge.bottom() );
+			resize(WIDTH, (int) btnReforge.bottom());
 		}
 
 		protected WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
@@ -321,7 +321,7 @@ public class WndBlacksmith extends Window {
 			}
 
 			@Override
-			public Class<?extends Bag> preferredBag(){
+			public Class<? extends Bag> preferredBag() {
 				return Belongings.Backpack.class;
 			}
 
@@ -331,7 +331,7 @@ public class WndBlacksmith extends Window {
 			}
 
 			@Override
-			public void onSelect( Item item ) {
+			public void onSelect(Item item) {
 				if (item != null && btnPressed.parent != null) {
 					btnPressed.item(item);
 
@@ -342,17 +342,12 @@ public class WndBlacksmith extends Window {
 					if (item1 == null || item2 == null) {
 						btnReforge.enable(false);
 
-					//both of the same type
+						//both of the same type
 					} else if (item1.getClass() != item2.getClass()) {
 						btnReforge.enable(false);
 
-					//and not the literal same item (unless quantity is >1)
-					} else if (item1 == item2 && item1.quantity() == 1) {
-						btnReforge.enable(false);
-
-					} else {
-						btnReforge.enable(true);
-					}
+						//and not the literal same item (unless quantity is >1)
+					} else btnReforge.enable(item1 != item2 || item1.quantity() != 1);
 				}
 			}
 		};
@@ -367,7 +362,7 @@ public class WndBlacksmith extends Window {
 		}
 
 		@Override
-		public Class<?extends Bag> preferredBag(){
+		public Class<? extends Bag> preferredBag() {
 			return Belongings.Backpack.class;
 		}
 
@@ -382,22 +377,22 @@ public class WndBlacksmith extends Window {
 		@Override
 		public void onSelect(Item item) {
 			if (item != null) {
-				if (item instanceof Weapon){
+				if (item instanceof Weapon) {
 					((Weapon) item).enchantHardened = true;
-				} else if (item instanceof Armor){
+				} else if (item instanceof Armor) {
 					((Armor) item).glyphHardened = true;
 				}
 
-				Blacksmith.Quest.favor -= 500 + 1000*Blacksmith.Quest.hardens;
+				Blacksmith.Quest.favor -= 500 + 1000 * Blacksmith.Quest.hardens;
 				Blacksmith.Quest.hardens++;
 
 				WndBlacksmith.this.hide();
 
 				Sample.INSTANCE.play(Assets.Sounds.EVOKE);
-				Item.evoke( Dungeon.hero );
+				Item.evoke(Dungeon.hero);
 
-				if (!Blacksmith.Quest.rewardsAvailable()){
-					Notes.remove( Notes.Landmark.TROLL );
+				if (!Blacksmith.Quest.rewardsAvailable()) {
+					Notes.remove(Notes.Landmark.TROLL);
 				}
 			}
 		}
@@ -411,7 +406,7 @@ public class WndBlacksmith extends Window {
 		}
 
 		@Override
-		public Class<?extends Bag> preferredBag(){
+		public Class<? extends Bag> preferredBag() {
 			return Belongings.Backpack.class;
 		}
 
@@ -427,20 +422,20 @@ public class WndBlacksmith extends Window {
 		public void onSelect(Item item) {
 			if (item != null) {
 				item.upgrade();
-				int upgradeCost = 1000 + 1000*Blacksmith.Quest.upgrades;
+				int upgradeCost = 1000 + 1000 * Blacksmith.Quest.upgrades;
 				Blacksmith.Quest.favor -= upgradeCost;
 				Blacksmith.Quest.upgrades++;
 
 				WndBlacksmith.this.hide();
 
 				Sample.INSTANCE.play(Assets.Sounds.EVOKE);
-				ScrollOfUpgrade.upgrade( Dungeon.hero );
-				Item.evoke( Dungeon.hero );
+				ScrollOfUpgrade.upgrade(Dungeon.hero);
+				Item.evoke(Dungeon.hero);
 
-				Badges.validateItemLevelAquired( item );
+				Badges.validateItemLevelAquired(item);
 
-				if (!Blacksmith.Quest.rewardsAvailable()){
-					Notes.remove( Notes.Landmark.TROLL );
+				if (!Blacksmith.Quest.rewardsAvailable()) {
+					Notes.remove(Notes.Landmark.TROLL);
 				}
 			}
 		}
@@ -448,47 +443,47 @@ public class WndBlacksmith extends Window {
 
 	public static class WndSmith extends Window {
 
-		private static final int WIDTH      = 120;
-		private static final int BTN_SIZE	= 32;
-		private static final int BTN_GAP	= 5;
-		private static final int GAP		= 2;
+		private static final int WIDTH = 120;
+		private static final int BTN_SIZE = 32;
+		private static final int BTN_GAP = 5;
+		private static final int GAP = 2;
 
-		public WndSmith( Blacksmith troll, Hero hero ){
+		public WndSmith(Blacksmith troll, Hero hero) {
 			super();
 
 			IconTitle titlebar = new IconTitle();
 			titlebar.icon(troll.sprite());
 			titlebar.label(Messages.titleCase(troll.name()));
 
-			RenderedTextBlock message = PixelScene.renderTextBlock( Messages.get(this, "prompt"), 6 );
+			RenderedTextBlock message = PixelScene.renderTextBlock(Messages.get(this, "prompt"), 6);
 
-			titlebar.setRect( 0, 0, WIDTH, 0 );
-			add( titlebar );
+			titlebar.setRect(0, 0, WIDTH, 0);
+			add(titlebar);
 
 			message.maxWidth(WIDTH);
 			message.setPos(0, titlebar.bottom() + GAP);
-			add( message );
+			add(message);
 
-			if (Blacksmith.Quest.smithRewards == null || Blacksmith.Quest.smithRewards.isEmpty()){
+			if (Blacksmith.Quest.smithRewards == null || Blacksmith.Quest.smithRewards.isEmpty()) {
 				Blacksmith.Quest.generateRewards(false);
 			}
 
 			int count = 0;
-			for (Item i : Blacksmith.Quest.smithRewards){
+			for (Item i : Blacksmith.Quest.smithRewards) {
 				count++;
-				ItemButton btnReward = new ItemButton(){
+				ItemButton btnReward = new ItemButton() {
 					@Override
 					protected void onClick() {
 						GameScene.show(new RewardWindow(troll, hero, item()));
 					}
 				};
-				btnReward.item( i );
-				btnReward.setRect( count*(WIDTH - BTN_GAP) / 3 - BTN_SIZE, message.top() + message.height() + BTN_GAP, BTN_SIZE, BTN_SIZE );
-				add( btnReward );
+				btnReward.item(i);
+				btnReward.setRect(count * (WIDTH - BTN_GAP) / 3 - BTN_SIZE, message.top() + message.height() + BTN_GAP, BTN_SIZE, BTN_SIZE);
+				add(btnReward);
 
 			}
 
-			resize(WIDTH, (int)message.bottom() + 2*BTN_GAP + BTN_SIZE);
+			resize(WIDTH, (int) message.bottom() + 2 * BTN_GAP + BTN_SIZE);
 
 		}
 
@@ -499,42 +494,42 @@ public class WndBlacksmith extends Window {
 
 		private class RewardWindow extends WndInfoItem {
 
-			public RewardWindow( Blacksmith troll, Hero hero, Item item ) {
+			public RewardWindow(Blacksmith troll, Hero hero, Item item) {
 				super(item);
 
-				RedButton btnConfirm = new RedButton(Messages.get(WndSadGhost.class, "confirm")){
+				RedButton btnConfirm = new RedButton(Messages.get(WndSadGhost.class, "confirm")) {
 					@Override
 					protected void onClick() {
 						RewardWindow.this.hide();
 						item.identify(false);
 						Sample.INSTANCE.play(Assets.Sounds.EVOKE);
-						Item.evoke( Dungeon.hero );
-						if (item.doPickUp( Dungeon.hero )) {
-							GLog.i( Messages.capitalize(Messages.get(Dungeon.hero, "you_now_have", item.name())) );
+						Item.evoke(Dungeon.hero);
+						if (item.doPickUp(Dungeon.hero)) {
+							GLog.i(Messages.capitalize(Messages.get(Dungeon.hero, "you_now_have", item.name())));
 						} else {
-							Dungeon.level.drop( item, Dungeon.hero.pos ).sprite.drop();
+							Dungeon.level.drop(item, Dungeon.hero.pos).sprite.drop();
 						}
 						WndSmith.this.hide();
 						Blacksmith.Quest.smithRewards = null;
 
-						if (!Blacksmith.Quest.rewardsAvailable()){
-							Notes.remove( Notes.Landmark.TROLL );
+						if (!Blacksmith.Quest.rewardsAvailable()) {
+							Notes.remove(Notes.Landmark.TROLL);
 						}
 					}
 				};
-				btnConfirm.setRect(0, height+2, width/2-1, 16);
+				btnConfirm.setRect(0, height + 2, width / 2 - 1, 16);
 				add(btnConfirm);
 
-				RedButton btnCancel = new RedButton(Messages.get(WndSadGhost.class, "cancel")){
+				RedButton btnCancel = new RedButton(Messages.get(WndSadGhost.class, "cancel")) {
 					@Override
 					protected void onClick() {
 						RewardWindow.this.hide();
 					}
 				};
-				btnCancel.setRect(btnConfirm.right()+2, height+2, btnConfirm.width(), 16);
+				btnCancel.setRect(btnConfirm.right() + 2, height + 2, btnConfirm.width(), 16);
 				add(btnCancel);
 
-				resize(width, (int)btnCancel.bottom());
+				resize(width, (int) btnCancel.bottom());
 			}
 		}
 

@@ -29,7 +29,6 @@ import com.watabou.utils.FileUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
@@ -38,7 +37,7 @@ public class GamesInProgress {
 	public static final int MAX_SLOTS = HeroClass.values().length;
 
 	//null means we have loaded info and it is empty, no entry means unknown.
-	private static HashMap<Integer, Info> slotStates = new HashMap<>();
+	private static final HashMap<Integer, Info> slotStates = new HashMap<>();
 	public static int curSlot;
 
 	public static HeroClass selectedClass;

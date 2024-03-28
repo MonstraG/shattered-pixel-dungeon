@@ -67,7 +67,7 @@ import java.util.HashMap;
 
 public class AscensionChallenge extends Buff {
 
-	private static HashMap<Class<? extends Mob>, Float> modifiers = new HashMap<>();
+	private static final HashMap<Class<? extends Mob>, Float> modifiers = new HashMap<>();
 
 	static {
 		modifiers.put(Rat.class, 10f);
@@ -381,5 +381,4 @@ public class AscensionChallenge extends Buff {
 	public static class AscensionBuffBlocker extends Buff {
 	}
 
-	;
 }

@@ -31,7 +31,6 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.watabou.noosa.TextureFilm;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
-import com.watabou.utils.Callback;
 
 public class DM300Sprite extends MobSprite {
 
@@ -56,10 +55,10 @@ public class DM300Sprite extends MobSprite {
 		TextureFilm frames = new TextureFilm(texture, 25, 22);
 
 		idle = new Animation(enraged ? 15 : 10, true);
-		idle.frames(frames, c + 0, c + 1);
+		idle.frames(frames, c, c + 1);
 
 		run = new Animation(enraged ? 15 : 10, true);
-		run.frames(frames, c + 0, c + 2);
+		run.frames(frames, c, c + 2);
 
 		attack = new Animation(15, false);
 		attack.frames(frames, c + 3, c + 4, c + 5);

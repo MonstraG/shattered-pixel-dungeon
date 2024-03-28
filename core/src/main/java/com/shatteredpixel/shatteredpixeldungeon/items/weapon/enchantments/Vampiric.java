@@ -31,36 +31,36 @@ import com.watabou.utils.Random;
 
 public class Vampiric extends Weapon.Enchantment {
 
-	private static ItemSprite.Glowing RED = new ItemSprite.Glowing( 0x660022 );
-	
+	private static final ItemSprite.Glowing RED = new ItemSprite.Glowing(0x660022);
+
 	@Override
-	public int proc( Weapon weapon, Char attacker, Char defender, int damage ) {
-		
+	public int proc(Weapon weapon, Char attacker, Char defender, int damage) {
+
 		//chance to heal scales from 5%-30% based on missing HP
-		float missingPercent = (attacker.HT - attacker.HP) / (float)attacker.HT;
-		float healChance = 0.05f + .25f*missingPercent;
+		float missingPercent = (attacker.HT - attacker.HP) / (float) attacker.HT;
+		float healChance = 0.05f + .25f * missingPercent;
 
 		healChance *= procChanceMultiplier(attacker);
-		
-		if (Random.Float() < healChance){
+
+		if (Random.Float() < healChance) {
 
 			float powerMulti = Math.max(1f, healChance);
-			
+
 			//heals for 50% of damage dealt
 			int healAmt = Math.round(damage * 0.5f * powerMulti);
-			healAmt = Math.min( healAmt, attacker.HT - attacker.HP );
-			
+			healAmt = Math.min(healAmt, attacker.HT - attacker.HP);
+
 			if (healAmt > 0 && attacker.isAlive()) {
-				
+
 				attacker.HP += healAmt;
-				attacker.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString( healAmt ), FloatingText.HEALING );
-				
+				attacker.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(healAmt), FloatingText.HEALING);
+
 			}
 		}
 
 		return damage;
 	}
-	
+
 	@Override
 	public Glowing glowing() {
 		return RED;

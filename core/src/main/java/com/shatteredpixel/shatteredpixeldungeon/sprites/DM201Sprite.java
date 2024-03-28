@@ -29,7 +29,6 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.TextureFilm;
 import com.watabou.noosa.audio.Sample;
-import com.watabou.utils.Callback;
 
 public class DM201Sprite extends MobSprite {
 
@@ -43,7 +42,7 @@ public class DM201Sprite extends MobSprite {
 		int c = 12;
 
 		idle = new Animation(2, true);
-		idle.frames(frames, c + 0, c + 1);
+		idle.frames(frames, c, c + 1);
 
 		run = idle.clone();
 

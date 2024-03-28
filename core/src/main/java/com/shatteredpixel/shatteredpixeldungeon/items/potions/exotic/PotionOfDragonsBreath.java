@@ -45,7 +45,6 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
 import com.watabou.noosa.audio.Sample;
-import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;
 
 import java.util.ArrayList;
@@ -73,7 +72,7 @@ public class PotionOfDragonsBreath extends ExoticPotion {
 		GameScene.selectCell(targeter);
 	}
 
-	private CellSelector.Listener targeter = new CellSelector.Listener() {
+	private final CellSelector.Listener targeter = new CellSelector.Listener() {
 
 		private boolean showingWindow = false;
 		private boolean potionAlreadyUsed = false;

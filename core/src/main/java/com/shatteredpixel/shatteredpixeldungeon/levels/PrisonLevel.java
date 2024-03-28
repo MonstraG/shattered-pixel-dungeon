@@ -51,7 +51,6 @@ import com.watabou.noosa.Group;
 import com.watabou.noosa.Halo;
 import com.watabou.noosa.audio.Music;
 import com.watabou.noosa.particles.Emitter;
-import com.watabou.utils.Callback;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 
@@ -198,7 +197,7 @@ public class PrisonLevel extends RegularLevel {
 
 	public static class Torch extends Emitter {
 
-		private int pos;
+		private final int pos;
 
 		public Torch(int pos) {
 			super();

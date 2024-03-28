@@ -89,7 +89,7 @@ public class Game implements ApplicationListener {
 		sceneClass = c;
 
 		instance = this;
-		this.platform = platform;
+		Game.platform = platform;
 	}
 
 	@Override
@@ -216,7 +216,7 @@ public class Game implements ApplicationListener {
 	}
 
 	public static void resetScene() {
-		switchScene(instance.sceneClass);
+		switchScene(sceneClass);
 	}
 
 	public static void switchScene(Class<? extends Scene> c) {
@@ -224,7 +224,7 @@ public class Game implements ApplicationListener {
 	}
 
 	public static void switchScene(Class<? extends Scene> c, SceneChangeCallback callback) {
-		instance.sceneClass = c;
+		sceneClass = c;
 		instance.requestedReset = true;
 		instance.onChange = callback;
 	}
@@ -295,7 +295,7 @@ public class Game implements ApplicationListener {
 			PrintWriter pw = new PrintWriter(sw);
 			tr.printStackTrace(pw);
 			pw.flush();
-			System.err.println(sw.toString());
+			System.err.println(sw);
 		}
 	}
 

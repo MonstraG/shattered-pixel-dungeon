@@ -52,7 +52,6 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.BossHealthBar;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
-import com.watabou.utils.Callback;
 import com.watabou.utils.GameMath;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
@@ -83,7 +82,7 @@ public class CrystalSpire extends Mob {
 	private float abilityCooldown;
 	private static final int ABILITY_CD = 15;
 
-	private ArrayList<ArrayList<Integer>> targetedCells = new ArrayList<>();
+	private final ArrayList<ArrayList<Integer>> targetedCells = new ArrayList<>();
 
 	@Override
 	protected boolean act() {
@@ -260,7 +259,6 @@ public class CrystalSpire extends Mob {
 			lineCells.addAll(spreadDiamondAOE(lineCells));
 			targetedCells.add(new ArrayList<>(lineCells));
 			if (HP < HT / 3f) {
-				;
 				lineCells.addAll(spreadDiamondAOE(lineCells));
 				targetedCells.add(lineCells);
 			}

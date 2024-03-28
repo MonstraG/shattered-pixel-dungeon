@@ -169,7 +169,7 @@ public class CityLevel extends RegularLevel {
 
 	public static class Smoke extends Emitter {
 
-		private int pos;
+		private final int pos;
 
 		public static final Emitter.Factory factory = new Factory() {
 

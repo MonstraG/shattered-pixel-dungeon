@@ -69,9 +69,9 @@ public class WndBag extends WndTabbed {
 
 	protected static final int TITLE_HEIGHT = 14;
 
-	private ItemSelector selector;
+	private final ItemSelector selector;
 
-	private int nCols;
+	private final int nCols;
 
 	private int slotWidth;
 	private int slotHeight;
@@ -409,8 +409,8 @@ public class WndBag extends WndTabbed {
 
 	private class BagTab extends IconTab {
 
-		private Bag bag;
-		private int index;
+		private final Bag bag;
+		private final int index;
 
 		public BagTab(Bag bag, int index) {
 			super(icon(bag));

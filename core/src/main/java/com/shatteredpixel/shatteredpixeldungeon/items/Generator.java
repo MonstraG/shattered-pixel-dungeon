@@ -245,7 +245,7 @@ public class Generator {
 		public final float secondProb;
 		public final Class<? extends Item> superClass;
 
-		private Category(float firstProb, float secondProb, Class<? extends Item> superClass) {
+		Category(float firstProb, float secondProb, Class<? extends Item> superClass) {
 			this.firstProb = firstProb;
 			this.secondProb = secondProb;
 			this.superClass = superClass;
@@ -530,8 +530,8 @@ public class Generator {
 	};
 
 	private static boolean usingFirstDeck = false;
-	private static HashMap<Category, Float> defaultCatProbs = new LinkedHashMap<>();
-	private static HashMap<Category, Float> categoryProbs = new LinkedHashMap<>();
+	private static final HashMap<Category, Float> defaultCatProbs = new LinkedHashMap<>();
+	private static final HashMap<Category, Float> categoryProbs = new LinkedHashMap<>();
 
 	public static void fullReset() {
 		usingFirstDeck = Random.Int(2) == 0;

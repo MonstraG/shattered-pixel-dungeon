@@ -60,7 +60,6 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Music;
 import com.watabou.utils.Bundle;
-import com.watabou.utils.Callback;
 import com.watabou.utils.GameMath;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
@@ -109,8 +108,8 @@ public class YogDzewa extends Mob {
 		return null;
 	}
 
-	private ArrayList<Class> fistSummons = new ArrayList<>();
-	private ArrayList<Class> challengeSummons = new ArrayList<>();
+	private final ArrayList<Class> fistSummons = new ArrayList<>();
+	private final ArrayList<Class> challengeSummons = new ArrayList<>();
 
 	{
 		//offset seed slightly to avoid output patterns
@@ -132,7 +131,7 @@ public class YogDzewa extends Mob {
 		Random.popGenerator();
 	}
 
-	private ArrayList<Class> regularSummons = new ArrayList<>();
+	private final ArrayList<Class> regularSummons = new ArrayList<>();
 
 	{
 		if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES)) {
@@ -157,7 +156,7 @@ public class YogDzewa extends Mob {
 		Random.shuffle(regularSummons);
 	}
 
-	private ArrayList<Integer> targetedCells = new ArrayList<>();
+	private final ArrayList<Integer> targetedCells = new ArrayList<>();
 
 	@Override
 	public int attackSkill(Char target) {

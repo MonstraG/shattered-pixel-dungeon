@@ -35,7 +35,6 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
-import com.watabou.utils.Callback;
 
 public class Sai extends MeleeWeapon {
 
@@ -96,7 +95,7 @@ public class Sai extends MeleeWeapon {
 
 			boolean hit = hero.attack(enemy, 1f + boostPerHit * recentHits, 0, Char.INFINITE_ACCURACY);
 			if (hit && !enemy.isAlive()) {
-				wep.onAbilityKill(hero, enemy);
+				onAbilityKill(hero, enemy);
 			}
 
 			Invisibility.dispel();

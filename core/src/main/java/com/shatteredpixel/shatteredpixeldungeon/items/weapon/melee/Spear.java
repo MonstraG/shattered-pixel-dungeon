@@ -34,7 +34,6 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.AttackIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
-import com.watabou.utils.Callback;
 
 public class Spear extends MeleeWeapon {
 
@@ -96,7 +95,7 @@ public class Spear extends MeleeWeapon {
 					//knock them back along that ballistica
 					WandOfBlastWave.throwChar(enemy, trajectory, 1, true, false, hero);
 				} else {
-					wep.onAbilityKill(hero, enemy);
+					onAbilityKill(hero, enemy);
 				}
 				Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
 			}

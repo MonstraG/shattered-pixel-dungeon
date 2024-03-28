@@ -30,20 +30,20 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite.Glowing;
 
 public class Grim extends Weapon.Enchantment {
-	
-	private static ItemSprite.Glowing BLACK = new ItemSprite.Glowing( 0x000000 );
-	
+
+	private static final ItemSprite.Glowing BLACK = new ItemSprite.Glowing(0x000000);
+
 	@Override
-	public int proc( Weapon weapon, Char attacker, Char defender, int damage ) {
+	public int proc(Weapon weapon, Char attacker, Char defender, int damage) {
 
 		if (defender.isImmune(Grim.class)) {
 			return damage;
 		}
 
-		int level = Math.max( 0, weapon.buffedLvl() );
+		int level = Math.max(0, weapon.buffedLvl());
 
 		//scales from 0 - 50% based on how low hp the enemy is, plus 0-5% per level
-		float maxChance = 0.5f + .05f*level;
+		float maxChance = 0.5f + .05f * level;
 		maxChance *= procChanceMultiplier(attacker);
 
 		//we defer logic using an actor here so we can know the true final damage
@@ -52,13 +52,13 @@ public class Grim extends Weapon.Enchantment {
 
 		if (defender.buff(GrimTracker.class) != null
 				&& attacker instanceof Hero
-				&& weapon.hasEnchant(Grim.class, attacker)){
+				&& weapon.hasEnchant(Grim.class, attacker)) {
 			defender.buff(GrimTracker.class).qualifiesForBadge = true;
 		}
 
 		return damage;
 	}
-	
+
 	@Override
 	public Glowing glowing() {
 		return BLACK;
@@ -78,6 +78,6 @@ public class Grim extends Weapon.Enchantment {
 			detach();
 			return true;
 		}
-	};
+	}
 
 }

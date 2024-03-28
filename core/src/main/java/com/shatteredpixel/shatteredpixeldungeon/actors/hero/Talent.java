@@ -189,17 +189,11 @@ public enum Talent {
 		}
 	}
 
-	;
-
 	public static class LethalMomentumTracker extends FlavourBuff {
 	}
 
-	;
-
 	public static class StrikingWaveTracker extends FlavourBuff {
 	}
-
-	;
 
 	public static class WandPreservationCounter extends CounterBuff {
 		{
@@ -207,12 +201,8 @@ public enum Talent {
 		}
 	}
 
-	;
-
 	public static class EmpoweredStrikeTracker extends FlavourBuff {
 	}
-
-	;
 
 	public static class ProtectiveShadowsTracker extends Buff {
 		float barrierInc = 0.5f;
@@ -256,8 +246,6 @@ public enum Talent {
 	public static class BountyHunterTracker extends FlavourBuff {
 	}
 
-	;
-
 	public static class RejuvenatingStepsCooldown extends FlavourBuff {
 		public int icon() {
 			return BuffIndicator.TIME;
@@ -272,15 +260,11 @@ public enum Talent {
 		}
 	}
 
-	;
-
 	public static class RejuvenatingStepsFurrow extends CounterBuff {
 		{
 			revivePersists = true;
 		}
 	}
-
-	;
 
 	public static class SeerShotCooldown extends FlavourBuff {
 		public int icon() {
@@ -296,12 +280,8 @@ public enum Talent {
 		}
 	}
 
-	;
-
 	public static class SpiritBladesTracker extends FlavourBuff {
 	}
-
-	;
 
 	public static class PatientStrikeTracker extends Buff {
 		public int pos;
@@ -343,8 +323,6 @@ public enum Talent {
 		}
 	}
 
-	;
-
 	public static class AggressiveBarrierCooldown extends FlavourBuff {
 		public int icon() {
 			return BuffIndicator.TIME;
@@ -359,12 +337,8 @@ public enum Talent {
 		}
 	}
 
-	;
-
 	public static class RestoredAgilityTracker extends FlavourBuff {
 	}
-
-	;
 
 	public static class LethalHasteCooldown extends FlavourBuff {
 		public int icon() {
@@ -379,8 +353,6 @@ public enum Talent {
 			return Math.max(0, visualcooldown() / 100);
 		}
 	}
-
-	;
 
 	public static class SwiftEquipCooldown extends FlavourBuff {
 		public boolean secondUse;
@@ -416,8 +388,6 @@ public enum Talent {
 			secondUse = bundle.getBoolean(SECOND_USE);
 		}
 	}
-
-	;
 
 	public static class DeadlyFollowupTracker extends FlavourBuff {
 		public int object;
@@ -471,13 +441,9 @@ public enum Talent {
 		}
 	}
 
-	;
-
 	public static class CombinedLethalityAbilityTracker extends FlavourBuff {
 		public MeleeWeapon weapon;
 	}
-
-	;
 
 	public static class CombinedLethalityTriggerTracker extends FlavourBuff {
 		{
@@ -497,8 +463,6 @@ public enum Talent {
 		}
 	}
 
-	;
-
 	public static class CombinedEnergyAbilityTracker extends FlavourBuff {
 		public int energySpent = -1;
 		public boolean wepAbilUsed = false;
@@ -506,8 +470,6 @@ public enum Talent {
 
 	public static class CounterAbilityTacker extends FlavourBuff {
 	}
-
-	;
 
 	final int icon;
 	final int maxPoints;
@@ -633,15 +595,11 @@ public enum Talent {
 		}
 	}
 
-	;
-
 	public static class NatureBerriesDropped extends CounterBuff {
 		{
 			revivePersists = true;
 		}
 	}
-
-	;
 
 	public static void onFoodEaten(Hero hero, float foodVal, Item foodSource) {
 		if (hero.hasTalent(HEARTY_MEAL)) {
@@ -910,8 +868,6 @@ public enum Talent {
 	public static class SuckerPunchTracker extends Buff {
 	}
 
-	;
-
 	public static class FollowupStrikeTracker extends FlavourBuff {
 		public int object;
 
@@ -945,8 +901,6 @@ public enum Talent {
 			object = bundle.getInt(OBJECT);
 		}
 	}
-
-	;
 
 	public static final int MAX_TALENT_TIERS = 4;
 

@@ -141,7 +141,6 @@ import com.watabou.utils.RectF;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Locale;
 
 public class GameScene extends PixelScene {
@@ -688,7 +687,7 @@ public class GameScene extends PixelScene {
 
 	//sometimes UI changes can be prompted by the actor thread.
 	// We queue any removed element destruction, rather than destroying them in the actor thread.
-	private ArrayList<Gizmo> toDestroy = new ArrayList<>();
+	private final ArrayList<Gizmo> toDestroy = new ArrayList<>();
 
 	//the actor thread processes at a maximum of 60 times a second
 	//this caps the speed of resting for higher refresh rate displays
@@ -1241,11 +1240,7 @@ public class GameScene extends PixelScene {
 
 		if (showingWindow()) return true;
 
-		if (scene.inventory != null && scene.inventory.isSelecting()) {
-			return true;
-		}
-
-		return false;
+		return scene.inventory != null && scene.inventory.isSelecting();
 	}
 
 	public static void toggleInvPane() {

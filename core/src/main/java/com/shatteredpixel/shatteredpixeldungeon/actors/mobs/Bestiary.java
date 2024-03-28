@@ -205,7 +205,6 @@ public class Bestiary {
 			// City
 			case 19:
 				if (Random.Float() < 0.025f) rotation.add(Succubus.class);
-				return;
 		}
 	}
 

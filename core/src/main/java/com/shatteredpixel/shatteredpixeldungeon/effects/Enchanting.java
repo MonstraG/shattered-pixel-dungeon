@@ -32,13 +32,13 @@ public class Enchanting extends ItemSprite {
 		FADE_IN, STATIC, FADE_OUT
 	}
 
-	private static final float FADE_IN_TIME		= 0.2f;
-	private static final float STATIC_TIME		= 1.0f;
-	private static final float FADE_OUT_TIME	= 0.4f;
+	private static final float FADE_IN_TIME = 0.2f;
+	private static final float STATIC_TIME = 1.0f;
+	private static final float FADE_OUT_TIME = 0.4f;
 
-	private static final float ALPHA	= 0.6f;
+	private static final float ALPHA = 0.6f;
 
-	private int color;
+	private final int color;
 
 	private Char target;
 
@@ -46,8 +46,8 @@ public class Enchanting extends ItemSprite {
 	private float duration;
 	private float passed;
 
-	public Enchanting( Item item ) {
-		super( item.image(), null );
+	public Enchanting(Item item) {
+		super(item.image(), null);
 		originToCenter();
 
 		color = item.glowing().color;
@@ -68,15 +68,15 @@ public class Enchanting extends ItemSprite {
 
 		switch (phase) {
 			case FADE_IN:
-				alpha( passed / duration * ALPHA );
-				scale.set( passed / duration );
+				alpha(passed / duration * ALPHA);
+				scale.set(passed / duration);
 				break;
 			case STATIC:
-				tint( color, passed / duration * 0.8f );
+				tint(color, passed / duration * 0.8f);
 				break;
 			case FADE_OUT:
-				alpha( (1 - passed / duration) * ALPHA );
-				scale.set( 1 + passed / duration );
+				alpha((1 - passed / duration) * ALPHA);
+				scale.set(1 + passed / duration);
 				break;
 		}
 
@@ -99,14 +99,14 @@ public class Enchanting extends ItemSprite {
 		}
 	}
 
-	public static void show( Char ch, Item item ) {
+	public static void show(Char ch, Item item) {
 
 		if (!ch.sprite.visible) {
 			return;
 		}
 
-		Enchanting sprite = new Enchanting( item );
+		Enchanting sprite = new Enchanting(item);
 		sprite.target = ch;
-		ch.sprite.parent.add( sprite );
+		ch.sprite.parent.add(sprite);
 	}
 }

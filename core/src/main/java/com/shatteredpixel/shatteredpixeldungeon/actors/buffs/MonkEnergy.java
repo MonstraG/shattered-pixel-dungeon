@@ -54,7 +54,6 @@ import com.watabou.noosa.Image;
 import com.watabou.noosa.Visual;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
-import com.watabou.utils.Callback;
 import com.watabou.utils.GameMath;
 
 public class MonkEnergy extends Buff implements ActionIndicator.Action {
@@ -209,7 +208,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 		if (target instanceof Hero && ((Hero) target).hasTalent(Talent.COMBINED_ENERGY)
 				&& abil.energyCost() >= 5 - ((Hero) target).pointsInTalent(Talent.COMBINED_ENERGY)) {
 			Talent.CombinedEnergyAbilityTracker tracker = target.buff(Talent.CombinedEnergyAbilityTracker.class);
-			if (tracker == null || tracker.wepAbilUsed == false) {
+			if (tracker == null || !tracker.wepAbilUsed) {
 				Buff.prolong(target, Talent.CombinedEnergyAbilityTracker.class, target.cooldown()).energySpent = abil.energyCost();
 			} else {
 				tracker.energySpent = abil.energyCost();
@@ -304,17 +303,11 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 		public static class UnarmedAbilityTracker extends FlavourBuff {
 		}
 
-		;
-
 		public static class JustHitTracker extends FlavourBuff {
 		}
 
-		;
-
 		public static class FlurryEmpowerTracker extends FlavourBuff {
 		}
-
-		;
 
 		public static class Flurry extends MonkAbility {
 
@@ -674,7 +667,6 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 				}
 			}
 
-			;
 		}
 
 	}

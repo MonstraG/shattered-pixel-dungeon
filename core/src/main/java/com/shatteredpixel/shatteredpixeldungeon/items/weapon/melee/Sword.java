@@ -35,7 +35,6 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.AttackIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
-import com.watabou.utils.Callback;
 
 public class Sword extends MeleeWeapon {
 
@@ -95,7 +94,7 @@ public class Sword extends MeleeWeapon {
 			Invisibility.dispel();
 			hero.spendAndNext(hero.attackDelay());
 			if (!enemy.isAlive()) {
-				wep.onAbilityKill(hero, enemy);
+				onAbilityKill(hero, enemy);
 				Buff.prolong(hero, CleaveTracker.class, 5f);
 			} else {
 				if (hero.buff(CleaveTracker.class) != null) {

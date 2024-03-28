@@ -34,8 +34,8 @@ import javax.net.ssl.SSLProtocolException;
 
 public class GitHubUpdates extends UpdateService {
 
-	private static Pattern descPattern = Pattern.compile("(.*?)(\r\n|\n|\r)(\r\n|\n|\r)---", Pattern.DOTALL + Pattern.MULTILINE);
-	private static Pattern versionCodePattern = Pattern.compile("internal version number: ([0-9]*)", Pattern.CASE_INSENSITIVE);
+	private static final Pattern descPattern = Pattern.compile("(.*?)(\r\n|\n|\r)(\r\n|\n|\r)---", Pattern.DOTALL + Pattern.MULTILINE);
+	private static final Pattern versionCodePattern = Pattern.compile("internal version number: ([0-9]*)", Pattern.CASE_INSENSITIVE);
 
 	@Override
 	public boolean supportsUpdatePrompts() {
@@ -50,7 +50,7 @@ public class GitHubUpdates extends UpdateService {
 	@Override
 	public void checkForUpdate(boolean useMetered, boolean includeBetas, UpdateResultCallback callback) {
 
-		if (!useMetered && !Game.platform.connectedToUnmeteredNetwork()){
+		if (!useMetered && !Game.platform.connectedToUnmeteredNetwork()) {
 			callback.onConnectionFailed();
 			return;
 		}
@@ -66,13 +66,13 @@ public class GitHubUpdates extends UpdateService {
 					Bundle latestRelease = null;
 					int latestVersionCode = Game.versionCode;
 
-					for (Bundle b : Bundle.read( httpResponse.getResultAsStream() ).getBundleArray()){
+					for (Bundle b : Bundle.read(httpResponse.getResultAsStream()).getBundleArray()) {
 						Matcher m = versionCodePattern.matcher(b.getString("body"));
 
-						if (m.find()){
+						if (m.find()) {
 							int releaseVersion = Integer.parseInt(m.group(1));
 							if (releaseVersion > latestVersionCode
-									&& (includeBetas || !b.getBoolean("prerelease"))){
+									&& (includeBetas || !b.getBoolean("prerelease"))) {
 								latestRelease = b;
 								latestVersionCode = releaseVersion;
 							}
@@ -80,7 +80,7 @@ public class GitHubUpdates extends UpdateService {
 
 					}
 
-					if (latestRelease == null){
+					if (latestRelease == null) {
 						callback.onNoUpdateFound();
 					} else {
 
@@ -96,7 +96,7 @@ public class GitHubUpdates extends UpdateService {
 						callback.onUpdateAvailable(update);
 					}
 				} catch (Exception e) {
-					Game.reportException( e );
+					Game.reportException(e);
 					callback.onConnectionFailed();
 				}
 			}
@@ -106,7 +106,7 @@ public class GitHubUpdates extends UpdateService {
 				//Failure in SSL handshake, possibly because GitHub requires TLS 1.2+.
 				// Often happens for old OS versions with outdated security protocols.
 				// Future update attempts won't work anyway, so just pretend nothing was found.
-				if (t instanceof SSLProtocolException){
+				if (t instanceof SSLProtocolException) {
 					callback.onNoUpdateFound();
 				} else {
 					Game.reportException(t);
@@ -124,7 +124,7 @@ public class GitHubUpdates extends UpdateService {
 
 	@Override
 	public void initializeUpdate(AvailableUpdateData update) {
-		Game.platform.openURI( update.URL );
+		Game.platform.openURI(update.URL);
 	}
 
 	@Override

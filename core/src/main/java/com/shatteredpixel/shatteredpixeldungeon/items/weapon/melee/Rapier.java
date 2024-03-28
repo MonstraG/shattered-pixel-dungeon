@@ -35,7 +35,6 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.AttackIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
-import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;
 
 public class Rapier extends MeleeWeapon {
@@ -131,7 +130,7 @@ public class Rapier extends MeleeWeapon {
 					if (hero.attack(enemy, dmgMulti, dmgBoost, Char.INFINITE_ACCURACY)) {
 						Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
 						if (!enemy.isAlive()) {
-							wep.onAbilityKill(hero, enemy);
+							onAbilityKill(hero, enemy);
 						}
 					}
 					Invisibility.dispel();

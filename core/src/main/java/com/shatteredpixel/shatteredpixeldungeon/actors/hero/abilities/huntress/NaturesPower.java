@@ -30,6 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.ArmorAbility;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.LeafParticle;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClassArmor;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
@@ -51,7 +52,7 @@ public class NaturesPower extends ArmorAbility {
 		hero.sprite.emitter().burst(LeafParticle.GENERAL, 10);
 
 		armor.charge -= chargeUse(hero);
-		armor.updateQuickslot();
+		Item.updateQuickslot();
 		Invisibility.dispel();
 		hero.spendAndNext(Actor.TICK);
 
@@ -67,7 +68,7 @@ public class NaturesPower extends ArmorAbility {
 		return new Talent[]{Talent.GROWING_POWER, Talent.NATURES_WRATH, Talent.WILD_MOMENTUM, Talent.HEROIC_ENERGY};
 	}
 
-	public static class naturesPowerTracker extends FlavourBuff{
+	public static class naturesPowerTracker extends FlavourBuff {
 
 		{
 			type = buffType.POSITIVE;
@@ -77,7 +78,7 @@ public class NaturesPower extends ArmorAbility {
 
 		public int extensionsLeft = 2;
 
-		public void extend( int turns ){
+		public void extend(int turns) {
 			if (extensionsLeft > 0 && turns > 0) {
 				spend(turns);
 				extensionsLeft--;

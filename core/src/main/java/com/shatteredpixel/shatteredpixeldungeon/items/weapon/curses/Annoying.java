@@ -36,12 +36,12 @@ import com.watabou.utils.Random;
 
 public class Annoying extends Weapon.Enchantment {
 
-	private static ItemSprite.Glowing BLACK = new ItemSprite.Glowing( 0x000000 );
+	private static final ItemSprite.Glowing BLACK = new ItemSprite.Glowing(0x000000);
 
 	@Override
-	public int proc( Weapon weapon, Char attacker, Char defender, int damage ) {
+	public int proc(Weapon weapon, Char attacker, Char defender, int damage) {
 
-		float procChance = 1/20f * procChanceMultiplier(attacker);
+		float procChance = 1 / 20f * procChanceMultiplier(attacker);
 		if (Random.Float() < procChance) {
 			for (Mob mob : Dungeon.level.mobs.toArray(new Mob[0])) {
 				mob.beckon(attacker.pos);

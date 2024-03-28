@@ -91,11 +91,9 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.AttackIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Sample;
-import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
@@ -278,8 +276,6 @@ public class ElementalStrike extends ArmorAbility {
 	public static class ElementalStrikeLuckyTracker extends Buff {
 	}
 
-	;
-
 	private int storedKineticDamage = 0;
 
 	public static class ElementalStrikeFurrowCounter extends CounterBuff {
@@ -287,8 +283,6 @@ public class ElementalStrike extends ArmorAbility {
 			revivePersists = true;
 		}
 	}
-
-	;
 
 	//effects that affect the cells of the environment themselves
 	private void perCellEffect(ConeAOE cone, Weapon.Enchantment ench) {

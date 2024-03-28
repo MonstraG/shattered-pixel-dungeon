@@ -35,7 +35,7 @@ import java.util.ArrayList;
 public class FogOfWar extends Image {
 
 	//first index is visibility type, second is brightness level
-	private static final int FOG_COLORS[][] = new int[][]{{
+	private static final int[][] FOG_COLORS = new int[][]{{
 			//visible
 			0x00000000, //-1 brightness
 			0x00000000, //0  brightness
@@ -62,9 +62,9 @@ public class FogOfWar extends Image {
 	private static final int MAPPED = 2;
 	private static final int INVISIBLE = 3;
 
-	private int mapWidth;
-	private int mapHeight;
-	private int mapLength;
+	private final int mapWidth;
+	private final int mapHeight;
+	private final int mapLength;
 
 	private volatile ArrayList<Rect> toUpdate;
 	private volatile ArrayList<Rect> updating;

@@ -57,11 +57,11 @@ public class DM200 extends Mob {
 
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( 10, 25 );
+		return Random.NormalIntRange(10, 25);
 	}
 
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill(Char target) {
 		return 20;
 	}
 
@@ -71,16 +71,16 @@ public class DM200 extends Mob {
 	}
 
 	@Override
-	public float lootChance(){
+	public float lootChance() {
 		//each drop makes future drops 1/2 as likely
 		// so loot chance looks like: 1/8, 1/16, 1/32, 1/64, etc.
-		return super.lootChance() * (float)Math.pow(1/2f, Dungeon.LimitedDrops.DM200_EQUIP.count);
+		return super.lootChance() * (float) Math.pow(1 / 2f, Dungeon.LimitedDrops.DM200_EQUIP.count);
 	}
 
 	public Item createLoot() {
 		Dungeon.LimitedDrops.DM200_EQUIP.count++;
 		//uses probability tables for dwarf city
-		if (loot == Generator.Category.WEAPON){
+		if (loot == Generator.Category.WEAPON) {
 			return Generator.randomWeapon(4, true);
 		} else {
 			return Generator.randomArmor(4);
@@ -100,7 +100,7 @@ public class DM200 extends Mob {
 	@Override
 	public void restoreFromBundle(Bundle bundle) {
 		super.restoreFromBundle(bundle);
-		ventCooldown = bundle.getInt( VENT_COOLDOWN );
+		ventCooldown = bundle.getInt(VENT_COOLDOWN);
 	}
 
 	@Override
@@ -109,35 +109,32 @@ public class DM200 extends Mob {
 		return super.act();
 	}
 
-	public void onZapComplete(){
+	public void onZapComplete() {
 		zap();
 		next();
 	}
 
-	private void zap( ){
-		spend( TICK );
+	private void zap() {
+		spend(TICK);
 		ventCooldown = 30;
 
 		Ballistica trajectory = new Ballistica(pos, enemy.pos, Ballistica.STOP_TARGET);
 
-		for (int i : trajectory.subPath(0, trajectory.dist)){
+		for (int i : trajectory.subPath(0, trajectory.dist)) {
 			GameScene.add(Blob.seed(i, 20, ToxicGas.class));
 		}
 		GameScene.add(Blob.seed(trajectory.collisionPos, 100, ToxicGas.class));
 
 	}
 
-	protected boolean canVent(int target){
+	protected boolean canVent(int target) {
 		if (ventCooldown > 0) return false;
-		PathFinder.buildDistanceMap(target, BArray.not(Dungeon.level.solid, null), Dungeon.level.distance(pos, target)+1);
+		PathFinder.buildDistanceMap(target, BArray.not(Dungeon.level.solid, null), Dungeon.level.distance(pos, target) + 1);
 		//vent can go around blocking terrain, but not through it
-		if (PathFinder.distance[pos] == Integer.MAX_VALUE){
-			return false;
-		}
-		return true;
+		return PathFinder.distance[pos] != Integer.MAX_VALUE;
 	}
 
-	private class Hunting extends Mob.Hunting{
+	private class Hunting extends Mob.Hunting {
 
 		@Override
 		public boolean act(boolean enemyInFOV, boolean justAlerted) {
@@ -149,22 +146,22 @@ public class DM200 extends Mob {
 
 				int oldPos = pos;
 
-				if (distance(enemy) >= 1 && Random.Int(100/distance(enemy)) == 0 && canVent(target)){
+				if (distance(enemy) >= 1 && Random.Int(100 / distance(enemy)) == 0 && canVent(target)) {
 					if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
-						sprite.zap( enemy.pos );
+						sprite.zap(enemy.pos);
 						return false;
 					} else {
 						zap();
 						return true;
 					}
 
-				} else if (getCloser( target )) {
-					spend( 1 / speed() );
-					return moveSprite( oldPos,  pos );
+				} else if (getCloser(target)) {
+					spend(1 / speed());
+					return moveSprite(oldPos, pos);
 
 				} else if (canVent(target)) {
 					if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
-						sprite.zap( enemy.pos );
+						sprite.zap(enemy.pos);
 						return false;
 					} else {
 						zap();
@@ -172,7 +169,7 @@ public class DM200 extends Mob {
 					}
 
 				} else {
-					spend( TICK );
+					spend(TICK);
 					return true;
 				}
 

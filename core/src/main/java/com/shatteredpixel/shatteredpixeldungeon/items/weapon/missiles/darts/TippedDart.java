@@ -195,7 +195,7 @@ public abstract class TippedDart extends Dart {
 		return 8 * quantity;
 	}
 
-	private static HashMap<Class<? extends Plant.Seed>, Class<? extends TippedDart>> types = new HashMap<>();
+	private static final HashMap<Class<? extends Plant.Seed>, Class<? extends TippedDart>> types = new HashMap<>();
 
 	static {
 		types.put(Blindweed.Seed.class, BlindingDart.class);

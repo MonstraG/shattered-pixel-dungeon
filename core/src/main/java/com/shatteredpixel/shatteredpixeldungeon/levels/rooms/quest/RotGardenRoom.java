@@ -40,14 +40,18 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 public class RotGardenRoom extends SpecialRoom {
-	
-	@Override
-	public int minWidth() { return 10; }
-	
-	@Override
-	public int minHeight() { return 10; }
 
-	public void paint( Level level ) {
+	@Override
+	public int minWidth() {
+		return 10;
+	}
+
+	@Override
+	public int minHeight() {
+		return 10;
+	}
+
+	public void paint(Level level) {
 
 		Door entrance = entrance();
 		entrance.set(Door.Type.LOCKED);
@@ -111,14 +115,14 @@ public class RotGardenRoom extends SpecialRoom {
 		//place up to 6 lashers in such a way that there is always a safe path to the heart
 		boolean[] newPassable = Arrays.copyOf(passable, passable.length);
 		int maxLashers = 6;
-		for (int i = 1; i <= maxLashers; i++){
+		for (int i = 1; i <= maxLashers; i++) {
 			int pos;
 			int tries = 50;
 			do {
 				pos = level.pointToCell(random());
 				tries--;
 			} while (tries > 0 && !validPlantPos(passable, newPassable, level, pos, heartPos, entryPos));
-			if (tries <= 0){
+			if (tries <= 0) {
 				break;
 			}
 			placePlant(level, pos, new RotLasher());
@@ -127,13 +131,16 @@ public class RotGardenRoom extends SpecialRoom {
 		//If the only open cells next to the heart are a diagonal, open one additional adjacent cell
 		//This is important so that the heart can spread gas
 		boolean openCardinal = false;
-		for (int i = 1; i < PathFinder.CIRCLE8.length; i+=2){
-			if (level.map[heartPos + PathFinder.CIRCLE8[i]] != Terrain.WALL) openCardinal = true;
+		for (int i = 1; i < PathFinder.CIRCLE8.length; i += 2) {
+			if (level.map[heartPos + PathFinder.CIRCLE8[i]] != Terrain.WALL) {
+				openCardinal = true;
+				break;
+			}
 		}
-		if (!openCardinal){
-			for (int i = 0; i < PathFinder.CIRCLE8.length; i+=2){
-				if (level.map[heartPos + PathFinder.CIRCLE8[i]] != Terrain.WALL){
-					Painter.set(level, heartPos + PathFinder.CIRCLE8[i+1], Terrain.HIGH_GRASS);
+		if (!openCardinal) {
+			for (int i = 0; i < PathFinder.CIRCLE8.length; i += 2) {
+				if (level.map[heartPos + PathFinder.CIRCLE8[i]] != Terrain.WALL) {
+					Painter.set(level, heartPos + PathFinder.CIRCLE8[i + 1], Terrain.HIGH_GRASS);
 				}
 			}
 		}
@@ -141,25 +148,25 @@ public class RotGardenRoom extends SpecialRoom {
 		//if almost every open cell next to the heart has a lasher threatening it, clear one lasher
 		int safeHeartcells = 0;
 		HashSet<Mob> adjacentLashers = new HashSet<>();
-		for (int i : PathFinder.NEIGHBOURS8){
-			if (level.map[heartPos+i] == Terrain.WALL) {
+		for (int i : PathFinder.NEIGHBOURS8) {
+			if (level.map[heartPos + i] == Terrain.WALL) {
 				continue;
 			}
 			boolean foundLasher = false;
-			for (int j : PathFinder.NEIGHBOURS8){
-				if (heartPos+i+j != heartPos
-						&& level.map[heartPos+i+j] != Terrain.WALL
-						&& level.findMob(heartPos+i+j) != null){
+			for (int j : PathFinder.NEIGHBOURS8) {
+				if (heartPos + i + j != heartPos
+						&& level.map[heartPos + i + j] != Terrain.WALL
+						&& level.findMob(heartPos + i + j) != null) {
 					foundLasher = true;
-					adjacentLashers.add(level.findMob(heartPos+i+j));
+					adjacentLashers.add(level.findMob(heartPos + i + j));
 				}
 			}
-			if (!foundLasher){
+			if (!foundLasher) {
 				safeHeartcells++;
 			}
 		}
 
-		if (safeHeartcells < 2 && !adjacentLashers.isEmpty()){
+		if (safeHeartcells < 2 && !adjacentLashers.isEmpty()) {
 			Char toRemove = Random.element(adjacentLashers);
 			level.mobs.remove(toRemove);
 			Painter.set(level, toRemove.pos, Terrain.HIGH_GRASS);
@@ -167,25 +174,25 @@ public class RotGardenRoom extends SpecialRoom {
 
 	}
 
-	private static boolean validPlantPos(boolean[] passable, boolean[] newPassable, Level level, int pos, int heartPos, int entryPos){
-		if (level.map[pos] != Terrain.HIGH_GRASS){
+	private static boolean validPlantPos(boolean[] passable, boolean[] newPassable, Level level, int pos, int heartPos, int entryPos) {
+		if (level.map[pos] != Terrain.HIGH_GRASS) {
 			return false;
 		}
 
-		for (int i : PathFinder.NEIGHBOURS9){
-			if (level.findMob(pos+i) != null){
+		for (int i : PathFinder.NEIGHBOURS9) {
+			if (level.findMob(pos + i) != null) {
 				return false;
 			}
 		}
 
 		newPassable[pos] = false;
-		for (int i : PathFinder.NEIGHBOURS4){
-			newPassable[pos+i] = false;
+		for (int i : PathFinder.NEIGHBOURS4) {
+			newPassable[pos + i] = false;
 		}
 
 		PathFinder.buildDistanceMap(heartPos, newPassable);
 
-		if (PathFinder.distance[entryPos] == Integer.MAX_VALUE){
+		if (PathFinder.distance[entryPos] == Integer.MAX_VALUE) {
 			System.arraycopy(passable, 0, newPassable, 0, passable.length);
 			return false;
 		} else {
@@ -194,9 +201,9 @@ public class RotGardenRoom extends SpecialRoom {
 		}
 	}
 
-	private static void placePlant(Level level, int pos, Mob plant){
+	private static void placePlant(Level level, int pos, Mob plant) {
 		plant.pos = pos;
-		level.mobs.add( plant );
+		level.mobs.add(plant);
 
 		Painter.set(level, pos, Terrain.GRASS);
 	}

@@ -54,7 +54,6 @@ import com.watabou.noosa.Group;
 import com.watabou.noosa.audio.Music;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.noosa.particles.PixelParticle;
-import com.watabou.utils.Callback;
 import com.watabou.utils.ColorMath;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
@@ -194,7 +193,7 @@ public class SewerLevel extends RegularLevel {
 
 	private static class Sink extends Emitter {
 
-		private int pos;
+		private final int pos;
 		private float rippleDelay = 0;
 
 		private static final Emitter.Factory factory = new Factory() {

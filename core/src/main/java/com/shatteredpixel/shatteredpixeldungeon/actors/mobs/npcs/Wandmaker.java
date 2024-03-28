@@ -392,9 +392,7 @@ public class Wandmaker extends NPC {
 						}
 					}
 
-					if (candles >= 4) {
-						return true;
-					}
+					return candles >= 4;
 
 				}
 

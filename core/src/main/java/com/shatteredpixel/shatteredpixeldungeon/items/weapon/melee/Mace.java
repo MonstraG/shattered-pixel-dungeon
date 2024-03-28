@@ -35,7 +35,6 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.AttackIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
-import com.watabou.utils.Callback;
 
 public class Mace extends MeleeWeapon {
 
@@ -116,7 +115,7 @@ public class Mace extends MeleeWeapon {
 				if (enemy.isAlive()) {
 					Buff.affect(enemy, Daze.class, Daze.DURATION);
 				} else {
-					wep.onAbilityKill(hero, enemy);
+					onAbilityKill(hero, enemy);
 				}
 			}
 			Invisibility.dispel();

@@ -45,7 +45,6 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
-import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
@@ -108,13 +107,12 @@ public class MasterThievesArmband extends Artifact {
 		}
 	}
 
-	private CellSelector.Listener targeter = new CellSelector.Listener() {
+	private final CellSelector.Listener targeter = new CellSelector.Listener() {
 
 		@Override
 		public void onSelect(Integer target) {
 
 			if (target == null) {
-				return;
 			} else if (!Dungeon.level.adjacent(curUser.pos, target) || Actor.findChar(target) == null) {
 				GLog.w(Messages.get(MasterThievesArmband.class, "no_target"));
 			} else {

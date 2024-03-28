@@ -56,7 +56,6 @@ import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Music;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
-import com.watabou.utils.Callback;
 import com.watabou.utils.GameMath;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
@@ -500,7 +499,10 @@ public abstract class Elemental extends Mob {
 
 			boolean visible = sprite.visible || enemy.sprite.visible;
 			for (Char ch : affected) {
-				if (ch.sprite.visible) visible = true;
+				if (ch.sprite.visible) {
+					visible = true;
+					break;
+				}
 			}
 
 			if (visible) {

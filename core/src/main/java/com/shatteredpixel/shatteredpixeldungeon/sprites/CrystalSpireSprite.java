@@ -34,47 +34,47 @@ public abstract class CrystalSpireSprite extends MobSprite {
 	{
 		perspectiveRaise = 7 / 16f; //7 pixels
 
-		shadowWidth     = 1f;
-		shadowHeight    = 1f;
-		shadowOffset    = 1f;
+		shadowWidth = 1f;
+		shadowHeight = 1f;
+		shadowOffset = 1f;
 	}
 
-	public CrystalSpireSprite(){
-		texture( Assets.Sprites.CRYSTAL_SPIRE );
+	public CrystalSpireSprite() {
+		texture(Assets.Sprites.CRYSTAL_SPIRE);
 
-		TextureFilm frames = new TextureFilm( texture, 24, 41 );
+		TextureFilm frames = new TextureFilm(texture, 24, 41);
 
 		int c = texOffset();
 
 		idle = new Animation(1, true);
-		idle.frames( frames, 0+c );
+		idle.frames(frames, c);
 
 		run = idle.clone();
 		attack = idle.clone();
 		zap = idle.clone();
 
 		die = new Animation(1, false);
-		die.frames( frames, 4+c );
+		die.frames(frames, 4 + c);
 
 		play(idle);
 	}
 
-	public void updateIdle(){
+	public void updateIdle() {
 		float hpPercent = 1f;
-		if (ch != null){
-			hpPercent = ch.HP/(float)ch.HT;
+		if (ch != null) {
+			hpPercent = ch.HP / (float) ch.HT;
 		}
 
-		TextureFilm frames = new TextureFilm( texture, 24, 41 );
+		TextureFilm frames = new TextureFilm(texture, 24, 41);
 
-		if (hpPercent > 0.9f){
-			idle.frames( frames, 0+texOffset() );
-		} else if (hpPercent > 0.67f){
-			idle.frames( frames, 1+texOffset() );
-		} else if (hpPercent > 0.33f){
-			idle.frames( frames, 2+texOffset() );
+		if (hpPercent > 0.9f) {
+			idle.frames(frames, texOffset());
+		} else if (hpPercent > 0.67f) {
+			idle.frames(frames, 1 + texOffset());
+		} else if (hpPercent > 0.33f) {
+			idle.frames(frames, 2 + texOffset());
 		} else {
-			idle.frames( frames, 3+texOffset() );
+			idle.frames(frames, 3 + texOffset());
 		}
 		play(idle, true);
 		run = idle.clone();
@@ -93,16 +93,16 @@ public abstract class CrystalSpireSprite extends MobSprite {
 	@Override
 	public void update() {
 		super.update();
-		if (curAnim != die && ch != null && visible != wasVisible){
-			if (visible){
-				DungeonWallsTilemap.skipCells.add(ch.pos - 2*Dungeon.level.width());
+		if (curAnim != die && ch != null && visible != wasVisible) {
+			if (visible) {
+				DungeonWallsTilemap.skipCells.add(ch.pos - 2 * Dungeon.level.width());
 				DungeonWallsTilemap.skipCells.add(ch.pos - Dungeon.level.width());
 			} else {
-				DungeonWallsTilemap.skipCells.remove(ch.pos - 2*Dungeon.level.width());
+				DungeonWallsTilemap.skipCells.remove(ch.pos - 2 * Dungeon.level.width());
 				DungeonWallsTilemap.skipCells.remove(ch.pos - Dungeon.level.width());
 			}
-			GameScene.updateMap(ch.pos-2*Dungeon.level.width());
-			GameScene.updateMap(ch.pos-Dungeon.level.width());
+			GameScene.updateMap(ch.pos - 2 * Dungeon.level.width());
+			GameScene.updateMap(ch.pos - Dungeon.level.width());
 			wasVisible = visible;
 		}
 	}
@@ -111,11 +111,11 @@ public abstract class CrystalSpireSprite extends MobSprite {
 	public void die() {
 		super.die();
 		Splash.around(this, blood(), 100);
-		if (ch != null && visible){
-			DungeonWallsTilemap.skipCells.remove(ch.pos - 2*Dungeon.level.width());
+		if (ch != null && visible) {
+			DungeonWallsTilemap.skipCells.remove(ch.pos - 2 * Dungeon.level.width());
 			DungeonWallsTilemap.skipCells.remove(ch.pos - Dungeon.level.width());
-			GameScene.updateMap(ch.pos-2*Dungeon.level.width());
-			GameScene.updateMap(ch.pos-Dungeon.level.width());
+			GameScene.updateMap(ch.pos - 2 * Dungeon.level.width());
+			GameScene.updateMap(ch.pos - Dungeon.level.width());
 		}
 	}
 
@@ -131,6 +131,7 @@ public abstract class CrystalSpireSprite extends MobSprite {
 		protected int texOffset() {
 			return 0;
 		}
+
 		@Override
 		public int blood() {
 			return 0xFF8EE3FF;
@@ -142,6 +143,7 @@ public abstract class CrystalSpireSprite extends MobSprite {
 		protected int texOffset() {
 			return 5;
 		}
+
 		@Override
 		public int blood() {
 			return 0xFF85FFC8;
@@ -153,6 +155,7 @@ public abstract class CrystalSpireSprite extends MobSprite {
 		protected int texOffset() {
 			return 10;
 		}
+
 		@Override
 		public int blood() {
 			return 0xFFFFBB33;

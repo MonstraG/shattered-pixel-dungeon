@@ -97,7 +97,7 @@ public class Dungeon {
 
 	//enum of items which have limited spawns, records how many have spawned
 	//could all be their own separate numbers, but this allows iterating, much nicer for bundling/initializing.
-	public static enum LimitedDrops {
+	public enum LimitedDrops {
 		//limited world drops
 		STRENGTH_POTIONS,
 		UPGRADE_SCROLLS,
@@ -332,11 +332,7 @@ public class Dungeon {
 			if (depth > Statistics.deepestFloor && branch == 0) {
 				Statistics.deepestFloor = depth;
 
-				if (Statistics.qualifiedForNoKilling) {
-					Statistics.completedWithNoKilling = true;
-				} else {
-					Statistics.completedWithNoKilling = false;
-				}
+				Statistics.completedWithNoKilling = Statistics.qualifiedForNoKilling;
 			}
 		}
 
@@ -400,12 +396,9 @@ public class Dungeon {
 	}
 
 	public static boolean interfloorTeleportAllowed() {
-		if (Dungeon.level.locked
-				|| Dungeon.level instanceof MiningLevel
-				|| (Dungeon.hero != null && Dungeon.hero.belongings.getItem(Amulet.class) != null)) {
-			return false;
-		}
-		return true;
+		return !Dungeon.level.locked
+				&& !(Dungeon.level instanceof MiningLevel)
+				&& (Dungeon.hero == null || Dungeon.hero.belongings.getItem(Amulet.class) == null);
 	}
 
 	public static void switchLevel(final Level level, int pos) {
@@ -485,8 +478,7 @@ public class Dungeon {
 		int targetPOSLeft = 2 - floorThisSet / 2;
 		if (floorThisSet % 2 == 1 && Random.Int(2) == 0) targetPOSLeft--;
 
-		if (targetPOSLeft < posLeftThisSet) return true;
-		else return false;
+		return targetPOSLeft < posLeftThisSet;
 
 	}
 
@@ -563,7 +555,7 @@ public class Dungeon {
 			bundle.put(LIMDROPS, limDrops);
 
 			int count = 0;
-			int ids[] = new int[chapters.size()];
+			int[] ids = new int[chapters.size()];
 			for (Integer id : chapters) {
 				ids[count++] = id;
 			}
@@ -673,7 +665,7 @@ public class Dungeon {
 			LimitedDrops.restore(bundle.getBundle(LIMDROPS));
 
 			chapters = new HashSet<>();
-			int ids[] = bundle.getIntArray(CHAPTERS);
+			int[] ids = bundle.getIntArray(CHAPTERS);
 			if (ids != null) {
 				for (int id : ids) {
 					chapters.add(id);

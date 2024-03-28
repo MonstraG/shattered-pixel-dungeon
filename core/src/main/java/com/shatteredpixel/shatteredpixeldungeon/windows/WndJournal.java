@@ -48,8 +48,6 @@ import com.watabou.noosa.ui.Component;
 import com.watabou.utils.Reflection;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 
 public class WndJournal extends WndTabbed {
@@ -62,11 +60,11 @@ public class WndJournal extends WndTabbed {
 
 	private static final int ITEM_HEIGHT = 18;
 
-	private GuideTab guideTab;
-	private AlchemyTab alchemyTab;
-	private NotesTab notesTab;
-	private CatalogTab catalogTab;
-	private LoreTab loreTab;
+	private final GuideTab guideTab;
+	private final AlchemyTab alchemyTab;
+	private final NotesTab notesTab;
+	private final CatalogTab catalogTab;
+	private final LoreTab loreTab;
 
 	public static int last_index = 0;
 
@@ -222,7 +220,7 @@ public class WndJournal extends WndTabbed {
 		private RenderedTextBlock body;
 
 		private ScrollPane list;
-		private ArrayList<QuickRecipe> recipes = new ArrayList<>();
+		private final ArrayList<QuickRecipe> recipes = new ArrayList<>();
 
 		@Override
 		protected void createChildren() {
@@ -454,7 +452,7 @@ public class WndJournal extends WndTabbed {
 		private static final int POTION_IDX = 5;
 		private static final int SCROLL_IDX = 6;
 
-		private static final int spriteIndexes[] = {1, 2, 4, 5, 6, 9, 11};
+		private static final int[] spriteIndexes = {1, 2, 4, 5, 6, 9, 11};
 
 		private ScrollingListPane list;
 

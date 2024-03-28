@@ -54,7 +54,6 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.BossHealthBar;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
-import com.watabou.utils.Callback;
 import com.watabou.utils.GameMath;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
@@ -658,7 +657,7 @@ public class GnollGeomancer extends Mob {
 	}
 
 	private static int rocksInFlight = 0;
-	private static ArrayList<Char> knockedChars = new ArrayList<>();
+	private static final ArrayList<Char> knockedChars = new ArrayList<>();
 
 	public static void doRockThrowAttack(Char source, int from, int to) {
 
@@ -748,6 +747,7 @@ public class GnollGeomancer extends Mob {
 						if (Dungeon.level.map[pos + j] == Terrain.BARRICADE
 								|| Dungeon.level.map[pos + j] == Terrain.ENTRANCE) {
 							barricade = true;
+							break;
 						}
 					}
 					if (barricade) {

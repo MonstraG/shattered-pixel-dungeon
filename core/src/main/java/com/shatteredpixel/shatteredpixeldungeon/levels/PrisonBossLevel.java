@@ -50,7 +50,6 @@ import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.CustomTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.ui.TargetHealthIndicator;
-import com.watabou.utils.BArray;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
@@ -58,9 +57,9 @@ import com.watabou.noosa.Tilemap;
 import com.watabou.noosa.audio.Music;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.tweeners.AlphaTweener;
+import com.watabou.utils.BArray;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
-import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Point;
 import com.watabou.utils.Random;
@@ -241,11 +240,11 @@ public class PrisonBossLevel extends Level {
 
 	}
 
-	private static int W = Terrain.WALL;
-	private static int D = Terrain.WALL_DECO;
-	private static int e = Terrain.EMPTY;
-	private static int E = Terrain.EXIT;
-	private static int C = Terrain.CHASM;
+	private static final int W = Terrain.WALL;
+	private static final int D = Terrain.WALL_DECO;
+	private static final int e = Terrain.EMPTY;
+	private static final int E = Terrain.EXIT;
+	private static final int C = Terrain.CHASM;
 
 	private static final Point endStart = new Point(startHallway.left + 2, startHallway.top + 2);
 	private static final Point levelExit = new Point(endStart.x + 11, endStart.y + 6);
@@ -314,7 +313,7 @@ public class PrisonBossLevel extends Level {
 	}
 
 	//keep track of removed items as the level is changed. Dump them back into the level at the end.
-	private ArrayList<Item> storedItems = new ArrayList<>();
+	private final ArrayList<Item> storedItems = new ArrayList<>();
 
 	private void clearEntities(Rect safeArea) {
 		for (Heap heap : heaps.valueList()) {
@@ -710,7 +709,7 @@ public class PrisonBossLevel extends Level {
 
 		Rect area;
 
-		private float fadeDuration = 1f;
+		private final float fadeDuration = 1f;
 		private float fadeDelay = 1f;
 
 		public void setCoveringArea(Rect area) {
@@ -820,7 +819,7 @@ public class PrisonBossLevel extends Level {
 
 		final int TEX_WIDTH = 256;
 
-		private static byte[] render = new byte[]{
+		private static final byte[] render = new byte[]{
 				0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0,
 				1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
 				1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0,
@@ -866,7 +865,7 @@ public class PrisonBossLevel extends Level {
 
 		final int TEX_WIDTH = 256;
 
-		private static byte[] render = new byte[]{
+		private static final byte[] render = new byte[]{
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,

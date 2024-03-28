@@ -266,8 +266,6 @@ public class Bomb extends Item {
 	public static class ConjuredBomb extends Bomb {
 	}
 
-	;
-
 	public static class Fuse extends Actor {
 
 		{

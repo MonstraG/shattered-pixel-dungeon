@@ -38,17 +38,17 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
 
 public class Viscosity extends Glyph {
-	
-	private static ItemSprite.Glowing PURPLE = new ItemSprite.Glowing( 0x8844CC );
-	
+
+	private static final ItemSprite.Glowing PURPLE = new ItemSprite.Glowing(0x8844CC);
+
 	@Override
-	public int proc( Armor armor, Char attacker, Char defender, int damage ) {
+	public int proc(Armor armor, Char attacker, Char defender, int damage) {
 
 		//we use a tracker so that this glyph can apply after armor
 		Buff.affect(defender, ViscosityTracker.class).level = armor.buffedLvl();
 
 		return damage;
-		
+
 	}
 
 	@Override
@@ -64,30 +64,30 @@ public class Viscosity extends Glyph {
 
 		private int level = 0;
 
-		public int deferDamage(int dmg){
+		public int deferDamage(int dmg) {
 			//account for icon stomach (just skip the glyph)
-			if (target.buff(Talent.WarriorFoodImmunity.class) != null){
+			if (target.buff(Talent.WarriorFoodImmunity.class) != null) {
 				return dmg;
 			}
 
-			int level = Math.max( 0, this.level );
+			int level = Math.max(0, this.level);
 
-			float percent = (level+1)/(float)(level+6);
+			float percent = (level + 1) / (float) (level + 6);
 			percent *= genericProcChanceMultiplier(target);
 
 			int amount;
-			if (percent > 1f){
+			if (percent > 1f) {
 				dmg = Math.round(dmg / percent);
 				amount = dmg;
 			} else {
-				amount = (int)Math.ceil(dmg * percent);
+				amount = (int) Math.ceil(dmg * percent);
 			}
 
-			if (amount > 0){
-				DeferedDamage deferred = Buff.affect( target, DeferedDamage.class );
-				deferred.prolong( amount );
+			if (amount > 0) {
+				DeferedDamage deferred = Buff.affect(target, DeferedDamage.class);
+				deferred.prolong(amount);
 
-				target.sprite.showStatus( CharSprite.WARNING, Messages.get(Viscosity.class, "deferred", amount) );
+				target.sprite.showStatus(CharSprite.WARNING, Messages.get(Viscosity.class, "deferred", amount));
 			}
 
 			return dmg - amount;
@@ -98,45 +98,45 @@ public class Viscosity extends Glyph {
 			detach();
 			return true;
 		}
-	};
-	
+	}
+
 	public static class DeferedDamage extends Buff {
-		
+
 		{
 			type = buffType.NEGATIVE;
 		}
-		
+
 		protected int damage = 0;
-		
-		private static final String DAMAGE	= "damage";
-		
+
+		private static final String DAMAGE = "damage";
+
 		@Override
-		public void storeInBundle( Bundle bundle ) {
-			super.storeInBundle( bundle );
-			bundle.put( DAMAGE, damage );
-			
+		public void storeInBundle(Bundle bundle) {
+			super.storeInBundle(bundle);
+			bundle.put(DAMAGE, damage);
+
 		}
-		
+
 		@Override
-		public void restoreFromBundle( Bundle bundle ) {
-			super.restoreFromBundle( bundle );
-			damage = bundle.getInt( DAMAGE );
+		public void restoreFromBundle(Bundle bundle) {
+			super.restoreFromBundle(bundle);
+			damage = bundle.getInt(DAMAGE);
 		}
-		
+
 		@Override
-		public boolean attachTo( Char target ) {
-			if (super.attachTo( target )) {
-				postpone( TICK );
+		public boolean attachTo(Char target) {
+			if (super.attachTo(target)) {
+				postpone(TICK);
 				return true;
 			} else {
 				return false;
 			}
 		}
-		
-		public void prolong( int damage ) {
+
+		public void prolong(int damage) {
 			this.damage += damage;
 		}
-		
+
 		@Override
 		public int icon() {
 			return BuffIndicator.DEFERRED;
@@ -146,33 +146,33 @@ public class Viscosity extends Glyph {
 		public String iconTextDisplay() {
 			return Integer.toString(damage);
 		}
-		
+
 		@Override
 		public boolean act() {
 			if (target.isAlive()) {
 
-				int damageThisTick = Math.max(1, (int)(damage*0.1f));
-				target.damage( damageThisTick, this );
+				int damageThisTick = Math.max(1, (int) (damage * 0.1f));
+				target.damage(damageThisTick, this);
 				if (target == Dungeon.hero && !target.isAlive()) {
 
 					Badges.validateDeathFromFriendlyMagic();
 
-					Dungeon.fail( this );
-					GLog.n( Messages.get(this, "ondeath") );
+					Dungeon.fail(this);
+					GLog.n(Messages.get(this, "ondeath"));
 				}
-				spend( TICK );
+				spend(TICK);
 
 				damage -= damageThisTick;
 				if (damage <= 0) {
 					detach();
 				}
-				
+
 			} else {
-				
+
 				detach();
-				
+
 			}
-			
+
 			return true;
 		}
 

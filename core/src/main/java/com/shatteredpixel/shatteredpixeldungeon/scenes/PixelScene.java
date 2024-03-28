@@ -48,7 +48,6 @@ import com.watabou.noosa.Scene;
 import com.watabou.noosa.Visual;
 import com.watabou.noosa.ui.Component;
 import com.watabou.noosa.ui.Cursor;
-import com.watabou.utils.Callback;
 import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.GameMath;
 import com.watabou.utils.PointF;
@@ -273,7 +272,7 @@ public class PixelScene extends Scene {
 	}
 
 	//FIXME this system currently only works for a subset of windows
-	private static ArrayList<Class<? extends Window>> savedWindows = new ArrayList<>();
+	private static final ArrayList<Class<? extends Window>> savedWindows = new ArrayList<>();
 	private static Class<? extends PixelScene> savedClass = null;
 
 	public synchronized void saveWindows() {
@@ -393,9 +392,9 @@ public class PixelScene extends Scene {
 
 	protected static class Fader extends ColorBlock {
 
-		private static float FADE_TIME = 1f;
+		private static final float FADE_TIME = 1f;
 
-		private boolean light;
+		private final boolean light;
 
 		private float time;
 

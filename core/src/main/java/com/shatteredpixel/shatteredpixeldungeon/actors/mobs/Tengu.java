@@ -72,7 +72,6 @@ import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.BArray;
 import com.watabou.utils.Bundle;
-import com.watabou.utils.Callback;
 import com.watabou.utils.GameMath;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.PointF;
@@ -200,7 +199,6 @@ public class Tengu extends Mob {
 					return true;
 				}
 			});
-			return;
 		}
 	}
 
@@ -384,7 +382,7 @@ public class Tengu extends Mob {
 	}
 
 	//don't bother bundling this, as its purely cosmetic
-	private boolean yelledCoward = false;
+	private final boolean yelledCoward = false;
 
 	//tengu is always hunting
 	private class Hunting extends Mob.Hunting {
@@ -469,11 +467,7 @@ public class Tengu extends Mob {
 				if (abilityCooldown == -1) abilityCooldown = Random.IntRange(1, 4);
 			}
 
-			if (abilityCooldown == 0) {
-				return true;
-			} else {
-				return false;
-			}
+			return abilityCooldown == 0;
 		}
 	}
 
@@ -571,6 +565,7 @@ public class Tengu extends Mob {
 			for (BombAbility b : thrower.buffs(BombAbility.class)) {
 				if (b.bombPos == cell) {
 					bombHere = true;
+					break;
 				}
 			}
 			if (!bombHere && !Dungeon.level.solid[cell] &&
@@ -603,7 +598,7 @@ public class Tengu extends Mob {
 		public int bombPos = -1;
 		private int timer = 3;
 
-		private ArrayList<Emitter> smokeEmitters = new ArrayList<>();
+		private final ArrayList<Emitter> smokeEmitters = new ArrayList<>();
 
 		@Override
 		public boolean act() {

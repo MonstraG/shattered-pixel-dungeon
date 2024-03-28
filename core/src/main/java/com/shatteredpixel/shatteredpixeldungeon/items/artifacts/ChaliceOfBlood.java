@@ -55,9 +55,9 @@ public class ChaliceOfBlood extends Artifact {
 	public static final String AC_PRICK = "PRICK";
 
 	@Override
-	public ArrayList<String> actions( Hero hero ) {
-		ArrayList<String> actions = super.actions( hero );
-		if (isEquipped( hero )
+	public ArrayList<String> actions(Hero hero) {
+		ArrayList<String> actions = super.actions(hero);
+		if (isEquipped(hero)
 				&& level() < levelCap
 				&& !cursed
 				&& !hero.isInvulnerable(getClass())
@@ -67,27 +67,27 @@ public class ChaliceOfBlood extends Artifact {
 	}
 
 	@Override
-	public void execute(Hero hero, String action ) {
+	public void execute(Hero hero, String action) {
 		super.execute(hero, action);
 
-		if (action.equals(AC_PRICK)){
+		if (action.equals(AC_PRICK)) {
 
-			int damage = 5 + 3*(level()*level());
+			int damage = 5 + 3 * (level() * level());
 
-			if (damage > hero.HP*0.75) {
+			if (damage > hero.HP * 0.75) {
 
 				GameScene.show(
-					new WndOptions(new ItemSprite(this),
-							Messages.titleCase(name()),
-							Messages.get(this, "prick_warn"),
-							Messages.get(this, "yes"),
-							Messages.get(this, "no")) {
-						@Override
-						protected void onSelect(int index) {
-							if (index == 0)
-								prick(Dungeon.hero);
+						new WndOptions(new ItemSprite(this),
+								Messages.titleCase(name()),
+								Messages.get(this, "prick_warn"),
+								Messages.get(this, "yes"),
+								Messages.get(this, "no")) {
+							@Override
+							protected void onSelect(int index) {
+								if (index == 0)
+									prick(Dungeon.hero);
+							}
 						}
-					}
 				);
 
 			} else {
@@ -96,8 +96,8 @@ public class ChaliceOfBlood extends Artifact {
 		}
 	}
 
-	private void prick(Hero hero){
-		int damage = 5 + 3*(level()*level());
+	private void prick(Hero hero) {
+		int damage = 5 + 3 * (level() * level());
 
 		Earthroot.Armor armor = hero.buff(Earthroot.Armor.class);
 		if (armor != null) {
@@ -111,23 +111,23 @@ public class ChaliceOfBlood extends Artifact {
 
 		damage -= hero.drRoll();
 
-		hero.sprite.operate( hero.pos );
+		hero.sprite.operate(hero.pos);
 		hero.busy();
 		hero.spend(3f);
-		GLog.w( Messages.get(this, "onprick") );
-		if (damage <= 0){
+		GLog.w(Messages.get(this, "onprick"));
+		if (damage <= 0) {
 			damage = 1;
 		} else {
 			Sample.INSTANCE.play(Assets.Sounds.CURSED);
-			hero.sprite.emitter().burst( ShadowParticle.CURSE, 4+(damage/10) );
+			hero.sprite.emitter().burst(ShadowParticle.CURSE, 4 + (damage / 10));
 		}
 
 		hero.damage(damage, this);
 
 		if (!hero.isAlive()) {
 			Badges.validateDeathFromFriendlyMagic();
-			Dungeon.fail( this );
-			GLog.n( Messages.get(this, "ondeath") );
+			Dungeon.fail(this);
+			GLog.n(Messages.get(this, "ondeath"));
 		} else {
 			upgrade();
 		}
@@ -153,7 +153,7 @@ public class ChaliceOfBlood extends Artifact {
 	protected ArtifactBuff passiveBuff() {
 		return new chaliceRegen();
 	}
-	
+
 	@Override
 	public void charge(Hero target, float amount) {
 		if (cursed || target.buff(MagicImmune.class) != null) return;
@@ -161,28 +161,28 @@ public class ChaliceOfBlood extends Artifact {
 		//grants 5 turns of healing up-front, if hero isn't starving
 		if (target.isStarving()) return;
 
-		float healDelay = 10f - (1.33f + level()*0.667f);
+		float healDelay = 10f - (1.33f + level() * 0.667f);
 		healDelay /= amount;
-		float heal = 5f/healDelay;
+		float heal = 5f / healDelay;
 		//effectively 0.5/1/1.5/2/2.5 HP per turn at +0/+6/+8/+9/+10
-		if (Random.Float() < heal%1){
+		if (Random.Float() < heal % 1) {
 			heal++;
 		}
 		if (heal >= 1f && target.HP < target.HT) {
-			target.HP = Math.min(target.HT, target.HP + (int)heal);
-			target.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString((int)heal), FloatingText.HEALING);
+			target.HP = Math.min(target.HT, target.HP + (int) heal);
+			target.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString((int) heal), FloatingText.HEALING);
 
 			if (target.HP == target.HT && target instanceof Hero) {
-				((Hero) target).resting = false;
+				target.resting = false;
 			}
 		}
 	}
-	
+
 	@Override
 	public String desc() {
 		String desc = super.desc();
 
-		if (isEquipped (Dungeon.hero)){
+		if (isEquipped(Dungeon.hero)) {
 			desc += "\n\n";
 			if (cursed)
 				desc += Messages.get(this, "desc_cursed");

@@ -590,7 +590,7 @@ public abstract class RegularLevel extends Level {
 
 	}
 
-	private static HashMap<Document, Dungeon.LimitedDrops> limitedDocs = new HashMap<>();
+	private static final HashMap<Document, Dungeon.LimitedDrops> limitedDocs = new HashMap<>();
 
 	static {
 		limitedDocs.put(Document.SEWERS_GUARD, Dungeon.LimitedDrops.LORE_SEWERS);

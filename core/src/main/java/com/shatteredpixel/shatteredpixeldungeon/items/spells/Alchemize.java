@@ -38,40 +38,40 @@ import com.shatteredpixel.shatteredpixeldungeon.windows.WndTradeItem;
 import com.watabou.noosa.audio.Sample;
 
 public class Alchemize extends Spell {
-	
+
 	{
 		image = ItemSpriteSheet.ALCHEMIZE;
 	}
 
 	private static WndBag parentWnd;
-	
+
 	@Override
 	protected void onCast(Hero hero) {
-		parentWnd = GameScene.selectItem( itemSelector );
+		parentWnd = GameScene.selectItem(itemSelector);
 	}
-	
+
 	@Override
 	public int value() {
 		//prices of ingredients, divided by output quantity, rounds down
-		return (int)(40 * (quantity/8f));
+		return (int) (40 * (quantity / 8f));
 	}
 
 	//TODO also allow alchemical catalyst? Or save that for an elixir/brew?
 	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe.SimpleRecipe {
 
 		{
-			inputs =  new Class[]{ArcaneCatalyst.class};
+			inputs = new Class[]{ArcaneCatalyst.class};
 			inQuantity = new int[]{1};
-			
+
 			cost = 2;
-			
+
 			output = Alchemize.class;
 			outQuantity = 8;
 		}
-		
+
 	}
 
-	private static WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
+	private static final WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
 		@Override
 		public String textPrompt() {
 			return Messages.get(Alchemize.class, "prompt");
@@ -84,12 +84,12 @@ public class Alchemize extends Spell {
 		}
 
 		@Override
-		public void onSelect( Item item ) {
+		public void onSelect(Item item) {
 			if (item != null) {
 				if (parentWnd != null) {
 					parentWnd = GameScene.selectItem(itemSelector);
 				}
-				GameScene.show( new WndAlchemizeItem( item, parentWnd ) );
+				GameScene.show(new WndAlchemizeItem(item, parentWnd));
 			}
 		}
 	};
@@ -97,10 +97,10 @@ public class Alchemize extends Spell {
 
 	public static class WndAlchemizeItem extends WndInfoItem {
 
-		private static final float GAP		= 2;
-		private static final int BTN_HEIGHT	= 18;
+		private static final float GAP = 2;
+		private static final int BTN_HEIGHT = 18;
 
-		private WndBag owner;
+		private final WndBag owner;
 
 		public WndAlchemizeItem(Item item, WndBag owner) {
 			super(item);
@@ -205,20 +205,20 @@ public class Alchemize extends Spell {
 				}
 			}
 
-			resize( width, (int)pos );
+			resize(width, (int) pos);
 
 		}
 
-		private void consumeAlchemize(){
+		private void consumeAlchemize() {
 			Sample.INSTANCE.play(Assets.Sounds.TELEPORT);
-			if (curItem.quantity() <= 1){
+			if (curItem.quantity() <= 1) {
 				curItem.detachAll(Dungeon.hero.belongings.backpack);
 				if (owner != null) {
 					owner.hide();
 				}
 			} else {
 				curItem.detach(Dungeon.hero.belongings.backpack);
-				if (owner != null){
+				if (owner != null) {
 					owner.hide();
 				}
 				GameScene.selectItem(itemSelector);

@@ -34,7 +34,7 @@ public enum Sample {
 
 	INSTANCE;
 
-	protected final HashMap<Object, Sound> ids = new HashMap<>();
+	private final HashMap<Object, Sound> ids = new HashMap<>();
 
 	private boolean enabled = true;
 	private float globalVolume = 1f;
